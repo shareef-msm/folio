@@ -149,6 +149,8 @@ async function callGroq(prompt) {
     })
   });
   const data = await res.json();
+  console.log('Groq status:', res.status);
+  console.log('Groq response:', JSON.stringify(data).substring(0, 200));
   if (!data.choices || !data.choices[0]) throw new Error(data.error?.message || 'Groq API error');
   return data.choices[0].message.content || '';
 }
