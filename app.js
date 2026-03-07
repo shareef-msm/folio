@@ -47,7 +47,7 @@ async function loadSavedResume() {
     const sb = getSB();
     if (!sb) return;
     const { data } = await sb.from('profiles').select('resume_data').eq('id', user.id).single();
-    if (data?.resume_data) fillForm(data.resume_data);
+    if (data?.resume_data) { fillForm(data.resume_data); setTimeout(() => updateLivePreview(), 100); }
   } catch(e) {}
 }
 
@@ -229,6 +229,9 @@ async function autofill(data) {
   else addEdu();
 
   if (Array.isArray(data.projects) && data.projects.length) data.projects.forEach(addProj);
+
+  // Update live preview after AI fills the form
+  setTimeout(() => updateLivePreview(), 100);
 }
 
 // ── SKILLS TAGS ───────────────────────────────────────────────────────────────

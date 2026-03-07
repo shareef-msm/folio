@@ -145,12 +145,20 @@ body {
 }
 .step-dot { cursor: pointer;
   width: 32px; height: 32px; border-radius: 50%;
+  transition: all 0.25s ease;
   background: rgba(255,255,255,0.06); border: 2px solid rgba(255,255,255,0.1);
   display: flex; align-items: center; justify-content: center;
   font-size: 0.78rem; font-weight: 700; color: rgba(224,224,255,0.35);
   transition: all .3s; flex-shrink: 0;
 }
-.step-dot.active { background: #6c63ff; border-color: #6c63ff; color: #fff; box-shadow: 0 0 16px rgba(108,99,255,0.5); }
+.step-dot.active { 
+  background: #6c63ff; 
+  border-color: #a090ff; 
+  color: #fff; 
+  box-shadow: 0 0 0 3px rgba(108,99,255,0.25), 0 0 20px rgba(108,99,255,0.6);
+  transform: scale(1.15);
+  font-weight: 800;
+}
 .step-dot.done { background: rgba(108,99,255,0.2); border-color: rgba(108,99,255,0.4); color: #a090ff; }
 .step-dot.done:hover { background: rgba(108,99,255,0.35); border-color: #6c63ff; transform: scale(1.1); }
 .step-line { flex: 1; height: 2px; background: rgba(255,255,255,0.06); max-width: 60px; }
