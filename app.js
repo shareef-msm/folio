@@ -1,3 +1,14 @@
+// ── SUPABASE ──────────────────────────────────────────────────────────────────
+const SUPABASE_URL = 'https://imrsjhxczbcsepbawhwr.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImltcnNqaHhjemJjc2VwYmF3aHdyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4ODk0NTEsImV4cCI6MjA4ODQ2NTQ1MX0.JfwoJh5ssQTkI_iy9aPZECu4nSl2TgwXs2DVtcXe2o0';
+
+// Supabase client — loaded from CDN in index.html
+let _supabase = null;
+function getSB() {
+  if (!_supabase && window.supabase) _supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  return _supabase;
+}
+
 // ── AUTH ──────────────────────────────────────────────────────────────────────
 function getToken() { return localStorage.getItem('folio_token'); }
 function getUser()  { try { return JSON.parse(localStorage.getItem('folio_user') || '{}'); } catch(e) { return {}; } }
@@ -5,10 +16,14 @@ function getUser()  { try { return JSON.parse(localStorage.getItem('folio_user')
 function updateNavUser() {
   const user = getUser();
   const userEl = document.getElementById('nav-user');
-  if (user.name && userEl) userEl.textContent = '👤 ' + user.name;
+  if (user.name && userEl) { userEl.textContent = '👤 ' + user.name; userEl.style.display = 'flex'; }
+  const logoutBtn = document.getElementById('nav-logout-btn');
+  if (logoutBtn && user.name) logoutBtn.style.display = 'block';
 }
 
-function logout() {
+async function logout() {
+  const sb = getSB();
+  if (sb) await sb.auth.signOut();
   localStorage.removeItem('folio_token');
   localStorage.removeItem('folio_user');
   localStorage.removeItem('folio_portfolio');
@@ -16,26 +31,23 @@ function logout() {
 }
 
 async function autoSaveResume(data) {
-  const token = getToken();
-  if (!token) return;
+  const user = getUser();
+  if (!user.id) return;
   try {
-    await fetch('/api/save-resume', {
-      method: 'POST', headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ token, resumeData: data })
-    });
+    const sb = getSB();
+    if (!sb) return;
+    await sb.from('profiles').update({ resume_data: data }).eq('id', user.id);
   } catch(e) {}
 }
 
 async function loadSavedResume() {
-  const token = getToken();
-  if (!token) return;
+  const user = getUser();
+  if (!user.id) return;
   try {
-    const res = await fetch('/api/get-resume', {
-      method: 'POST', headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ token })
-    });
-    const data = await res.json();
-    if (data.success && data.resumeData) fillForm(data.resumeData);
+    const sb = getSB();
+    if (!sb) return;
+    const { data } = await sb.from('profiles').select('resume_data').eq('id', user.id).single();
+    if (data?.resume_data) fillForm(data.resume_data);
   } catch(e) {}
 }
 

@@ -9,74 +9,50 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'DM Sans',sans-serif;background:#0a0a10;color:#e0e0ff;min-height:100vh;display:flex;flex-direction:column}
-
-/* NAV */
 nav{padding:20px 40px;display:flex;align-items:center;justify-content:space-between}
 .logo{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;color:#fff;text-decoration:none}
 .logo span{color:#6c63ff}
 .nav-back{color:rgba(224,224,255,0.4);font-size:0.85rem;text-decoration:none;transition:color .2s}
 .nav-back:hover{color:#a090ff}
-
-/* MAIN */
 main{flex:1;display:flex;align-items:center;justify-content:center;padding:40px 20px;
   background:radial-gradient(ellipse 60% 50% at 50% 0%,rgba(108,99,255,0.1),transparent 60%),#0a0a10}
-
-/* CARD */
 .card{width:100%;max-width:420px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:40px;box-shadow:0 24px 60px rgba(0,0,0,0.4)}
-
 .card-title{font-family:'Syne',sans-serif;font-size:1.7rem;font-weight:800;color:#fff;margin-bottom:6px;text-align:center}
 .card-sub{color:rgba(224,224,255,0.4);font-size:0.88rem;text-align:center;margin-bottom:28px}
-
-/* TABS */
 .tabs{display:flex;background:rgba(255,255,255,0.04);border-radius:10px;padding:4px;margin-bottom:28px;gap:4px}
 .tab{flex:1;padding:10px;border:none;background:transparent;color:rgba(224,224,255,0.4);font-family:'DM Sans',sans-serif;font-size:0.88rem;font-weight:500;cursor:pointer;border-radius:7px;transition:all .2s}
 .tab.active{background:rgba(108,99,255,0.25);color:#fff;border:1px solid rgba(108,99,255,0.3)}
-
-/* FORM */
 .field{margin-bottom:16px}
 .field label{display:block;font-size:0.8rem;font-weight:500;color:rgba(224,224,255,0.5);margin-bottom:6px}
 .field input{width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:13px 16px;color:#e0e0ff;font-family:'DM Sans',sans-serif;font-size:0.92rem;outline:none;transition:all .2s}
 .field input:focus{border-color:rgba(108,99,255,0.5);background:rgba(108,99,255,0.07)}
 .field input::placeholder{color:rgba(224,224,255,0.2)}
-
-/* PASSWORD WRAPPER */
 .pw-wrap{position:relative}
 .pw-wrap input{padding-right:44px}
 .pw-toggle{position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;color:rgba(224,224,255,0.3);cursor:pointer;font-size:1rem;padding:4px;transition:color .2s}
 .pw-toggle:hover{color:#a090ff}
-
-/* SUBMIT */
 .submit-btn{width:100%;background:linear-gradient(135deg,#6c63ff,#9b55ff);color:#fff;border:none;padding:14px;border-radius:12px;font-size:0.95rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:8px}
 .submit-btn:hover{transform:translateY(-1px);box-shadow:0 6px 24px rgba(108,99,255,0.4)}
 .submit-btn:disabled{opacity:0.6;cursor:not-allowed;transform:none}
-
-/* ERROR / SUCCESS */
 .msg{padding:12px 16px;border-radius:10px;font-size:0.85rem;margin-bottom:16px;display:none}
 .msg.error{background:rgba(255,101,101,0.1);border:1px solid rgba(255,101,101,0.25);color:#ff8888}
 .msg.success{background:rgba(67,233,123,0.1);border:1px solid rgba(67,233,123,0.25);color:#43e97b}
 .msg.show{display:block}
-
-/* DIVIDER */
-.divider{text-align:center;color:rgba(224,224,255,0.2);font-size:0.8rem;margin:20px 0;position:relative}
-.divider::before,.divider::after{content:'';position:absolute;top:50%;width:40%;height:1px;background:rgba(255,255,255,0.07)}
-.divider::before{left:0}
-.divider::after{right:0}
-
-/* SPINNER */
-.spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
+.spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:inline-block}
 @keyframes spin{to{transform:rotate(360deg)}}
-
-/* FOOTER */
+.verify-notice{background:rgba(108,99,255,0.1);border:1px solid rgba(108,99,255,0.25);border-radius:12px;padding:20px;text-align:center;display:none}
+.verify-notice.show{display:block}
+.verify-icon{font-size:2.5rem;margin-bottom:10px}
+.verify-title{font-weight:700;color:#fff;margin-bottom:6px}
+.verify-sub{color:rgba(224,224,255,0.5);font-size:0.85rem;line-height:1.5}
 footer{text-align:center;padding:20px;font-size:0.75rem;color:rgba(224,224,255,0.2)}
 </style>
 </head>
 <body>
-
 <nav>
   <a href="/" class="logo">fo<span>lio</span></a>
   <a href="/" class="nav-back">← Back to Home</a>
 </nav>
-
 <main>
   <div class="card">
     <div class="card-title">Welcome to Folio</div>
@@ -89,7 +65,14 @@ footer{text-align:center;padding:20px;font-size:0.75rem;color:rgba(224,224,255,0
 
     <div id="msg" class="msg"></div>
 
-    <!-- LOGIN FORM -->
+    <!-- VERIFY NOTICE -->
+    <div class="verify-notice" id="verify-notice">
+      <div class="verify-icon">📧</div>
+      <div class="verify-title">Check your email!</div>
+      <div class="verify-sub">We sent a verification link to your email.<br/>Click it then come back and sign in.</div>
+    </div>
+
+    <!-- LOGIN -->
     <div id="login-form">
       <div class="field">
         <label>Email Address</label>
@@ -99,15 +82,13 @@ footer{text-align:center;padding:20px;font-size:0.75rem;color:rgba(224,224,255,0
         <label>Password</label>
         <div class="pw-wrap">
           <input type="password" id="login-password" placeholder="Enter your password" onkeydown="if(event.key==='Enter')doLogin()"/>
-          <button class="pw-toggle" onclick="togglePw('login-password', this)">👁</button>
+          <button class="pw-toggle" onclick="togglePw('login-password',this)">👁</button>
         </div>
       </div>
-      <button class="submit-btn" id="login-btn" onclick="doLogin()">
-        Sign In →
-      </button>
+      <button class="submit-btn" id="login-btn" onclick="doLogin()">Sign In →</button>
     </div>
 
-    <!-- SIGNUP FORM -->
+    <!-- SIGNUP -->
     <div id="signup-form" style="display:none">
       <div class="field">
         <label>Full Name</label>
@@ -121,27 +102,29 @@ footer{text-align:center;padding:20px;font-size:0.75rem;color:rgba(224,224,255,0
         <label>Password <span style="color:rgba(224,224,255,0.3);font-size:0.75rem">(min 6 characters)</span></label>
         <div class="pw-wrap">
           <input type="password" id="signup-password" placeholder="Create a password" onkeydown="if(event.key==='Enter')doSignup()"/>
-          <button class="pw-toggle" onclick="togglePw('signup-password', this)">👁</button>
+          <button class="pw-toggle" onclick="togglePw('signup-password',this)">👁</button>
         </div>
       </div>
-      <button class="submit-btn" id="signup-btn" onclick="doSignup()">
-        Create Account →
-      </button>
+      <button class="submit-btn" id="signup-btn" onclick="doSignup()">Create Account →</button>
     </div>
-
   </div>
 </main>
+<footer>Secured by Supabase · Built with Folio</footer>
 
-<footer>Your data is saved securely · Built with Folio</footer>
-
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+const SUPABASE_URL = 'https://imrsjhxczbcsepbawhwr.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImltcnNqaHhjemJjc2VwYmF3aHdyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4ODk0NTEsImV4cCI6MjA4ODQ2NTQ1MX0.JfwoJh5ssQTkI_iy9aPZECu4nSl2TgwXs2DVtcXe2o0';
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
 let currentTab = 'login';
 
 function switchTab(tab) {
   currentTab = tab;
-  document.getElementById('login-form').style.display = tab === 'login' ? 'block' : 'none';
-  document.getElementById('signup-form').style.display = tab === 'signup' ? 'block' : 'none';
-  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', (i===0&&tab==='login')||(i===1&&tab==='signup')));
+  document.getElementById('login-form').style.display = tab==='login' ? 'block' : 'none';
+  document.getElementById('signup-form').style.display = tab==='signup' ? 'block' : 'none';
+  document.getElementById('verify-notice').classList.remove('show');
+  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active',(i===0&&tab==='login')||(i===1&&tab==='signup')));
   hideMsg();
 }
 
@@ -149,25 +132,18 @@ function showMsg(text, type) {
   const el = document.getElementById('msg');
   el.textContent = text; el.className = `msg ${type} show`;
 }
-function hideMsg() {
-  document.getElementById('msg').className = 'msg';
-}
+function hideMsg() { document.getElementById('msg').className = 'msg'; }
 
 function togglePw(id, btn) {
   const inp = document.getElementById(id);
-  inp.type = inp.type === 'password' ? 'text' : 'password';
-  btn.textContent = inp.type === 'password' ? '👁' : '🙈';
+  inp.type = inp.type==='password' ? 'text' : 'password';
+  btn.textContent = inp.type==='password' ? '👁' : '🙈';
 }
 
-function setLoading(btnId, loading) {
+function setLoading(btnId, loading, tab) {
   const btn = document.getElementById(btnId);
-  if (loading) {
-    btn.disabled = true;
-    btn.innerHTML = '<div class="spinner"></div> Please wait...';
-  } else {
-    btn.disabled = false;
-    btn.innerHTML = btnId === 'login-btn' ? 'Sign In →' : 'Create Account →';
-  }
+  btn.disabled = loading;
+  btn.innerHTML = loading ? '<span class="spinner"></span> Please wait...' : (tab==='login' ? 'Sign In →' : 'Create Account →');
 }
 
 async function doLogin() {
@@ -175,30 +151,25 @@ async function doLogin() {
   const password = document.getElementById('login-password').value;
   if (!email || !password) return showMsg('Please fill in all fields', 'error');
 
-  setLoading('login-btn', true); hideMsg();
-  try {
-    const res = await fetch('/api/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password })
-    });
-    const data = await res.json();
-    if (!res.ok) { showMsg(data.error || 'Login failed', 'error'); setLoading('login-btn', false); return; }
+  setLoading('login-btn', true, 'login'); hideMsg();
+  const { data, error } = await sb.auth.signInWithPassword({ email, password });
 
-    // Save session
-    localStorage.setItem('folio_token', data.token);
-    localStorage.setItem('folio_user', JSON.stringify({ name: data.name, email: data.email }));
-
-    showMsg('✓ Welcome back, ' + data.name + '!', 'success');
-    setTimeout(() => {
-      // Go to where they wanted to go
-      const redirect = new URLSearchParams(location.search).get('redirect') || '/';
-      window.location.href = redirect;
-    }, 800);
-  } catch(e) {
-    showMsg('Network error. Try again.', 'error');
-    setLoading('login-btn', false);
+  if (error) {
+    showMsg(error.message === 'Invalid login credentials' ? 'Wrong email or password' : error.message, 'error');
+    setLoading('login-btn', false, 'login'); return;
   }
+
+  // Get profile
+  const { data: profile } = await sb.from('profiles').select('name').eq('id', data.user.id).single();
+  const name = profile?.name || email.split('@')[0];
+
+  localStorage.setItem('folio_token', data.session.access_token);
+  localStorage.setItem('folio_user', JSON.stringify({ name, email, id: data.user.id }));
+
+  showMsg('✓ Welcome back, ' + name + '!', 'success');
+  setTimeout(() => {
+    window.location.href = new URLSearchParams(location.search).get('redirect') || '/';
+  }, 800);
 }
 
 async function doSignup() {
@@ -208,38 +179,37 @@ async function doSignup() {
   if (!name || !email || !password) return showMsg('Please fill in all fields', 'error');
   if (password.length < 6) return showMsg('Password must be at least 6 characters', 'error');
 
-  setLoading('signup-btn', true); hideMsg();
-  try {
-    const res = await fetch('/api/signup', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, password })
-    });
-    const data = await res.json();
-    if (!res.ok) { showMsg(data.error || 'Signup failed', 'error'); setLoading('signup-btn', false); return; }
+  setLoading('signup-btn', true, 'signup'); hideMsg();
+  const { data, error } = await sb.auth.signUp({ email, password });
 
-    localStorage.setItem('folio_token', data.token);
-    localStorage.setItem('folio_user', JSON.stringify({ name: data.name, email: data.email }));
+  if (error) {
+    showMsg(error.message, 'error');
+    setLoading('signup-btn', false, 'signup'); return;
+  }
 
-    showMsg('✓ Account created! Welcome, ' + data.name + '!', 'success');
-    setTimeout(() => {
-      const redirect = new URLSearchParams(location.search).get('redirect') || '/';
-      window.location.href = redirect;
-    }, 800);
-  } catch(e) {
-    showMsg('Network error. Try again.', 'error');
-    setLoading('signup-btn', false);
+  // Create profile
+  if (data.user) {
+    await sb.from('profiles').insert({ id: data.user.id, name, email });
+  }
+
+  // Show verify notice
+  document.getElementById('signup-form').style.display = 'none';
+  document.getElementById('verify-notice').classList.add('show');
+  setLoading('signup-btn', false, 'signup');
+}
+
+// Check if already logged in
+async function checkSession() {
+  const { data } = await sb.auth.getSession();
+  if (data.session) {
+    const { data: profile } = await sb.from('profiles').select('name').eq('id', data.session.user.id).single();
+    const name = profile?.name || data.session.user.email.split('@')[0];
+    localStorage.setItem('folio_token', data.session.access_token);
+    localStorage.setItem('folio_user', JSON.stringify({ name, email: data.session.user.email, id: data.session.user.id }));
+    window.location.href = new URLSearchParams(location.search).get('redirect') || '/';
   }
 }
-
-// If already logged in, redirect
-const token = localStorage.getItem('folio_token');
-if (token) {
-  fetch('/api/verify', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({token}) })
-    .then(r => r.json()).then(d => {
-      if (d.success) window.location.href = new URLSearchParams(location.search).get('redirect') || '/';
-    }).catch(()=>{});
-}
+checkSession();
 </script>
 </body>
 </html>
