@@ -129,6 +129,14 @@ app.post('/api/get-resume', (req, res) => {
   res.json({ success: true, resumeData: user.lastResume || null, name: user.name });
 });
 
+// ── DEBUG ─────────────────────────────────────────────────────────────────────
+app.get('/api/status', (req, res) => {
+  res.json({
+    apiKey: API_KEY ? '✓ SET (' + API_KEY.substring(0,8) + '...)' : '✗ MISSING',
+    model: 'llama-3.3-70b-versatile'
+  });
+});
+
 // ── GROQ ──────────────────────────────────────────────────────────────────────
 async function callGroq(prompt) {
   const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
