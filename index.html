@@ -13,7 +13,11 @@
 <!-- NAV -->
 <nav id="main-nav">
   <div class="nav-logo">fo<span>lio</span></div>
-  <button class="nav-home-btn" id="nav-home-btn" onclick="goHome()" style="display:none">← Home</button>
+  <div style="display:flex;align-items:center;gap:10px">
+    <span id="nav-user" style="display:none;color:rgba(224,224,255,0.5);font-size:0.85rem;align-items:center;gap:6px"></span>
+    <button class="nav-home-btn" id="nav-logout-btn" onclick="logout()" style="display:none">Logout</button>
+    <button class="nav-home-btn" id="nav-home-btn" onclick="goHome()" style="display:none">← Home</button>
+  </div>
 </nav>
 
 <!-- ══ HERO PAGE ══ -->
@@ -352,5 +356,18 @@
 <div class="toast" id="toast"></div>
 
 <script src="app.js"></script>
+<script>
+// Show user info if logged in
+window.addEventListener('DOMContentLoaded', () => {
+  const token = localStorage.getItem('folio_token');
+  const user = (() => { try { return JSON.parse(localStorage.getItem('folio_user') || '{}'); } catch(e) { return {}; } })();
+  if (token && user.name) {
+    const userEl = document.getElementById('nav-user');
+    const logoutBtn = document.getElementById('nav-logout-btn');
+    if (userEl) { userEl.textContent = '👤 ' + user.name; userEl.style.display = 'flex'; }
+    if (logoutBtn) logoutBtn.style.display = 'block';
+  }
+});
+</script>
 </body>
 </html>

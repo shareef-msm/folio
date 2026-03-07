@@ -1,3 +1,44 @@
+// ── AUTH ──────────────────────────────────────────────────────────────────────
+function getToken() { return localStorage.getItem('folio_token'); }
+function getUser()  { try { return JSON.parse(localStorage.getItem('folio_user') || '{}'); } catch(e) { return {}; } }
+
+function updateNavUser() {
+  const user = getUser();
+  const userEl = document.getElementById('nav-user');
+  if (user.name && userEl) userEl.textContent = '👤 ' + user.name;
+}
+
+function logout() {
+  localStorage.removeItem('folio_token');
+  localStorage.removeItem('folio_user');
+  localStorage.removeItem('folio_portfolio');
+  window.location.href = '/';
+}
+
+async function autoSaveResume(data) {
+  const token = getToken();
+  if (!token) return;
+  try {
+    await fetch('/api/save-resume', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ token, resumeData: data })
+    });
+  } catch(e) {}
+}
+
+async function loadSavedResume() {
+  const token = getToken();
+  if (!token) return;
+  try {
+    const res = await fetch('/api/get-resume', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ token })
+    });
+    const data = await res.json();
+    if (data.success && data.resumeData) fillForm(data.resumeData);
+  } catch(e) {}
+}
+
 // ── STATE ─────────────────────────────────────────────────────────────────────
 let selectedTemplate = 'classic';
 let skills = [];
@@ -13,6 +54,7 @@ function goHome() {
 }
 
 function startApp(mode) {
+  if (!getToken()) { window.location.href = "/login.html?redirect=/"; return; }
   document.getElementById("nav-home-btn").style.display = "block";
   document.getElementById('hero').style.display = 'none';
   document.getElementById('app').style.display = 'block';
@@ -364,6 +406,7 @@ function buildResume(d) {
 // ── GENERATE ──────────────────────────────────────────────────────────────────
 function generateResume() {
   // Save for portfolio
+  autoSaveResume(collectData());
   try { localStorage.setItem("folio_portfolio", JSON.stringify(collectData())); } catch(e) {}
   const data = collectData();
   document.getElementById('resume-output').innerHTML = buildResume(data);
