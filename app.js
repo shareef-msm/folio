@@ -314,6 +314,7 @@ function selectTemplate(card) {
   document.querySelectorAll('.tmpl-card').forEach(c => c.classList.remove('selected'));
   card.classList.add('selected');
   selectedTemplate = card.dataset.tmpl;
+  updateLivePreview();
 }
 
 // ── CLAUDE API ────────────────────────────────────────────────────────────────
@@ -458,3 +459,26 @@ function viewPortfolio() {
   // Open portfolio — uses localStorage, no btoa needed
   window.open('/portfolio.html', '_blank');
 }
+
+// ── LIVE PREVIEW ──────────────────────────────────────────────────────────────
+let previewTimer = null;
+
+function updateLivePreview() {
+  clearTimeout(previewTimer);
+  previewTimer = setTimeout(() => {
+    const el = document.getElementById('live-preview-output');
+    if (!el) return;
+    const data = collectData();
+    const hasData = data.name !== 'Your Name' || data.title !== 'Professional Title' || data.email || data.summary;
+    if (!hasData) return;
+    el.classList.add('preview-updating');
+    el.innerHTML = buildResume(data);
+    setTimeout(() => el.classList.remove('preview-updating'), 400);
+  }, 300);
+}
+
+// Attach live preview listeners after DOM ready
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('app').addEventListener('input', updateLivePreview);
+  document.getElementById('app').addEventListener('change', updateLivePreview);
+});

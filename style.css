@@ -382,3 +382,94 @@ textarea { min-height: 90px; resize: vertical; }
   .step-panel { padding: 24px; }
   #main-nav { padding: 16px 24px; }
 }
+
+/* ── SPLIT LAYOUT ────────────────────────────────────────────────────────── */
+#app { max-width: 100%; padding-top: 80px; padding-bottom: 0; }
+
+.split-layout {
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  min-height: calc(100vh - 160px);
+  gap: 0;
+}
+
+.split-left {
+  border-right: 1px solid rgba(255,255,255,0.06);
+  overflow-y: auto;
+  max-width: 800px;
+  width: 100%;
+}
+
+.split-right {
+  position: sticky;
+  top: 80px;
+  height: calc(100vh - 80px);
+  overflow: hidden;
+  background: rgba(255,255,255,0.02);
+}
+
+/* Preview Panel */
+.preview-panel {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.preview-panel-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.preview-panel-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #6c63ff;
+}
+
+.preview-panel-sub {
+  font-size: 0.72rem;
+  color: rgba(224,224,255,0.3);
+}
+
+.preview-panel-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+}
+
+/* Scale down resume to fit panel */
+#live-preview-output {
+  transform-origin: top left;
+  transform: scale(0.55);
+  width: 182%;
+  pointer-events: none;
+}
+
+.preview-empty {
+  text-align: center;
+  padding: 60px 20px;
+  transform: scale(1.8);
+  transform-origin: top center;
+}
+
+.preview-empty-icon { font-size: 2.5rem; margin-bottom: 12px; opacity: 0.3; }
+.preview-empty-text { color: rgba(224,224,255,0.2); font-size: 0.85rem; line-height: 1.6; }
+
+/* Live preview pulse animation */
+@keyframes previewPulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.7; }
+  100% { opacity: 1; }
+}
+.preview-updating { animation: previewPulse 0.4s ease; }
+
+/* Responsive — hide preview on small screens */
+@media (max-width: 1024px) {
+  .split-layout { grid-template-columns: 1fr; }
+  .split-right { display: none; }
+}
