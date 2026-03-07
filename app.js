@@ -67,16 +67,25 @@ function skipUpload() { addExp(); addEdu(); showStep(2); }
 function showStep(n) {
   document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
   document.getElementById('step-' + n).classList.add('active');
+  if (n > maxStepReached) maxStepReached = n;
   for (let i = 1; i <= 6; i++) {
     const dot = document.getElementById('dot-' + i);
     if (!dot) continue;
     dot.classList.remove('active', 'done');
     if (i < n) dot.classList.add('done');
     if (i === n) dot.classList.add('active');
+    // Show pointer cursor only on reachable steps
+    dot.style.cursor = i <= maxStepReached ? 'pointer' : 'default';
   }
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 function goStep(n) { showStep(n); }
+
+// Click on step dot to jump — only allow visited steps
+let maxStepReached = 1;
+function jumpStep(n) {
+  if (n <= maxStepReached) showStep(n);
+}
 
 // ── UNIVERSAL UPLOAD ──────────────────────────────────────────────────────────
 const ACCEPTED_EXT = ['.pdf','.jpg','.jpeg','.png','.webp','.tiff','.bmp','.txt'];
