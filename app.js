@@ -74,18 +74,14 @@ function showStep(n) {
     dot.classList.remove('active', 'done');
     if (i < n) dot.classList.add('done');
     if (i === n) dot.classList.add('active');
-    // Show pointer cursor only on reachable steps
-    dot.style.cursor = i <= maxStepReached ? 'pointer' : 'default';
+    // Always clickable
+    dot.style.cursor = 'pointer';
   }
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 function goStep(n) { showStep(n); }
 
-// Click on step dot to jump — only allow visited steps
-let maxStepReached = 1;
-function jumpStep(n) {
-  if (n <= maxStepReached) showStep(n);
-}
+function jumpStep(n) { showStep(n); }
 
 // ── UNIVERSAL UPLOAD ──────────────────────────────────────────────────────────
 const ACCEPTED_EXT = ['.pdf','.jpg','.jpeg','.png','.webp','.tiff','.bmp','.txt'];
