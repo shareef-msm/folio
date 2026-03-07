@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title id="page-title">Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Fraunces:ital,opsz,wght@0,9..144,100;0,9..144,700;1,9..144,300&family=IBM+Plex+Mono:wght@400;700&family=Outfit:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;700;800&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{min-height:100vh;transition:background .5s,color .5s}
+a{text-decoration:none;color:inherit}
+
+/* ─ SOCIAL BUTTONS ─ */
+.s-links{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.s-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 15px;border-radius:100px;font-size:.8rem;font-weight:600;transition:transform .15s,opacity .15s}
+.s-btn:hover{transform:translateY(-2px);opacity:.85}
+.s-btn.li{background:#0077b5;color:#fff}
+.s-btn.gh{background:#24292e;color:#fff}
+.s-btn.ig{background:linear-gradient(45deg,#f09433,#dc2743,#bc1888);color:#fff}
+.s-btn.wa{background:#25d366;color:#fff}
+
+/* ─ THEME DOCK ─ */
+#dock{
+  position:fixed;bottom:22px;left:50%;transform:translateX(-50%);
+  background:rgba(8,8,12,.92);border:1px solid rgba(255,255,255,.1);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-radius:60px;padding:10px 18px;display:flex;align-items:center;gap:10px;
+  z-index:9999;box-shadow:0 12px 40px rgba(0,0,0,.5);
+}
+#dock-label{color:rgba(255,255,255,.35);font-size:.7rem;letter-spacing:2px;text-transform:uppercase;margin-right:4px;font-family:'IBM Plex Mono',monospace}
+.tdot{width:28px;height:28px;border-radius:50%;cursor:pointer;border:2.5px solid transparent;transition:all .2s;flex-shrink:0;position:relative}
+.tdot:hover{transform:scale(1.2)}
+.tdot.on{border-color:#fff;transform:scale(1.25)}
+.tdot::after{content:attr(title);position:absolute;bottom:36px;left:50%;transform:translateX(-50%);background:#000;color:#fff;font-size:.65rem;padding:3px 8px;border-radius:6px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .15s}
+.tdot:hover::after{opacity:1}
+.tdot[data-t="cyber"]{background:linear-gradient(135deg,#00ffcc,#7b2fff)}
+.tdot[data-t="noir"]{background:linear-gradient(135deg,#111,#555)}
+.tdot[data-t="linen"]{background:linear-gradient(135deg,#f2ede4,#b5956a)}
+.tdot[data-t="plasma"]{background:linear-gradient(135deg,#0d0221,#ff6edf)}
+.tdot[data-t="slate"]{background:linear-gradient(135deg,#0f1923,#38bdf8)}
+.tdot[data-t="grove"]{background:linear-gradient(135deg,#0d1f0d,#6fcf97)}
+.tdot[data-t="amber"]{background:linear-gradient(135deg,#1a0a00,#f59e0b)}
+.tdot[data-t="chalk"]{background:linear-gradient(135deg,#fafafa,#999)}
+.tdot[data-t="velvet"]{background:linear-gradient(135deg,#1a0030,#c084fc)}
+.tdot[data-t="iron"]{background:linear-gradient(135deg,#101010,#dc2626)}
+.tdot[data-t="dusk"]{background:linear-gradient(135deg,#1e1030,#f97316)}
+.tdot[data-t="jade"]{background:linear-gradient(135deg,#001a15,#2dd4bf)}
+
+/* ─ TOPBAR ─ */
+#topbar{position:fixed;top:16px;right:16px;display:flex;gap:8px;z-index:9999}
+.tpill{background:rgba(8,8,12,.85);border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(12px);color:#fff;padding:8px 16px;border-radius:100px;font-size:.78rem;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;display:flex;align-items:center;gap:6px}
+.tpill:hover{background:rgba(120,100,255,.3)}
+
+/* ─ SHARED SECTION SHELL ─ */
+.section{padding:72px max(40px,8vw);max-width:1040px;margin:0 auto}
+
+/* ─ TOAST ─ */
+#toast{position:fixed;bottom:88px;left:50%;transform:translateX(-50%);padding:10px 22px;border-radius:12px;font-size:.85rem;z-index:99999;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap;background:#111;color:#fff;border:1px solid #333}
+
+/* ════════════════════════════════════════════════════
+   THEME 1 — CYBER (dark teal/purple neon grid)
+════════════════════════════════════════════════════ */
+body.cyber{background:#050a10;color:#cdf0ea;font-family:'IBM Plex Mono',monospace}
+.cyber .hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:80px 40px;position:relative;overflow:hidden;background:linear-gradient(180deg,#050a10,#071520)}
+.cyber .hero::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(0,255,204,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,204,.04) 1px,transparent 1px);background-size:60px 60px}
+.cyber .hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,#00ffcc,transparent)}
+.cyber .h-name{font-family:'Bebas Neue',sans-serif;font-size:clamp(4rem,14vw,10rem);letter-spacing:6px;background:linear-gradient(135deg,#00ffcc,#7b2fff,#00ffcc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 40px rgba(0,255,204,.3));line-height:.9;margin-bottom:12px}
+.cyber .h-title{font-size:.8rem;letter-spacing:5px;text-transform:uppercase;color:#00ffcc;margin-bottom:20px}
+.cyber .h-summary{max-width:560px;color:rgba(205,240,234,.6);line-height:1.7;font-size:.9rem}
+.cyber .h-contact{margin-top:12px;color:rgba(123,47,255,.8);font-size:.78rem;letter-spacing:2px}
+.cyber .sec-label{font-size:.7rem;letter-spacing:5px;text-transform:uppercase;color:#00ffcc;margin-bottom:28px;display:flex;align-items:center;gap:14px}
+.cyber .sec-label::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(0,255,204,.4),transparent)}
+.cyber .card{background:rgba(0,255,204,.03);border:1px solid rgba(0,255,204,.08);border-radius:8px;padding:18px 22px;margin-bottom:10px;transition:all .2s}
+.cyber .card:hover{border-color:rgba(0,255,204,.25);background:rgba(0,255,204,.06)}
+.cyber .c-title{font-weight:700;color:#cdf0ea;margin-bottom:4px}
+.cyber .c-sub{color:#00ffcc;font-size:.8rem;margin-bottom:6px}
+.cyber .c-desc{color:rgba(205,240,234,.55);font-size:.88rem;white-space:pre-line;line-height:1.6}
+.cyber .tag{background:rgba(123,47,255,.15);color:#c084fc;border:1px solid rgba(123,47,255,.25);padding:4px 12px;border-radius:4px;font-size:.75rem;display:inline-block;margin:3px}
+
+/* ════════════════════════════════════════════════════
+   THEME 2 — NOIR (pure black editorial)
+════════════════════════════════════════════════════ */
+body.noir{background:#080808;color:#e8e8e8;font-family:'Outfit',sans-serif}
+.noir .hero{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;background:#080808}
+.noir .hero-l{padding:80px 60px;display:flex;flex-direction:column;justify-content:flex-end;border-right:1px solid #1a1a1a}
+.noir .hero-r{padding:80px 60px;display:flex;flex-direction:column;justify-content:center;background:#0f0f0f}
+.noir .h-eyebrow{font-size:.68rem;letter-spacing:5px;text-transform:uppercase;color:#555;margin-bottom:20px}
+.noir .h-name{font-family:'Fraunces',serif;font-size:clamp(2.5rem,5vw,5rem);font-weight:700;line-height:.95;letter-spacing:-2px;margin-bottom:16px}
+.noir .h-title{color:#555;font-size:.9rem;font-weight:300;letter-spacing:2px;text-transform:uppercase}
+.noir .h-summary{color:#777;line-height:1.8;font-size:.95rem;margin-bottom:16px}
+.noir .h-contact{color:#444;font-size:.8rem;font-family:'IBM Plex Mono',monospace;line-height:1.8}
+.noir .sec-label{font-family:'IBM Plex Mono',monospace;font-size:.68rem;letter-spacing:4px;text-transform:uppercase;color:#444;margin-bottom:24px;padding-bottom:12px;border-bottom:1px solid #1a1a1a}
+.noir .card{padding:20px 0;border-bottom:1px solid #111}
+.noir .c-title{font-family:'Fraunces',serif;font-size:1.15rem;font-weight:700;margin-bottom:4px}
+.noir .c-sub{color:#555;font-size:.8rem;margin-bottom:6px;font-family:'IBM Plex Mono',monospace}
+.noir .c-desc{color:#666;font-size:.88rem;white-space:pre-line;line-height:1.7}
+.noir .tag{background:#111;color:#555;border:1px solid #1d1d1d;padding:4px 12px;border-radius:2px;font-size:.75rem;font-family:'IBM Plex Mono',monospace;display:inline-block;margin:3px}
+
+/* ════════════════════════════════════════════════════
+   THEME 3 — LINEN (warm paper editorial)
+════════════════════════════════════════════════════ */
+body.linen{background:#f4ede0;color:#1c1208;font-family:'Cormorant Garamond',serif}
+.linen .hero{min-height:88vh;display:flex;align-items:flex-end;padding:70px 80px;background:linear-gradient(180deg,#f4ede0,#eee3d0);border-bottom:2px solid #1c1208;position:relative;overflow:hidden}
+.linen .hero::before{content:'PORTFOLIO';position:absolute;top:40px;right:80px;font-family:'IBM Plex Mono',monospace;font-size:.68rem;letter-spacing:4px;color:rgba(180,140,80,.5)}
+.linen .hero::after{content:'';position:absolute;right:0;top:0;bottom:0;width:35%;background:repeating-linear-gradient(-45deg,transparent,transparent 8px,rgba(180,140,80,.05) 8px,rgba(180,140,80,.05) 9px)}
+.linen .h-issue{font-family:'IBM Plex Mono',monospace;font-size:.68rem;letter-spacing:3px;color:#b5956a;margin-bottom:14px}
+.linen .h-name{font-size:clamp(3.5rem,9vw,8rem);font-weight:700;line-height:.88;letter-spacing:-3px;margin-bottom:14px}
+.linen .h-title{font-family:'IBM Plex Mono',monospace;font-size:.75rem;letter-spacing:3px;text-transform:uppercase;color:#b5956a;margin-bottom:16px}
+.linen .h-summary{font-style:italic;font-size:1.1rem;color:#5a4030;max-width:480px;line-height:1.6}
+.linen .h-contact{margin-top:14px;font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:#8a7060}
+.linen .sec-label{font-family:'IBM Plex Mono',monospace;font-size:.68rem;letter-spacing:4px;text-transform:uppercase;color:#b5956a;margin-bottom:22px}
+.linen .card{padding:18px 0;border-top:1px solid rgba(28,18,8,.1);display:flex;gap:24px;align-items:flex-start}
+.linen .c-date{font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:#b5956a;white-space:nowrap;padding-top:4px;min-width:80px}
+.linen .c-body{flex:1}
+.linen .c-title{font-size:1.2rem;font-weight:700;margin-bottom:4px}
+.linen .c-sub{font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:#b5956a;margin-bottom:6px}
+.linen .c-desc{font-style:italic;color:#5a4030;font-size:.95rem;white-space:pre-line;line-height:1.6}
+.linen .tag{background:rgba(181,149,106,.1);color:#7a5c2a;border:1px solid rgba(181,149,106,.3);padding:4px 10px;border-radius:2px;font-family:'IBM Plex Mono',monospace;font-size:.72rem;display:inline-block;margin:3px}
+
+/* ════════════════════════════════════════════════════
+   THEME 4 — PLASMA (hot pink dark)
+════════════════════════════════════════════════════ */
+body.plasma{background:#08020f;color:#f0d8ff;font-family:'Outfit',sans-serif}
+.plasma .hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:80px 40px;background:radial-gradient(ellipse 70% 50% at 50% 0%,rgba(255,110,223,.08),transparent 60%),#08020f;position:relative}
+.plasma .h-name{font-family:'Syne',sans-serif;font-size:clamp(3.5rem,10vw,8rem);font-weight:800;background:linear-gradient(135deg,#ff6edf,#c084fc,#ff6edf);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-2px;margin-bottom:8px}
+.plasma .h-title{color:#c084fc;font-size:.85rem;letter-spacing:4px;text-transform:uppercase;margin-bottom:20px}
+.plasma .h-summary{max-width:540px;margin:0 auto;color:rgba(240,216,255,.55);line-height:1.7}
+.plasma .h-contact{margin-top:12px;color:rgba(192,132,252,.5);font-size:.8rem}
+.plasma .sec-label{font-size:.72rem;letter-spacing:4px;text-transform:uppercase;color:#ff6edf;margin-bottom:24px;display:flex;align-items:center;gap:14px}
+.plasma .sec-label::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(255,110,223,.4),transparent)}
+.plasma .card{background:rgba(255,110,223,.04);border:1px solid rgba(255,110,223,.1);border-radius:12px;padding:18px 22px;margin-bottom:10px;transition:all .2s}
+.plasma .card:hover{border-color:rgba(255,110,223,.3);background:rgba(255,110,223,.07)}
+.plasma .c-title{font-weight:700;color:#f0d8ff;margin-bottom:4px}
+.plasma .c-sub{color:#ff6edf;font-size:.8rem;margin-bottom:6px}
+.plasma .c-desc{color:rgba(240,216,255,.5);font-size:.88rem;white-space:pre-line;line-height:1.6}
+.plasma .tag{background:rgba(192,132,252,.1);color:#c084fc;border:1px solid rgba(192,132,252,.2);padding:4px 12px;border-radius:20px;font-size:.78rem;display:inline-block;margin:3px}
+
+/* ════════════════════════════════════════════════════
+   THEME 5 — SLATE (ocean blue dark)
+════════════════════════════════════════════════════ */
+body.slate{background:#050f1a;color:#c8e4f8;font-family:'DM Sans',sans-serif}
+.slate .hero{min-height:100vh;display:flex;align-items:center;padding:80px max(40px,8vw);gap:60px;background:linear-gradient(135deg,#050f1a,#0a1f35)}
+.slate .hero-l{flex:1}
+.slate .hero-r{width:260px;flex-shrink:0}
+.slate .h-badge{display:inline-block;background:rgba(56,189,248,.1);border:1px solid rgba(56,189,248,.2);color:#38bdf8;padding:5px 14px;border-radius:100px;font-size:.72rem;letter-spacing:2px;margin-bottom:18px}
+.slate .h-name{font-family:'Syne',sans-serif;font-size:clamp(2.5rem,5vw,4.5rem);font-weight:800;letter-spacing:-2px;color:#fff;margin-bottom:8px}
+.slate .h-title{color:#38bdf8;font-size:.95rem;margin-bottom:18px;font-weight:400}
+.slate .h-summary{color:rgba(200,228,248,.55);line-height:1.7}
+.slate .h-contact{margin-top:12px;color:rgba(56,189,248,.5);font-size:.8rem}
+.slate .hero-card{background:linear-gradient(135deg,#0c2d4a,#0a1f35);border:1px solid rgba(56,189,248,.15);border-radius:20px;padding:32px;text-align:center}
+.slate .hero-init{font-family:'Syne',sans-serif;font-size:4.5rem;font-weight:800;color:#38bdf8;opacity:.7}
+.slate .sec-label{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:#38bdf8;margin-bottom:24px}
+.slate .card{background:rgba(56,189,248,.04);border:1px solid rgba(56,189,248,.09);border-radius:10px;padding:18px 22px;margin-bottom:10px;transition:all .2s}
+.slate .card:hover{border-color:rgba(56,189,248,.25);transform:translateX(4px)}
+.slate .c-title{font-weight:700;color:#c8e4f8;margin-bottom:4px}
+.slate .c-sub{color:#38bdf8;font-size:.8rem;margin-bottom:6px}
+.slate .c-desc{color:rgba(200,228,248,.5);font-size:.88rem;white-space:pre-line;line-height:1.6}
+.slate .tag{background:rgba(56,189,248,.08);color:#38bdf8;border:1px solid rgba(56,189,248,.15);padding:4px 12px;border-radius:20px;font-size:.78rem;display:inline-block;margin:3px}
+
+/* ════════════════════════════════════════════════════
+   THEME 6 — GROVE (botanical green)
+════════════════════════════════════════════════════ */
+body.grove{background:#08140a;color:#c8e8c0;font-family:'Cormorant Garamond',serif}
+.grove .hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:80px 40px;background:radial-gradient(ellipse 80% 40% at 50% 100%,rgba(111,207,151,.07),transparent 60%),#08140a}
+.grove .h-name{font-size:clamp(3rem,8vw,6.5rem);font-weight:600;color:#a8dca0;letter-spacing:-1px;margin-bottom:6px}
+.grove .h-divider{width:50px;height:1px;background:#6fcf97;margin:14px auto;opacity:.4}
+.grove .h-title{font-family:'IBM Plex Mono',monospace;font-size:.72rem;letter-spacing:4px;text-transform:uppercase;color:#6fcf97;margin-bottom:18px}
+.grove .h-summary{font-style:italic;font-size:1.1rem;color:rgba(200,232,192,.6);max-width:500px;line-height:1.7}
+.grove .h-contact{margin-top:12px;font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:rgba(111,207,151,.5)}
+.grove .sec-label{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:600;color:#a8dca0;text-align:center;margin-bottom:28px;letter-spacing:1px}
+.grove .card{background:rgba(111,207,151,.04);border:1px solid rgba(111,207,151,.1);border-radius:8px;padding:18px 22px;margin-bottom:10px;transition:all .2s}
+.grove .card:hover{border-color:rgba(111,207,151,.25)}
+.grove .c-title{font-size:1.1rem;font-weight:600;color:#c8e8c0;margin-bottom:4px}
+.grove .c-sub{font-family:'IBM Plex Mono',monospace;color:#6fcf97;font-size:.72rem;margin-bottom:6px}
+.grove .c-desc{font-style:italic;color:rgba(200,232,192,.55);font-size:.9rem;white-space:pre-line;line-height:1.6}
+.grove .tag{background:rgba(111,207,151,.08);color:#6fcf97;border:1px solid rgba(111,207,151,.15);padding:4px 12px;border-radius:20px;font-size:.78rem;display:inline-block;margin:3px}
+
+/* ════════════════════════════════════════════════════
+   THEME 7 — AMBER (warm amber/brass dark)
+════════════════════════════════════════════════════ */
+body.amber{background:#0a0600;color:#f0d890;font-family:'Outfit',sans-serif}
+.amber .hero{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;background:#0a0600}
+.amber .hero-l{padding:80px 60px;display:flex;flex-direction:column;justify-content:center;background:linear-gradient(135deg,#0f0900,#0a0600)}
+.amber .hero-r{background:linear-gradient(135deg,#f59e0b,#d97706);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.amber .hero-r::before{content:'';position:absolute;width:500px;height:500px;border-radius:50%;border:100px solid rgba(255,255,255,.07);top:-150px;right:-150px}
+.amber .h-eyebrow{font-size:.68rem;letter-spacing:4px;text-transform:uppercase;color:rgba(240,216,144,.4);margin-bottom:16px;font-family:'IBM Plex Mono',monospace}
+.amber .h-name{font-family:'Syne',sans-serif;font-size:clamp(2rem,4.5vw,4rem);font-weight:800;color:#f0d890;letter-spacing:-1px;margin-bottom:8px}
+.amber .h-title{color:#f59e0b;font-size:.9rem;margin-bottom:18px}
+.amber .h-summary{color:rgba(240,216,144,.55);line-height:1.7}
+.amber .h-contact{margin-top:12px;color:rgba(245,158,11,.5);font-size:.78rem}
+.amber .hero-init-big{font-family:'Syne',sans-serif;font-size:12rem;font-weight:800;color:rgba(255,255,255,.15);line-height:1}
+.amber .sec-label{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:#f59e0b;margin-bottom:24px;text-transform:uppercase;letter-spacing:1px}
+.amber .card{border-left:2px solid #f59e0b;padding:14px 18px;margin-bottom:14px;background:rgba(245,158,11,.04);transition:background .2s}
+.amber .card:hover{background:rgba(245,158,11,.08)}
+.amber .c-title{font-weight:700;color:#f0d890;margin-bottom:4px}
+.amber .c-sub{color:#f59e0b;font-size:.8rem;margin-bottom:6px}
+.amber .c-desc{color:rgba(240,216,144,.5);font-size:.88rem;white-space:pre-line;line-height:1.6}
+.amber .tag{background:rgba(245,158,11,.1);color:#f59e0b;border:1px solid rgba(245,158,11,.2);padding:4px 12px;border-radius:4px;font-size:.78rem;display:inline-block;margin:3px}
+
+/* ════════════════════════════════════════════════════
+   THEME 8 — CHALK (clean white minimal)
+════════════════════════════════════════════════════ */
+body.chalk{background:#fafafa;color:#111;font-family:'DM Sans',sans-serif}
+.chalk .hero{min-height:78vh;display:flex;align-items:center;padding:80px max(40px,10vw);border-bottom:1px solid #e8e8e8;gap:60px}
+.chalk .hero-l{flex:1}
+.chalk .h-name{font-family:'Fraunces',serif;font-size:clamp(3rem,7vw,6rem);font-weight:700;line-height:.92;letter-spacing:-3px;margin-bottom:12px}
+.chalk .h-title{color:#888;font-size:.9rem;margin-bottom:18px;font-weight:400;letter-spacing:1px}
+.chalk .h-summary{color:#555;line-height:1.7;max-width:460px}
+.chalk .h-contact{margin-top:12px;color:#bbb;font-size:.8rem;font-family:'IBM Plex Mono',monospace}
+.chalk .hero-r{width:200px;flex-shrink:0;text-align:center}
+.chalk .hero-circle{width:160px;height:160px;border-radius:50%;background:#111;display:flex;align-items:center;justify-content:center;margin:0 auto}
+.chalk .hero-init{font-family:'Fraunces',serif;font-size:3.5rem;font-weight:700;color:#fafafa}
+.chalk .sec-label{font-family:'Fraunces',serif;font-size:1.6rem;font-weight:700;color:#111;margin-bottom:24px}
+.chalk .card{padding:18px 0;border-bottom:1px solid #f0f0f0;display:flex;justify-content:space-between;align-items:flex-start;gap:20px}
+.chalk .c-body{flex:1}
+.chalk .c-title{font-weight:600;color:#111;margin-bottom:4px}
+.chalk .c-sub{color:#bbb;font-size:.8rem;margin-bottom:6px;font-family:'IBM Plex Mono',monospace}
+.chalk .c-desc{color:#888;font-size:.88rem;white-space:pre-line;line-height:1.6}
+.chalk .c-date{font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:#ccc;white-space:nowrap}
+.chalk .tag{background:#f3f3f3;color:#666;border:1px solid #e8e8e8;padding:4px 12px;border-radius:100px;font-size:.78rem;display:inline-block;margin:3px}
+
+/* ════════════════════════════════════════════════════
+   THEME 9 — VELVET (deep purple luxury)
+════════════════════════════════════════════════════ */
+body.velvet{background:#0c0015;color:#e8d8f8;font-family:'Outfit',sans-serif}
+.velvet .hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:80px 40px;background:radial-gradient(ellipse 60% 40% at 50% 0%,rgba(192,132,252,.1),transparent 60%),#0c0015;position:relative}
+.velvet .h-crown{font-size:2rem;margin-bottom:12px;filter:drop-shadow(0 0 20px rgba(192,132,252,.5))}
+.velvet .h-name{font-family:'Cormorant Garamond',serif;font-size:clamp(3rem,8vw,6.5rem);font-weight:600;color:#e8d8f8;letter-spacing:2px;margin-bottom:6px}
+.velvet .h-title{color:#c084fc;font-size:.8rem;letter-spacing:5px;text-transform:uppercase;margin-bottom:22px}
+.velvet .h-summary{max-width:520px;color:rgba(232,216,248,.5);line-height:1.7;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem}
+.velvet .h-contact{margin-top:12px;color:rgba(192,132,252,.4);font-size:.8rem}
+.velvet .sec-label{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:600;color:#c084fc;margin-bottom:24px;letter-spacing:2px;text-align:center}
+.velvet .card{background:rgba(192,132,252,.04);border:1px solid rgba(192,132,252,.1);border-radius:12px;padding:18px 22px;margin-bottom:10px;transition:all .2s}
+.velvet .card:hover{border-color:rgba(192,132,252,.3)}
+.velvet .c-title{font-family:'Cormorant Garamond',serif;font-size:1.15rem;color:#e8d8f8;margin-bottom:4px}
+.velvet .c-sub{color:#c084fc;font-size:.8rem;margin-bottom:6px}
+.velvet .c-desc{color:rgba(232,216,248,.45);font-size:.88rem;white-space:pre-line;line-height:1.6}
+.velvet .tag{background:rgba(192,132,252,.08);color:#c084fc;border:1px solid rgba(192,132,252,.15);padding:4px 12px;border-radius:20px;font-size:.78rem;display:inline-block;margin:3px}
+
+/* ════════════════════════════════════════════════════
+   THEME 10 — IRON (dark red industrial)
+════════════════════════════════════════════════════ */
+body.iron{background:#080808;color:#f0e0e0;font-family:'Outfit',sans-serif}
+.iron .hero{min-height:100vh;display:flex;align-items:center;padding:80px max(40px,8vw);gap:60px;background:#080808;position:relative;overflow:hidden}
+.iron .hero::after{content:'';position:absolute;right:-100px;top:50%;transform:translateY(-50%);width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(220,38,38,.08),transparent 70%)}
+.iron .hero-l{flex:1;z-index:1}
+.iron .h-bar{width:40px;height:3px;background:#dc2626;margin-bottom:20px}
+.iron .h-name{font-family:'Syne',sans-serif;font-size:clamp(2.5rem,5vw,5rem);font-weight:800;color:#fff;letter-spacing:-2px;margin-bottom:8px}
+.iron .h-title{color:#dc2626;font-size:.9rem;font-weight:400;margin-bottom:18px;letter-spacing:1px}
+.iron .h-summary{color:#808080;line-height:1.7;max-width:480px}
+.iron .h-contact{margin-top:12px;color:#444;font-size:.78rem;font-family:'IBM Plex Mono',monospace}
+.iron .sec-label{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:#dc2626;margin-bottom:24px;text-transform:uppercase;letter-spacing:2px}
+.iron .card{border-left:2px solid #dc2626;padding:14px 18px;margin-bottom:14px;background:rgba(220,38,38,.04);transition:background .2s}
+.iron .card:hover{background:rgba(220,38,38,.08)}
+.iron .c-title{font-weight:700;color:#f0e0e0;margin-bottom:4px}
+.iron .c-sub{color:#dc2626;font-size:.8rem;margin-bottom:6px}
+.iron .c-desc{color:#606060;font-size:.88rem;white-space:pre-line;line-height:1.6}
+.iron .tag{background:rgba(220,38,38,.08);color:#dc2626;border:1px solid rgba(220,38,38,.18);padding:4px 12px;border-radius:2px;font-size:.75rem;font-family:'IBM Plex Mono',monospace;display:inline-block;margin:3px}
+
+/* ════════════════════════════════════════════════════
+   THEME 11 — DUSK (orange sunset)
+════════════════════════════════════════════════════ */
+body.dusk{background:#110a18;color:#fde8cc;font-family:'Outfit',sans-serif}
+.dusk .hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:80px 40px;background:radial-gradient(ellipse 60% 40% at 50% 80%,rgba(249,115,22,.1),transparent 60%),linear-gradient(180deg,#110a18,#1e1030)}
+.dusk .h-name{font-family:'Syne',sans-serif;font-size:clamp(3rem,9vw,7.5rem);font-weight:800;background:linear-gradient(135deg,#f97316,#fbbf24,#f97316);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-2px;margin-bottom:8px}
+.dusk .h-title{color:#f97316;font-size:.82rem;letter-spacing:4px;text-transform:uppercase;margin-bottom:20px}
+.dusk .h-summary{max-width:520px;color:rgba(253,232,204,.5);line-height:1.7}
+.dusk .h-contact{margin-top:12px;color:rgba(249,115,22,.45);font-size:.8rem}
+.dusk .sec-label{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:#f97316;margin-bottom:24px}
+.dusk .card{background:rgba(249,115,22,.04);border:1px solid rgba(249,115,22,.1);border-radius:10px;padding:18px 22px;margin-bottom:10px;transition:all .2s}
+.dusk .card:hover{border-color:rgba(249,115,22,.3)}
+.dusk .c-title{font-weight:700;color:#fde8cc;margin-bottom:4px}
+.dusk .c-sub{color:#f97316;font-size:.8rem;margin-bottom:6px}
+.dusk .c-desc{color:rgba(253,232,204,.45);font-size:.88rem;white-space:pre-line;line-height:1.6}
+.dusk .tag{background:rgba(249,115,22,.1);color:#f97316;border:1px solid rgba(249,115,22,.2);padding:4px 12px;border-radius:20px;font-size:.78rem;display:inline-block;margin:3px}
+
+/* ════════════════════════════════════════════════════
+   THEME 12 — JADE (deep teal luxury)
+════════════════════════════════════════════════════ */
+body.jade{background:#001410;color:#ccf0e8;font-family:'Cormorant Garamond',serif}
+.jade .hero{min-height:100vh;display:flex;align-items:center;padding:80px max(40px,8vw);gap:60px;background:linear-gradient(135deg,#001410,#002820)}
+.jade .hero-l{flex:1}
+.jade .h-gem{font-size:1.5rem;margin-bottom:16px}
+.jade .h-name{font-size:clamp(3rem,7vw,6rem);font-weight:600;color:#b8e8d8;letter-spacing:-1px;margin-bottom:8px}
+.jade .h-title{font-family:'IBM Plex Mono',monospace;font-size:.72rem;letter-spacing:4px;text-transform:uppercase;color:#2dd4bf;margin-bottom:18px}
+.jade .h-summary{font-style:italic;color:rgba(204,240,232,.55);line-height:1.7;max-width:480px;font-size:1.05rem}
+.jade .h-contact{margin-top:12px;font-family:'IBM Plex Mono',monospace;color:rgba(45,212,191,.45);font-size:.72rem}
+.jade .hero-r{width:240px;flex-shrink:0}
+.jade .hero-gem-box{background:linear-gradient(135deg,#004030,#002820);border:1px solid rgba(45,212,191,.2);border-radius:16px;padding:40px;text-align:center}
+.jade .hero-gem-init{font-size:4rem;font-weight:600;color:rgba(45,212,191,.4)}
+.jade .sec-label{font-size:1.8rem;font-weight:600;color:#2dd4bf;margin-bottom:24px;letter-spacing:1px}
+.jade .card{background:rgba(45,212,191,.04);border:1px solid rgba(45,212,191,.1);border-radius:10px;padding:18px 22px;margin-bottom:10px;transition:all .2s}
+.jade .card:hover{border-color:rgba(45,212,191,.3)}
+.jade .c-title{font-size:1.1rem;font-weight:600;color:#ccf0e8;margin-bottom:4px}
+.jade .c-sub{font-family:'IBM Plex Mono',monospace;color:#2dd4bf;font-size:.72rem;margin-bottom:6px}
+.jade .c-desc{font-style:italic;color:rgba(204,240,232,.5);font-size:.9rem;white-space:pre-line;line-height:1.6}
+.jade .tag{background:rgba(45,212,191,.08);color:#2dd4bf;border:1px solid rgba(45,212,191,.15);padding:4px 12px;border-radius:20px;font-size:.78rem;display:inline-block;margin:3px}
+
+/* ─ FOOTER ─ */
+.footer{text-align:center;padding:44px 20px;opacity:.35;font-size:.78rem;font-family:'IBM Plex Mono',monospace;letter-spacing:2px}
+
+@media(max-width:768px){
+  .noir .hero,.amber .hero,.iron .hero,.jade .hero{grid-template-columns:1fr;flex-direction:column}
+  .slate .hero,.chalk .hero{flex-direction:column}
+  .slate .hero-r,.chalk .hero-r,.jade .hero-r,.amber .hero-r{display:none}
+  .noir .hero-r,.amber .hero-r{min-height:180px}
+  .section{padding:50px 24px}
+  .linen .hero,.noir .hero-l{padding:60px 24px}
+}
+</style>
+</head>
+<body class="cyber" id="B">
+
+<div id="topbar">
+  <button class="tpill" onclick="copyLink()">🔗 Share Link</button>
+  <button class="tpill" onclick="window.print()">⬇ Save PDF</button>
+</div>
+
+<div id="portfolio-root"></div>
+
+<div class="footer">BUILT WITH FOLIO</div>
+
+<div id="dock">
+  <span id="dock-label">Theme</span>
+  <div class="tdot on" data-t="cyber"   title="Cyber"   onclick="T('cyber')"></div>
+  <div class="tdot"    data-t="noir"    title="Noir"    onclick="T('noir')"></div>
+  <div class="tdot"    data-t="linen"   title="Linen"   onclick="T('linen')"></div>
+  <div class="tdot"    data-t="plasma"  title="Plasma"  onclick="T('plasma')"></div>
+  <div class="tdot"    data-t="slate"   title="Slate"   onclick="T('slate')"></div>
+  <div class="tdot"    data-t="grove"   title="Grove"   onclick="T('grove')"></div>
+  <div class="tdot"    data-t="amber"   title="Amber"   onclick="T('amber')"></div>
+  <div class="tdot"    data-t="chalk"   title="Chalk"   onclick="T('chalk')"></div>
+  <div class="tdot"    data-t="velvet"  title="Velvet"  onclick="T('velvet')"></div>
+  <div class="tdot"    data-t="iron"    title="Iron"    onclick="T('iron')"></div>
+  <div class="tdot"    data-t="dusk"    title="Dusk"    onclick="T('dusk')"></div>
+  <div class="tdot"    data-t="jade"    title="Jade"    onclick="T('jade')"></div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ── LOAD DATA ─────────────────────────────────────────────────────────────────
+let D = {};
+// From URL hash (shareable link)
+try {
+  if (location.hash.length > 1) D = JSON.parse(atob(decodeURIComponent(location.hash.slice(1))));
+} catch(e) {}
+// Fallback: localStorage
+if (!D.name) {
+  try { D = JSON.parse(localStorage.getItem('folio_portfolio') || '{}'); } catch(e) {}
+}
+
+let theme = new URLSearchParams(location.search).get('theme') ||
+            localStorage.getItem('folio_ptheme') || 'cyber';
+
+// ── RENDER ────────────────────────────────────────────────────────────────────
+function render() {
+  if (!D || !D.name) {
+    document.getElementById('portfolio-root').innerHTML = `
+      <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:40px">
+        <div><div style="font-size:4rem;margin-bottom:16px">🌐</div>
+        <h2 style="margin-bottom:10px;font-size:1.5rem">No portfolio data</h2>
+        <p style="color:#888;max-width:320px">Go back to Folio, generate your resume, then click "View Portfolio".</p></div>
+      </div>`;
+    return;
+  }
+
+  document.title = D.name + ' — Portfolio';
+  document.getElementById('page-title').textContent = D.name + ' — Portfolio';
+  const t = theme;
+  const contact = [D.email, D.phone, D.location].filter(Boolean).join(' · ');
+  const init = (D.name||'U')[0].toUpperCase();
+
+  // Social
+  const socials = [
+    D.linkedin  ? `<a class="s-btn li"  href="https://${D.linkedin.replace(/^https?:\/\//,'')}"   target="_blank">💼 LinkedIn</a>` : '',
+    D.github    ? `<a class="s-btn gh"  href="https://${D.github.replace(/^https?:\/\//,'')}"     target="_blank">🐙 GitHub</a>` : '',
+    D.instagram ? `<a class="s-btn ig"  href="https://instagram.com/${D.instagram.replace(/.*instagram\.com\//,'').replace('@','')}" target="_blank">📸 Instagram</a>` : '',
+    D.whatsapp  ? `<a class="s-btn wa"  href="https://wa.me/${D.whatsapp.replace(/\D/g,'')}"       target="_blank">💬 WhatsApp</a>` : ''
+  ].filter(Boolean).join('');
+  const socHtml = socials ? `<div class="s-links">${socials}</div>` : '';
+
+  // Helper
+  const cards = (arr, fn) => (arr||[]).filter(fn ? fn : x=>x).map(e => {
+    const card = `<div class="card">`;
+    return card;
+  });
+
+  function expCards() {
+    return (D.exps||[]).filter(e=>e.title).map(e => {
+      const date = [e.start,e.end].filter(Boolean).join(' – ');
+      if (t==='linen') return `<div class="card"><div class="c-date">${date}</div><div class="c-body"><div class="c-title">${e.title}${e.company?' @ '+e.company:''}</div><div class="c-sub">${date}</div>${e.desc?`<div class="c-desc">${e.desc}</div>`:''}</div></div>`;
+      if (t==='chalk') return `<div class="card"><div class="c-body"><div class="c-title">${e.title}${e.company?' — '+e.company:''}</div><div class="c-sub">${date}</div>${e.desc?`<div class="c-desc">${e.desc}</div>`:''}</div><div class="c-date">${date}</div></div>`;
+      return `<div class="card"><div class="c-title">${e.title}${e.company?' — '+e.company:''}</div><div class="c-sub">${date}</div>${e.desc?`<div class="c-desc">${e.desc}</div>`:''}</div>`;
+    }).join('');
+  }
+  function eduCards() {
+    return (D.edus||[]).filter(e=>e.degree).map(e => {
+      if (t==='linen') return `<div class="card"><div class="c-date">${e.year||''}</div><div class="c-body"><div class="c-title">${e.degree}</div><div class="c-sub">${e.school||''}</div></div></div>`;
+      if (t==='chalk') return `<div class="card"><div class="c-body"><div class="c-title">${e.degree}</div><div class="c-sub">${e.school||''}</div></div><div class="c-date">${e.year||''}</div></div>`;
+      return `<div class="card"><div class="c-title">${e.degree}</div><div class="c-sub">${e.school||''} ${e.year?'· '+e.year:''}</div></div>`;
+    }).join('');
+  }
+  function projCards() {
+    return (D.projs||[]).filter(p=>p.name).map(p =>
+      `<div class="card"><div class="c-title">${p.name}${p.url?` <span style="opacity:.4;font-size:.8em">· ${p.url}</span>`:''}</div>${p.desc?`<div class="c-desc">${p.desc}</div>`:''}</div>`
+    ).join('');
+  }
+  const skillsHtml = (D.skills||[]).map(s=>`<span class="tag">${s}</span>`).join('');
+
+  // Hero per theme
+  const heroes = {
+    cyber: `<div class="hero"><div class="h-name">${D.name}</div><div class="h-title">${D.title||''}</div><div class="h-summary">${D.summary||''}</div><div class="h-contact">${contact}</div>${socHtml}</div>`,
+    noir:  `<div class="hero"><div class="hero-l"><div class="h-eyebrow">Portfolio · ${new Date().getFullYear()}</div><div class="h-name">${D.name}</div><div class="h-title">${D.title||''}</div></div><div class="hero-r"><div class="h-summary">${D.summary||''}</div><div class="h-contact" style="margin-top:16px;line-height:2">${[D.email,D.phone,D.location,D.website].filter(Boolean).join('<br>')}</div>${socHtml}</div></div>`,
+    linen: `<div class="hero"><div><div class="h-issue">VOL.I · ${new Date().getFullYear()}</div><div class="h-name">${D.name}</div><div class="h-title">${D.title||''}</div><div class="h-summary">${D.summary||''}</div><div class="h-contact">${contact}</div>${socHtml}</div></div>`,
+    plasma:`<div class="hero"><div class="h-name">${D.name}</div><div class="h-title">${D.title||''}</div><div class="h-summary">${D.summary||''}</div><div class="h-contact">${contact}</div>${socHtml}</div>`,
+    slate: `<div class="hero"><div class="hero-l"><div class="h-badge">Open to Opportunities</div><div class="h-name">${D.name}</div><div class="h-title">${D.title||''}</div><div class="h-summary">${D.summary||''}</div><div class="h-contact">${contact}</div>${socHtml}</div><div class="hero-r"><div class="hero-card"><div class="hero-init">${init}</div><div style="margin-top:8px;font-family:'Syne',sans-serif;font-weight:700;color:#fff">${D.name}</div><div style="color:#38bdf8;font-size:.82rem;margin-top:4px">${D.title||''}</div></div></div></div>`,
+    grove: `<div class="hero"><div class="h-name">${D.name}</div><div class="h-divider"></div><div class="h-title">${D.title||''}</div><div class="h-summary">${D.summary||''}</div><div class="h-contact">${contact}</div>${socHtml}</div>`,
+    amber: `<div class="hero"><div class="hero-l"><div class="h-eyebrow">Portfolio</div><div class="h-name">${D.name}</div><div class="h-title">${D.title||''}</div><div class="h-summary">${D.summary||''}</div><div class="h-contact">${contact}</div>${socHtml}</div><div class="hero-r"><div class="hero-init-big">${init}</div></div></div>`,
+    chalk: `<div class="hero"><div class="hero-l"><div class="h-name">${D.name}</div><div class="h-title">${D.title||''}</div><div class="h-summary">${D.summary||''}</div><div class="h-contact">${contact}</div>${socHtml}</div><div class="hero-r"><div class="hero-circle"><div class="hero-init">${init}</div></div></div></div>`,
+    velvet:`<div class="hero"><div class="h-crown">✦</div><div class="h-name">${D.name}</div><div class="h-title">${D.title||''}</div><div class="h-summary">${D.summary||''}</div><div class="h-contact">${contact}</div>${socHtml}</div>`,
+    iron:  `<div class="hero"><div class="hero-l"><div class="h-bar"></div><div class="h-name">${D.name}</div><div class="h-title">${D.title||''}</div><div class="h-summary">${D.summary||''}</div><div class="h-contact">${contact}</div>${socHtml}</div></div>`,
+    dusk:  `<div class="hero"><div class="h-name">${D.name}</div><div class="h-title">${D.title||''}</div><div class="h-summary">${D.summary||''}</div><div class="h-contact">${contact}</div>${socHtml}</div>`,
+    jade:  `<div class="hero"><div class="hero-l"><div class="h-gem">◆</div><div class="h-name">${D.name}</div><div class="h-title">${D.title||''}</div><div class="h-summary">${D.summary||''}</div><div class="h-contact">${contact}</div>${socHtml}</div><div class="hero-r"><div class="hero-gem-box"><div class="hero-gem-init">${init}</div></div></div></div>`
+  };
+
+  const SL = { linen:'sec-label', noir:'sec-label', cyber:'sec-label', plasma:'sec-label', grove:'sec-label', velvet:'sec-label', jade:'sec-label' };
+  const secCls = SL[t] || 'sec-label';
+
+  const expH  = expCards();
+  const eduH  = eduCards();
+  const projH = projCards();
+
+  document.getElementById('portfolio-root').innerHTML = `
+    ${heroes[t] || heroes.cyber}
+    ${expH  ? `<div class="section"><div class="${secCls}">Experience</div>${expH}</div>` : ''}
+    ${projH ? `<div class="section"><div class="${secCls}">Projects</div>${projH}</div>` : ''}
+    ${eduH  ? `<div class="section"><div class="${secCls}">Education</div>${eduH}</div>` : ''}
+    ${skillsHtml ? `<div class="section"><div class="${secCls}">Skills</div><div style="margin-top:6px">${skillsHtml}</div></div>` : ''}
+  `;
+}
+
+// ── THEME SWITCH ─────────────────────────────────────────────────────────────
+function T(t) {
+  theme = t;
+  document.getElementById('B').className = t;
+  document.querySelectorAll('.tdot').forEach(d => d.classList.toggle('on', d.dataset.t === t));
+  localStorage.setItem('folio_ptheme', t);
+  render();
+  setTimeout(initAnimations, 100);
+}
+
+// ── SHARE LINK ────────────────────────────────────────────────────────────────
+function copyLink() {
+  try {
+    // Safe unicode encoding
+    const json = JSON.stringify(D);
+    const encoded = btoa(encodeURIComponent(json).replace(/%([0-9A-F]{2})/g,
+      (match, p1) => String.fromCharCode('0x' + p1)));
+    const url = location.origin + '/portfolio.html?theme=' + theme + '#' + encoded;
+    navigator.clipboard.writeText(url).then(() => toast('🔗 Portfolio link copied!'));
+  } catch(e) { toast('Could not copy link'); }
+}
+
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.style.opacity = '1';
+  setTimeout(() => el.style.opacity = '0', 2600);
+}
+
+// ── FADE UP STAGGER ANIMATIONS ───────────────────────────────────────────────
+function initAnimations() {
+  // Add base animation styles
+  const style = document.createElement('style');
+  style.textContent = `
+    .anim-ready { opacity: 0; transform: translateY(36px); transition: opacity .65s ease, transform .65s ease; }
+    .anim-visible { opacity: 1 !important; transform: translateY(0) !important; }
+    .hero { opacity: 1 !important; transform: none !important; }
+    .hero > * { opacity: 0; transform: translateY(28px); transition: opacity .6s ease, transform .6s ease; }
+    .hero > *.anim-visible { opacity: 1; transform: translateY(0); }
+    @keyframes heroFadeIn { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+  `;
+  document.head.appendChild(style);
+
+  // Stagger hero children
+  setTimeout(() => {
+    const heroChildren = document.querySelectorAll('.hero > *');
+    heroChildren.forEach((el, i) => {
+      setTimeout(() => el.classList.add('anim-visible'), i * 120);
+    });
+  }, 100);
+
+  // Observe sections and cards
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const el = entry.target;
+        const delay = el.dataset.delay || 0;
+        setTimeout(() => el.classList.add('anim-visible'), parseInt(delay));
+        observer.unobserve(el);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  // Observe section titles
+  document.querySelectorAll('.sec-label').forEach((el, i) => {
+    el.classList.add('anim-ready');
+    el.dataset.delay = i * 60;
+    observer.observe(el);
+  });
+
+  // Observe cards with stagger
+  document.querySelectorAll('.section').forEach(section => {
+    const cards = section.querySelectorAll('.card, .tag');
+    cards.forEach((card, i) => {
+      card.classList.add('anim-ready');
+      card.dataset.delay = i * 80;
+      observer.observe(card);
+    });
+  });
+
+  // Observe skill tags
+  document.querySelectorAll('.tag').forEach((tag, i) => {
+    tag.classList.add('anim-ready');
+    tag.dataset.delay = i * 40;
+    observer.observe(tag);
+  });
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+T(theme);
+setTimeout(initAnimations, 200);
+</script>
+</body>
+</html>
