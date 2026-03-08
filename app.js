@@ -112,8 +112,25 @@ function skipUpload() { addExp(); addEdu(); showStep(2); }
 
 // ── STEP NAVIGATION ───────────────────────────────────────────────────────────
 function showStep(n) {
+  // Steps 1–4: normal step-panels inside split-layout
   document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
-  document.getElementById('step-' + n).classList.add('active');
+  // Steps 5–6: full-split-panels outside split-layout
+  document.querySelectorAll('.full-split-panel').forEach(p => p.classList.remove('active'));
+
+  if (n <= 4) {
+    const panel = document.getElementById('step-' + n);
+    if (panel) panel.classList.add('active');
+    // Show the split-layout (with live preview on right)
+    const sl = document.querySelector('.split-layout');
+    if (sl) sl.style.display = '';
+  } else {
+    // Hide the split-layout entirely for steps 5 & 6
+    const sl = document.querySelector('.split-layout');
+    if (sl) sl.style.display = 'none';
+    const panel = document.getElementById('step-' + n);
+    if (panel) panel.classList.add('active');
+  }
+
   if (n > maxStepReached) maxStepReached = n;
   for (let i = 1; i <= 6; i++) {
     const dot = document.getElementById('dot-' + i);

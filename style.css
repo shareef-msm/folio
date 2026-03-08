@@ -137,12 +137,19 @@ body {
 .hero-footer { text-align: center; padding: 24px; font-size: 0.78rem; color: rgba(224,224,255,0.2); border-top: 1px solid rgba(255,255,255,0.05); }
 
 /* ── APP ─────────────────────────────────────────────────────────────────── */
-#app { padding-top: 80px; max-width: 800px; margin: 0 auto; padding-bottom: 60px; }
+#app { padding-top: 140px; width: 100%; max-width: 100%; padding-bottom: 0; }
 
 /* ── ICON STEP BAR ─────────────────────────────────────────────── */
 .steps-bar {
   display: flex; align-items: center; justify-content: center;
-  padding: 24px 32px 0; gap: 0;
+  padding: 12px 32px 0; gap: 0;
+  position: fixed;
+  top: 60px; left: 0; right: 0;
+  background: rgba(10,10,16,0.97);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  z-index: 99;
+  height: 80px;
 }
 .ic-step {
   display: flex; flex-direction: column; align-items: center; gap: 6px;
@@ -325,11 +332,11 @@ select option { background: #1a1a28; color: #e0e0ff; }
 
 /* ── FULL SPLIT PANELS (Step 5 Resume + Step 6 Portfolio) ─────── */
 .full-split-panel {
-  padding: 0 !important;
   display: none;
-  position: fixed !important;
-  top: 80px; left: 0; right: 0; bottom: 0;
-  z-index: 10;
+  position: fixed;
+  top: 140px; left: 0; right: 0; bottom: 0;
+  z-index: 50;
+  background: #0a0a10;
 }
 .full-split-panel.active {
   display: flex !important;
@@ -632,26 +639,23 @@ select option { background: #1a1a28; color: #e0e0ff; }
 }
 
 /* ── SPLIT LAYOUT ────────────────────────────────────────────────────────── */
-#app { max-width: 100%; padding-top: 80px; padding-bottom: 0; }
-
 .split-layout {
   display: grid;
   grid-template-columns: 1fr 420px;
-  min-height: calc(100vh - 160px);
+  min-height: calc(100vh - 220px);
   gap: 0;
 }
 
 .split-left {
   border-right: 1px solid rgba(255,255,255,0.06);
   overflow-y: auto;
-  max-width: 800px;
   width: 100%;
 }
 
 .split-right {
   position: sticky;
-  top: 80px;
-  height: calc(100vh - 80px);
+  top: 140px;
+  height: calc(100vh - 140px);
   overflow: hidden;
   background: rgba(255,255,255,0.02);
 }

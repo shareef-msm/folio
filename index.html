@@ -290,54 +290,6 @@
     </div>
   </div>
 
-  <!-- STEP 5: RESUME — left preview, right templates -->
-  <div class="step-panel full-split-panel" id="step-5">
-
-    <!-- LEFT: resume preview -->
-    <div class="sp-left">
-      <div class="sp-preview-wrap" id="step5-resume-preview"></div>
-      <div class="sp-bottom-bar">
-        <button class="sp-btn-back" onclick="goStep(4)">← Back</button>
-        <button class="sp-btn-primary" onclick="downloadPDF()">⬇ Download PDF</button>
-        <button class="sp-btn-green" onclick="goStep(6)">🌐 Generate Portfolio</button>
-      </div>
-    </div>
-
-    <!-- RIGHT: 6 template cards -->
-    <div class="sp-right">
-      <div class="sp-panel-header">
-        <div class="sp-panel-title">✦ Templates</div>
-        <div class="sp-panel-sub">Click to switch instantly</div>
-      </div>
-      <div class="sp-panel-list" id="tmpl-panel-list"></div>
-    </div>
-
-  </div>
-
-  <!-- STEP 6: PORTFOLIO — left portfolio preview, right 20 themes -->
-  <div class="step-panel full-split-panel" id="step-6">
-
-    <!-- LEFT: portfolio preview -->
-    <div class="sp-left">
-      <div class="sp-preview-wrap" id="step6-portfolio-preview"></div>
-      <div class="sp-bottom-bar">
-        <button class="sp-btn-back" onclick="goStep(5)">← Back</button>
-        <button class="sp-btn-outline" onclick="copyPortfolioLink()">🔗 Share Link</button>
-        <button class="sp-btn-primary" onclick="savePortfolioPDF()">📄 Save as PDF</button>
-      </div>
-    </div>
-
-    <!-- RIGHT: 20 theme cards -->
-    <div class="sp-right">
-      <div class="sp-panel-header">
-        <div class="sp-panel-title">✦ Themes</div>
-        <div class="sp-panel-sub">Click to switch instantly</div>
-      </div>
-      <div class="sp-panel-list" id="theme-panel-list"></div>
-    </div>
-
-  </div>
-
   </div><!-- end split-left -->
 
   <!-- RIGHT: LIVE PREVIEW (steps 1–4 only) -->
@@ -359,6 +311,44 @@
   </div>
 
   </div><!-- end split-layout -->
+
+  <!-- STEP 5: RESUME — full width, outside split-layout -->
+  <div class="full-split-panel" id="step-5">
+    <div class="sp-left">
+      <div class="sp-preview-wrap" id="step5-resume-preview"></div>
+      <div class="sp-bottom-bar">
+        <button class="sp-btn-back" onclick="goStep(4)">← Back</button>
+        <button class="sp-btn-primary" onclick="downloadPDF()">⬇ Download PDF</button>
+        <button class="sp-btn-green" onclick="goStep(6)">🌐 Generate Portfolio</button>
+      </div>
+    </div>
+    <div class="sp-right">
+      <div class="sp-panel-header">
+        <div class="sp-panel-title">✦ Templates</div>
+        <div class="sp-panel-sub">Click to switch instantly</div>
+      </div>
+      <div class="sp-panel-list" id="tmpl-panel-list"></div>
+    </div>
+  </div>
+
+  <!-- STEP 6: PORTFOLIO — full width, outside split-layout -->
+  <div class="full-split-panel" id="step-6">
+    <div class="sp-left">
+      <div class="sp-preview-wrap" id="step6-portfolio-preview"></div>
+      <div class="sp-bottom-bar">
+        <button class="sp-btn-back" onclick="goStep(5)">← Back</button>
+        <button class="sp-btn-outline" onclick="copyPortfolioLink()">🔗 Share Link</button>
+        <button class="sp-btn-primary" onclick="savePortfolioPDF()">📄 Save as PDF</button>
+      </div>
+    </div>
+    <div class="sp-right">
+      <div class="sp-panel-header">
+        <div class="sp-panel-title">✦ Themes</div>
+        <div class="sp-panel-sub">Click to switch instantly</div>
+      </div>
+      <div class="sp-panel-list" id="theme-panel-list"></div>
+    </div>
+  </div>
 
 </div>
 
