@@ -851,26 +851,26 @@ function applyTheme(t) {
 
 // ── THEME ICONS ────────────────────────────────────────────────────
 const THEME_ICONS = {
-  cyber:    {exp:'⬡', edu:'◈', proj:'⚡', skills:'▸'},
-  noir:     {exp:'◆', edu:'▪', proj:'—', skills:'·'},
-  midnight: {exp:'✦', edu:'◇', proj:'✧', skills:'❖'},
-  obsidian: {exp:'▶', edu:'●', proj:'◉', skills:'▸'},
-  steel:    {exp:'//', edu:'#', proj:'{}', skills:'→'},
-  linen:    {exp:'❧', edu:'§', proj:'¶', skills:'†'},
-  chalk:    {exp:'○', edu:'□', proj:'△', skills:'◇'},
-  paper:    {exp:'→', edu:'—', proj:'·', skills:'◦'},
-  cotton:   {exp:'◉', edu:'▷', proj:'★', skills:'◈'},
-  velvet:   {exp:'◆', edu:'❖', proj:'✦', skills:'♦'},
-  amber:    {exp:'▸', edu:'⬡', proj:'◈', skills:'✦'},
-  coral:    {exp:'✿', edu:'❀', proj:'◉', skills:'★'},
-  dusk:     {exp:'✦', edu:'◈', proj:'⬡', skills:'✧'},
-  aurora:   {exp:'◈', edu:'⬡', proj:'✦', skills:'⚡'},
-  neon:     {exp:'◉', edu:'▶', proj:'✦', skills:'⬡'},
-  retro:    {exp:'★', edu:'◆', proj:'▸', skills:'✦'},
-  glass:    {exp:'◈', edu:'○', proj:'△', skills:'□'},
-  navy:     {exp:'▷', edu:'◈', proj:'■', skills:'→'},
-  grove:    {exp:'❧', edu:'◉', proj:'✦', skills:'◇'},
-  slate:    {exp:'▷', edu:'◈', proj:'●', skills:'▸'},
+  cyber:    {exp:'⬡', edu:'◈', proj:'⚡', skills:'▸', cert:'🏆', achieve:'⭐', lang:'◎'},
+  noir:     {exp:'◆', edu:'▪', proj:'—', skills:'·', cert:'◆', achieve:'▪', lang:'·'},
+  midnight: {exp:'✦', edu:'◇', proj:'✧', skills:'❖', cert:'✦', achieve:'◇', lang:'❖'},
+  obsidian: {exp:'▶', edu:'●', proj:'◉', skills:'▸', cert:'●', achieve:'▶', lang:'◈'},
+  steel:    {exp:'//', edu:'#', proj:'{}', skills:'→', cert:'[]', achieve:'**', lang:'::'},
+  linen:    {exp:'❧', edu:'§', proj:'¶', skills:'†', cert:'✦', achieve:'❧', lang:'§'},
+  chalk:    {exp:'○', edu:'□', proj:'△', skills:'◇', cert:'○', achieve:'★', lang:'◇'},
+  paper:    {exp:'→', edu:'—', proj:'·', skills:'◦', cert:'→', achieve:'·', lang:'◦'},
+  cotton:   {exp:'◉', edu:'▷', proj:'★', skills:'◈', cert:'★', achieve:'◉', lang:'▷'},
+  velvet:   {exp:'◆', edu:'❖', proj:'✦', skills:'♦', cert:'✦', achieve:'◆', lang:'❖'},
+  amber:    {exp:'▸', edu:'⬡', proj:'◈', skills:'✦', cert:'⬡', achieve:'▸', lang:'◈'},
+  coral:    {exp:'✿', edu:'❀', proj:'◉', skills:'★', cert:'✿', achieve:'★', lang:'❀'},
+  dusk:     {exp:'✦', edu:'◈', proj:'⬡', skills:'✧', cert:'⬡', achieve:'✦', lang:'✧'},
+  aurora:   {exp:'◈', edu:'⬡', proj:'✦', skills:'⚡', cert:'✦', achieve:'◈', lang:'⬡'},
+  neon:     {exp:'◉', edu:'▶', proj:'✦', skills:'⬡', cert:'✦', achieve:'◉', lang:'▶'},
+  retro:    {exp:'★', edu:'◆', proj:'▸', skills:'✦', cert:'★', achieve:'▸', lang:'◆'},
+  glass:    {exp:'◈', edu:'○', proj:'△', skills:'□', cert:'◈', achieve:'△', lang:'○'},
+  navy:     {exp:'▷', edu:'◈', proj:'■', skills:'→', cert:'■', achieve:'▷', lang:'◈'},
+  grove:    {exp:'❧', edu:'◉', proj:'✦', skills:'◇', cert:'✦', achieve:'❧', lang:'◉'},
+  slate:    {exp:'▷', edu:'◈', proj:'●', skills:'▸', cert:'●', achieve:'▷', lang:'◈'},
 };
 
 function getIcon(section) {
@@ -1071,16 +1071,24 @@ function renderPortfolio() {
   document.title = (D.name || 'Portfolio') + ' — Folio';
   document.getElementById('page-title') && (document.getElementById('page-title').textContent = document.title);
 
-  const expHtml  = (D.exps||[]).filter(e=>e.title).map(e=>cardHtml(e.title+(e.company?` — ${e.company}`:''), [e.start,e.end].filter(Boolean).join(' – '), e.desc)).join('');
-  const eduHtml  = (D.edus||[]).filter(e=>e.degree).map(e=>cardHtml(e.degree, e.school+(e.year?` · ${e.year}`:''), '')).join('');
-  const projHtml = (D.projs||[]).filter(p=>p.name).map(p=>cardHtml(p.name+(p.url?` <span style="opacity:.5;font-size:.8em">${p.url}</span>`:''), '', p.desc)).join('');
+  const expHtml     = (D.exps||[]).filter(e=>e.title).map(e=>cardHtml(e.title+(e.company?` — ${e.company}`:''), [e.start,e.end].filter(Boolean).join(' – '), e.desc)).join('');
+  const eduHtml     = (D.edus||[]).filter(e=>e.degree).map(e=>cardHtml(e.degree, [e.school, e.year, e.grade].filter(Boolean).join(' · '), '')).join('');
+  const projHtml    = (D.projs||[]).filter(p=>p.name).map(p=>cardHtml(p.name+(p.url?` <span style="opacity:.5;font-size:.8em">${p.url}</span>`:''), '', p.desc)).join('');
+  const certHtml    = (D.certs||[]).filter(c=>c.name).map(c=>cardHtml(c.name, [c.issuer, c.year].filter(Boolean).join(' · '), '')).join('');
+  const achieveHtml = (D.achievements||[]).filter(a=>a.title).map(a=>cardHtml(a.title, '', a.desc)).join('');
+  const langHtml    = (D.langs||[]).filter(l=>l.name).length
+    ? `<div style="display:flex;flex-wrap:wrap;gap:8px">${(D.langs||[]).filter(l=>l.name).map(l=>`<span class="tag">${l.name} <span style="opacity:0.55;font-size:0.85em">· ${l.level}</span></span>`).join('')}</div>`
+    : '';
 
   document.getElementById('portfolio-content').innerHTML =
     heroHtml(D) +
-    sectionHtml(getIcon('exp'),    'Experience',  expHtml) +
-    sectionHtml(getIcon('edu'),    'Education',   eduHtml) +
-    sectionHtml(getIcon('proj'),   'Projects',    projHtml) +
-    sectionHtml(getIcon('skills'), 'Skills',      tagsHtml(D.skills));
+    sectionHtml(getIcon('exp'),     'Experience',      expHtml) +
+    sectionHtml(getIcon('edu'),     'Education',       eduHtml) +
+    sectionHtml(getIcon('proj'),    'Projects',        projHtml) +
+    sectionHtml(getIcon('cert'),    'Certifications',  certHtml) +
+    sectionHtml(getIcon('achieve'), 'Achievements',    achieveHtml) +
+    sectionHtml(getIcon('skills'),  'Skills',          tagsHtml(D.skills)) +
+    sectionHtml(getIcon('lang'),    'Languages',       langHtml);
 }
 
 // ── SCROLL ANIMATIONS ──────────────────────────────────────────────
