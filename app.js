@@ -97,6 +97,8 @@ function goHome() {
   document.getElementById("hero").style.display = "block";
   document.getElementById("app").style.display = "none";
   document.getElementById("nav-home-btn").style.display = "none";
+  document.getElementById('steps-bar').style.display = 'none';
+  document.querySelectorAll('.full-split-panel').forEach(p => p.classList.remove('active'));
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
@@ -105,6 +107,7 @@ function startApp(mode) {
   document.getElementById("nav-home-btn").style.display = "block";
   document.getElementById('hero').style.display = 'none';
   document.getElementById('app').style.display = 'block';
+  document.getElementById('steps-bar').style.display = 'flex';
   if (mode === 'manual') { addExp(); addEdu(); showStep(2); }
   else showStep(1);
 }
