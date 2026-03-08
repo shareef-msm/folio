@@ -3,16 +3,132 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title id="page-title">Portfolio</title>
+<title id="page-title">Portfolio — Folio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Fraunces:ital,opsz,wght@0,9..144,100;0,9..144,700;1,9..144,300&family=IBM+Plex+Mono:wght@400;700&family=Outfit:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;700;800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,300;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&family=Fraunces:ital,opsz,wght@0,9..144,700;1,9..144,300&family=IBM+Plex+Mono:wght@400;700&family=Outfit:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,700;1,400&family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&family=Unbounded:wght@700;900&display=swap" rel="stylesheet"/>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{min-height:100vh;transition:background .5s,color .5s}
+body{min-height:100vh;transition:background .5s,color .5s;overflow-x:hidden}
 a{text-decoration:none;color:inherit}
 
-/* ─ SOCIAL BUTTONS ─ */
+/* ── LAYOUT ─────────────────────────────────────────────────────── */
+#app-layout{display:flex;min-height:100vh}
+
+/* LEFT — portfolio view */
+#portfolio-view{
+  flex:1;
+  overflow-y:auto;
+  height:100vh;
+  position:relative;
+  transition:filter .4s;
+}
+
+/* RIGHT — theme panel */
+#theme-panel{
+  width:260px;
+  flex-shrink:0;
+  height:100vh;
+  overflow-y:auto;
+  background:#0a0a12;
+  border-left:1px solid rgba(255,255,255,0.07);
+  display:flex;
+  flex-direction:column;
+  position:sticky;
+  top:0;
+}
+
+.tp-header{
+  padding:20px 16px 14px;
+  border-bottom:1px solid rgba(255,255,255,0.06);
+  flex-shrink:0;
+}
+.tp-title{
+  font-family:'Syne',sans-serif;
+  font-size:0.82rem;
+  font-weight:700;
+  color:#6c63ff;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  margin-bottom:4px;
+}
+.tp-sub{font-size:0.7rem;color:rgba(255,255,255,0.25)}
+
+.tp-list{
+  flex:1;
+  overflow-y:auto;
+  padding:10px 10px;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+.tp-list::-webkit-scrollbar{width:4px}
+.tp-list::-webkit-scrollbar-track{background:transparent}
+.tp-list::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:2px}
+
+/* Theme row */
+.tr{
+  border-radius:12px;
+  overflow:hidden;
+  cursor:pointer;
+  border:2px solid transparent;
+  transition:all .2s;
+  flex-shrink:0;
+}
+.tr:hover{border-color:rgba(255,255,255,0.2);transform:translateX(-2px)}
+.tr.active{border-color:#6c63ff;box-shadow:0 0 16px rgba(108,99,255,0.3)}
+
+.tr-preview{height:70px;position:relative;overflow:hidden;pointer-events:none}
+.tr-preview-inner{transform:scale(0.35);transform-origin:top left;width:286%;pointer-events:none}
+
+.tr-meta{
+  padding:8px 12px 10px;
+  background:#0f0f1a;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.tr-name{font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;color:#e0e0ff}
+.tr-cat{font-size:0.62rem;color:rgba(224,224,255,0.3)}
+.tr-select{
+  background:rgba(108,99,255,0.2);
+  border:1px solid rgba(108,99,255,0.3);
+  color:#a090ff;
+  font-size:0.65rem;
+  font-weight:600;
+  padding:4px 10px;
+  border-radius:20px;
+  cursor:pointer;
+  transition:all .2s;
+  font-family:'DM Sans',sans-serif;
+}
+.tr.active .tr-select{background:#6c63ff;color:#fff;border-color:#6c63ff}
+.tr-select:hover{background:#6c63ff;color:#fff}
+
+/* TOP BAR */
+#topbar{
+  position:fixed;top:16px;right:276px;
+  display:flex;gap:8px;z-index:9999;
+}
+.tpill{
+  background:rgba(8,8,12,.85);border:1px solid rgba(255,255,255,.12);
+  backdrop-filter:blur(12px);color:#fff;padding:8px 16px;border-radius:100px;
+  font-size:.78rem;cursor:pointer;font-family:'DM Sans',sans-serif;
+  transition:all .2s;display:flex;align-items:center;gap:6px;
+}
+.tpill:hover{background:rgba(120,100,255,.3)}
+
+/* TOAST */
+#toast{
+  position:fixed;bottom:30px;left:50%;transform:translateX(-50%);
+  padding:10px 22px;border-radius:12px;font-size:.85rem;z-index:99999;
+  opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap;
+  background:#111;color:#fff;border:1px solid #333;
+  font-family:'DM Sans',sans-serif;
+}
+#toast.show{opacity:1}
+
+/* ── SOCIAL BUTTONS ─────────────────────────────────────────────── */
 .s-links{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
 .s-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 15px;border-radius:100px;font-size:.8rem;font-weight:600;transition:transform .15s,opacity .15s}
 .s-btn:hover{transform:translateY(-2px);opacity:.85}
@@ -21,47 +137,55 @@ a{text-decoration:none;color:inherit}
 .s-btn.ig{background:linear-gradient(45deg,#f09433,#dc2743,#bc1888);color:#fff}
 .s-btn.wa{background:#25d366;color:#fff}
 
-/* ─ THEME DOCK ─ */
-#dock{
-  position:fixed;bottom:22px;left:50%;transform:translateX(-50%);
-  background:rgba(8,8,12,.92);border:1px solid rgba(255,255,255,.1);
-  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-  border-radius:60px;padding:10px 18px;display:flex;align-items:center;gap:10px;
-  z-index:9999;box-shadow:0 12px 40px rgba(0,0,0,.5);
+/* ── FLOATING SECTION ICONS ─────────────────────────────────────── */
+.section-wrap{position:relative}
+.float-icon{
+  position:absolute;
+  left:-60px;
+  top:50%;
+  transform:translateY(-50%);
+  width:42px;height:42px;
+  border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.2rem;
+  background:rgba(108,99,255,0.12);
+  border:1px solid rgba(108,99,255,0.2);
+  opacity:0;
+  transition:opacity .4s, transform .4s;
+  pointer-events:none;
 }
-#dock-label{color:rgba(255,255,255,.35);font-size:.7rem;letter-spacing:2px;text-transform:uppercase;margin-right:4px;font-family:'IBM Plex Mono',monospace}
-.tdot{width:28px;height:28px;border-radius:50%;cursor:pointer;border:2.5px solid transparent;transition:all .2s;flex-shrink:0;position:relative}
-.tdot:hover{transform:scale(1.2)}
-.tdot.on{border-color:#fff;transform:scale(1.25)}
-.tdot::after{content:attr(title);position:absolute;bottom:36px;left:50%;transform:translateX(-50%);background:#000;color:#fff;font-size:.65rem;padding:3px 8px;border-radius:6px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .15s}
-.tdot:hover::after{opacity:1}
-.tdot[data-t="cyber"]{background:linear-gradient(135deg,#00ffcc,#7b2fff)}
-.tdot[data-t="noir"]{background:linear-gradient(135deg,#111,#555)}
-.tdot[data-t="linen"]{background:linear-gradient(135deg,#f2ede4,#b5956a)}
-.tdot[data-t="plasma"]{background:linear-gradient(135deg,#0d0221,#ff6edf)}
-.tdot[data-t="slate"]{background:linear-gradient(135deg,#0f1923,#38bdf8)}
-.tdot[data-t="grove"]{background:linear-gradient(135deg,#0d1f0d,#6fcf97)}
-.tdot[data-t="amber"]{background:linear-gradient(135deg,#1a0a00,#f59e0b)}
-.tdot[data-t="chalk"]{background:linear-gradient(135deg,#fafafa,#999)}
-.tdot[data-t="velvet"]{background:linear-gradient(135deg,#1a0030,#c084fc)}
-.tdot[data-t="iron"]{background:linear-gradient(135deg,#101010,#dc2626)}
-.tdot[data-t="dusk"]{background:linear-gradient(135deg,#1e1030,#f97316)}
-.tdot[data-t="jade"]{background:linear-gradient(135deg,#001a15,#2dd4bf)}
+.section-wrap.visible .float-icon{
+  opacity:1;
+  animation:floatBob 3s ease-in-out infinite;
+}
+@keyframes floatBob{
+  0%,100%{transform:translateY(-50%) translateY(0)}
+  50%{transform:translateY(-50%) translateY(-6px)}
+}
 
-/* ─ TOPBAR ─ */
-#topbar{position:fixed;top:16px;right:16px;display:flex;gap:8px;z-index:9999}
-.tpill{background:rgba(8,8,12,.85);border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(12px);color:#fff;padding:8px 16px;border-radius:100px;font-size:.78rem;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;display:flex;align-items:center;gap:6px}
-.tpill:hover{background:rgba(120,100,255,.3)}
+/* ── FADE UP ANIMATIONS ─────────────────────────────────────────── */
+.fade-up{opacity:0;transform:translateY(30px);transition:opacity .6s ease, transform .6s ease}
+.fade-up.visible{opacity:1;transform:translateY(0)}
+.fade-up:nth-child(1){transition-delay:.05s}
+.fade-up:nth-child(2){transition-delay:.12s}
+.fade-up:nth-child(3){transition-delay:.18s}
+.fade-up:nth-child(4){transition-delay:.24s}
+.fade-up:nth-child(5){transition-delay:.3s}
 
-/* ─ SHARED SECTION SHELL ─ */
+/* ── THEME TRANSITION OVERLAY ───────────────────────────────────── */
+#theme-transition{
+  position:fixed;inset:0;background:#0a0a10;
+  z-index:8888;opacity:0;pointer-events:none;
+  transition:opacity .25s;
+}
+#theme-transition.flash{opacity:1;pointer-events:all}
+
+/* shared section shell */
 .section{padding:72px max(40px,8vw);max-width:1040px;margin:0 auto}
 
-/* ─ TOAST ─ */
-#toast{position:fixed;bottom:88px;left:50%;transform:translateX(-50%);padding:10px 22px;border-radius:12px;font-size:.85rem;z-index:99999;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap;background:#111;color:#fff;border:1px solid #333}
-
-/* ════════════════════════════════════════════════════
-   THEME 1 — CYBER (dark teal/purple neon grid)
-════════════════════════════════════════════════════ */
+/* ════════════════════════════════════════════════════════════════════
+   THEME 1 — CYBER
+════════════════════════════════════════════════════════════════════ */
 body.cyber{background:#050a10;color:#cdf0ea;font-family:'IBM Plex Mono',monospace}
 .cyber .hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:80px 40px;position:relative;overflow:hidden;background:linear-gradient(180deg,#050a10,#071520)}
 .cyber .hero::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(0,255,204,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,204,.04) 1px,transparent 1px);background-size:60px 60px}
@@ -78,10 +202,11 @@ body.cyber{background:#050a10;color:#cdf0ea;font-family:'IBM Plex Mono',monospac
 .cyber .c-sub{color:#00ffcc;font-size:.8rem;margin-bottom:6px}
 .cyber .c-desc{color:rgba(205,240,234,.55);font-size:.88rem;white-space:pre-line;line-height:1.6}
 .cyber .tag{background:rgba(123,47,255,.15);color:#c084fc;border:1px solid rgba(123,47,255,.25);padding:4px 12px;border-radius:4px;font-size:.75rem;display:inline-block;margin:3px}
+.cyber .float-icon{background:rgba(0,255,204,0.1);border-color:rgba(0,255,204,0.25)}
 
-/* ════════════════════════════════════════════════════
-   THEME 2 — NOIR (pure black editorial)
-════════════════════════════════════════════════════ */
+/* ════════════════════════════════════════════════════════════════════
+   THEME 2 — NOIR
+════════════════════════════════════════════════════════════════════ */
 body.noir{background:#080808;color:#e8e8e8;font-family:'Outfit',sans-serif}
 .noir .hero{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;background:#080808}
 .noir .hero-l{padding:80px 60px;display:flex;flex-direction:column;justify-content:flex-end;border-right:1px solid #1a1a1a}
@@ -97,31 +222,49 @@ body.noir{background:#080808;color:#e8e8e8;font-family:'Outfit',sans-serif}
 .noir .c-sub{color:#555;font-size:.8rem;margin-bottom:6px;font-family:'IBM Plex Mono',monospace}
 .noir .c-desc{color:#666;font-size:.88rem;white-space:pre-line;line-height:1.7}
 .noir .tag{background:#111;color:#555;border:1px solid #1d1d1d;padding:4px 12px;border-radius:2px;font-size:.75rem;font-family:'IBM Plex Mono',monospace;display:inline-block;margin:3px}
+.noir .float-icon{background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.1)}
 
-/* ════════════════════════════════════════════════════
-   THEME 3 — LINEN (warm paper editorial)
-════════════════════════════════════════════════════ */
-body.linen{background:#f4ede0;color:#1c1208;font-family:'Cormorant Garamond',serif}
-.linen .hero{min-height:88vh;display:flex;align-items:flex-end;padding:70px 80px;background:linear-gradient(180deg,#f4ede0,#eee3d0);border-bottom:2px solid #1c1208;position:relative;overflow:hidden}
-.linen .hero::before{content:'PORTFOLIO';position:absolute;top:40px;right:80px;font-family:'IBM Plex Mono',monospace;font-size:.68rem;letter-spacing:4px;color:rgba(180,140,80,.5)}
-.linen .hero::after{content:'';position:absolute;right:0;top:0;bottom:0;width:35%;background:repeating-linear-gradient(-45deg,transparent,transparent 8px,rgba(180,140,80,.05) 8px,rgba(180,140,80,.05) 9px)}
-.linen .h-issue{font-family:'IBM Plex Mono',monospace;font-size:.68rem;letter-spacing:3px;color:#b5956a;margin-bottom:14px}
-.linen .h-name{font-size:clamp(3.5rem,9vw,8rem);font-weight:700;line-height:.88;letter-spacing:-3px;margin-bottom:14px}
-.linen .h-title{font-family:'IBM Plex Mono',monospace;font-size:.75rem;letter-spacing:3px;text-transform:uppercase;color:#b5956a;margin-bottom:16px}
-.linen .h-summary{font-style:italic;font-size:1.1rem;color:#5a4030;max-width:480px;line-height:1.6}
-.linen .h-contact{margin-top:14px;font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:#8a7060}
-.linen .sec-label{font-family:'IBM Plex Mono',monospace;font-size:.68rem;letter-spacing:4px;text-transform:uppercase;color:#b5956a;margin-bottom:22px}
-.linen .card{padding:18px 0;border-top:1px solid rgba(28,18,8,.1);display:flex;gap:24px;align-items:flex-start}
-.linen .c-date{font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:#b5956a;white-space:nowrap;padding-top:4px;min-width:80px}
-.linen .c-body{flex:1}
-.linen .c-title{font-size:1.2rem;font-weight:700;margin-bottom:4px}
-.linen .c-sub{font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:#b5956a;margin-bottom:6px}
-.linen .c-desc{font-style:italic;color:#5a4030;font-size:.95rem;white-space:pre-line;line-height:1.6}
-.linen .tag{background:rgba(181,149,106,.1);color:#7a5c2a;border:1px solid rgba(181,149,106,.3);padding:4px 10px;border-radius:2px;font-family:'IBM Plex Mono',monospace;font-size:.72rem;display:inline-block;margin:3px}
+/* ════════════════════════════════════════════════════════════════════
+   THEME 3 — MIDNIGHT
+════════════════════════════════════════════════════════════════════ */
+body.midnight{background:#0a0a1a;color:#e8dcc8;font-family:'Playfair Display',serif}
+.midnight .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding:80px;background:linear-gradient(160deg,#0a0a1a,#0d0d2b);border-bottom:1px solid rgba(201,168,76,0.2)}
+.midnight .h-accent{width:50px;height:3px;background:linear-gradient(90deg,#c9a84c,#e8c97a);border-radius:2px;margin-bottom:20px}
+.midnight .h-name{font-size:clamp(3rem,8vw,7rem);font-weight:700;line-height:.9;letter-spacing:-2px;color:#e8dcc8;margin-bottom:14px}
+.midnight .h-title{font-family:'IBM Plex Mono',monospace;font-size:.75rem;letter-spacing:3px;color:#c9a84c;text-transform:uppercase;margin-bottom:16px}
+.midnight .h-summary{font-style:italic;font-size:1.05rem;color:#a09880;max-width:520px;line-height:1.7}
+.midnight .h-contact{margin-top:12px;font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:#7a6850}
+.midnight .sec-label{font-family:'IBM Plex Mono',monospace;font-size:.68rem;letter-spacing:4px;text-transform:uppercase;color:#c9a84c;margin-bottom:22px;border-top:1px solid rgba(201,168,76,0.2);border-bottom:1px solid rgba(201,168,76,0.2);padding:6px 0;text-align:center}
+.midnight .card{padding:18px 0;border-bottom:1px solid rgba(201,168,76,0.08)}
+.midnight .c-title{font-size:1.1rem;font-weight:700;margin-bottom:4px;color:#e8dcc8}
+.midnight .c-sub{font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:#c9a84c;margin-bottom:6px}
+.midnight .c-desc{font-style:italic;color:#a09880;font-size:.9rem;white-space:pre-line;line-height:1.6}
+.midnight .tag{background:rgba(201,168,76,.1);color:#c9a84c;border:1px solid rgba(201,168,76,.25);padding:4px 10px;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:.72rem;display:inline-block;margin:3px}
+.midnight .float-icon{background:rgba(201,168,76,0.1);border-color:rgba(201,168,76,0.25)}
 
-/* ════════════════════════════════════════════════════
-   THEME 4 — PLASMA (hot pink dark)
-════════════════════════════════════════════════════ */
+/* ════════════════════════════════════════════════════════════════════
+   THEME 4 — OBSIDIAN
+════════════════════════════════════════════════════════════════════ */
+body.obsidian{background:#141414;color:#e0e0e0;font-family:'Unbounded',sans-serif}
+.obsidian .hero{min-height:100vh;background:#0f0f0f;display:flex;flex-direction:column;overflow:hidden}
+.obsidian .hero-top{background:#111;padding:60px 80px 40px;border-bottom:3px solid #ff6b35;flex:1;display:flex;flex-direction:column;justify-content:flex-end}
+.obsidian .h-name{font-size:clamp(2.5rem,6vw,5.5rem);font-weight:900;color:#fff;line-height:.9;letter-spacing:-3px;margin-bottom:10px;text-transform:uppercase}
+.obsidian .h-title{font-size:.75rem;color:#ff6b35;font-weight:700;text-transform:uppercase;letter-spacing:2px;margin-bottom:14px}
+.obsidian .h-summary{font-family:'DM Sans',sans-serif;color:#888;max-width:540px;line-height:1.7;font-size:.9rem}
+.obsidian .h-contact{margin-top:12px;font-family:'DM Sans',sans-serif;font-size:.8rem;color:#555}
+.obsidian .sec-label{font-size:.65rem;letter-spacing:3px;text-transform:uppercase;color:#ff6b35;margin-bottom:22px;display:flex;align-items:center;gap:10px}
+.obsidian .sec-label::before{content:'';width:20px;height:2px;background:#ff6b35}
+.obsidian .card{background:#1a1a1a;border-left:3px solid #ff6b35;padding:16px 20px;margin-bottom:10px;border-radius:0 8px 8px 0;transition:all .2s}
+.obsidian .card:hover{background:#1f1f1f;border-left-width:4px}
+.obsidian .c-title{font-size:.9rem;font-weight:700;color:#fff;margin-bottom:4px}
+.obsidian .c-sub{font-family:'DM Sans',sans-serif;font-size:.8rem;color:#ff6b35;margin-bottom:6px}
+.obsidian .c-desc{font-family:'DM Sans',sans-serif;color:#888;font-size:.85rem;white-space:pre-line;line-height:1.6}
+.obsidian .tag{background:rgba(255,107,53,.1);color:#ff6b35;border:1px solid rgba(255,107,53,.25);padding:4px 12px;border-radius:3px;font-size:.72rem;display:inline-block;margin:3px;font-family:'DM Sans',sans-serif}
+.obsidian .float-icon{background:rgba(255,107,53,0.1);border-color:rgba(255,107,53,0.25)}
+
+/* ════════════════════════════════════════════════════════════════════
+   THEME 5 — PLASMA
+════════════════════════════════════════════════════════════════════ */
 body.plasma{background:#08020f;color:#f0d8ff;font-family:'Outfit',sans-serif}
 .plasma .hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:80px 40px;background:radial-gradient(ellipse 70% 50% at 50% 0%,rgba(255,110,223,.08),transparent 60%),#08020f;position:relative}
 .plasma .h-name{font-family:'Syne',sans-serif;font-size:clamp(3.5rem,10vw,8rem);font-weight:800;background:linear-gradient(135deg,#ff6edf,#c084fc,#ff6edf);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-2px;margin-bottom:8px}
@@ -131,407 +274,689 @@ body.plasma{background:#08020f;color:#f0d8ff;font-family:'Outfit',sans-serif}
 .plasma .sec-label{font-size:.72rem;letter-spacing:4px;text-transform:uppercase;color:#ff6edf;margin-bottom:24px;display:flex;align-items:center;gap:14px}
 .plasma .sec-label::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(255,110,223,.4),transparent)}
 .plasma .card{background:rgba(255,110,223,.04);border:1px solid rgba(255,110,223,.1);border-radius:12px;padding:18px 22px;margin-bottom:10px;transition:all .2s}
-.plasma .card:hover{border-color:rgba(255,110,223,.3);background:rgba(255,110,223,.07)}
+.plasma .card:hover{border-color:rgba(255,110,223,.3)}
 .plasma .c-title{font-weight:700;color:#f0d8ff;margin-bottom:4px}
 .plasma .c-sub{color:#ff6edf;font-size:.8rem;margin-bottom:6px}
 .plasma .c-desc{color:rgba(240,216,255,.5);font-size:.88rem;white-space:pre-line;line-height:1.6}
 .plasma .tag{background:rgba(192,132,252,.1);color:#c084fc;border:1px solid rgba(192,132,252,.2);padding:4px 12px;border-radius:20px;font-size:.78rem;display:inline-block;margin:3px}
+.plasma .float-icon{background:rgba(255,110,223,0.1);border-color:rgba(255,110,223,0.25)}
 
-/* ════════════════════════════════════════════════════
-   THEME 5 — SLATE (ocean blue dark)
-════════════════════════════════════════════════════ */
-body.slate{background:#050f1a;color:#c8e4f8;font-family:'DM Sans',sans-serif}
-.slate .hero{min-height:100vh;display:flex;align-items:center;padding:80px max(40px,8vw);gap:60px;background:linear-gradient(135deg,#050f1a,#0a1f35)}
-.slate .hero-l{flex:1}
-.slate .hero-r{width:260px;flex-shrink:0}
-.slate .h-badge{display:inline-block;background:rgba(56,189,248,.1);border:1px solid rgba(56,189,248,.2);color:#38bdf8;padding:5px 14px;border-radius:100px;font-size:.72rem;letter-spacing:2px;margin-bottom:18px}
-.slate .h-name{font-family:'Syne',sans-serif;font-size:clamp(2.5rem,5vw,4.5rem);font-weight:800;letter-spacing:-2px;color:#fff;margin-bottom:8px}
-.slate .h-title{color:#38bdf8;font-size:.95rem;margin-bottom:18px;font-weight:400}
-.slate .h-summary{color:rgba(200,228,248,.55);line-height:1.7}
-.slate .h-contact{margin-top:12px;color:rgba(56,189,248,.5);font-size:.8rem}
-.slate .hero-card{background:linear-gradient(135deg,#0c2d4a,#0a1f35);border:1px solid rgba(56,189,248,.15);border-radius:20px;padding:32px;text-align:center}
-.slate .hero-init{font-family:'Syne',sans-serif;font-size:4.5rem;font-weight:800;color:#38bdf8;opacity:.7}
-.slate .sec-label{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:#38bdf8;margin-bottom:24px}
-.slate .card{background:rgba(56,189,248,.04);border:1px solid rgba(56,189,248,.09);border-radius:10px;padding:18px 22px;margin-bottom:10px;transition:all .2s}
-.slate .card:hover{border-color:rgba(56,189,248,.25);transform:translateX(4px)}
-.slate .c-title{font-weight:700;color:#c8e4f8;margin-bottom:4px}
-.slate .c-sub{color:#38bdf8;font-size:.8rem;margin-bottom:6px}
-.slate .c-desc{color:rgba(200,228,248,.5);font-size:.88rem;white-space:pre-line;line-height:1.6}
-.slate .tag{background:rgba(56,189,248,.08);color:#38bdf8;border:1px solid rgba(56,189,248,.15);padding:4px 12px;border-radius:20px;font-size:.78rem;display:inline-block;margin:3px}
+/* ════════════════════════════════════════════════════════════════════
+   THEME 6 — LINEN
+════════════════════════════════════════════════════════════════════ */
+body.linen{background:#f4ede0;color:#1c1208;font-family:'Cormorant Garamond',serif}
+.linen .hero{min-height:88vh;display:flex;align-items:flex-end;padding:70px 80px;background:linear-gradient(180deg,#f4ede0,#eee3d0);border-bottom:2px solid #1c1208;position:relative;overflow:hidden}
+.linen .hero::after{content:'';position:absolute;right:0;top:0;bottom:0;width:35%;background:repeating-linear-gradient(-45deg,transparent,transparent 8px,rgba(180,140,80,.05) 8px,rgba(180,140,80,.05) 9px)}
+.linen .h-name{font-size:clamp(3.5rem,9vw,8rem);font-weight:700;line-height:.88;letter-spacing:-3px;margin-bottom:14px}
+.linen .h-title{font-family:'IBM Plex Mono',monospace;font-size:.75rem;letter-spacing:3px;text-transform:uppercase;color:#b5956a;margin-bottom:16px}
+.linen .h-summary{font-style:italic;font-size:1.1rem;color:#5a4030;max-width:480px;line-height:1.6}
+.linen .h-contact{margin-top:14px;font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:#8a7060}
+.linen .sec-label{font-family:'IBM Plex Mono',monospace;font-size:.68rem;letter-spacing:4px;text-transform:uppercase;color:#b5956a;margin-bottom:22px}
+.linen .card{padding:18px 0;border-top:1px solid rgba(28,18,8,.1)}
+.linen .c-title{font-size:1.2rem;font-weight:700;margin-bottom:4px}
+.linen .c-sub{font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:#b5956a;margin-bottom:6px}
+.linen .c-desc{font-style:italic;color:#5a4030;font-size:.95rem;white-space:pre-line;line-height:1.6}
+.linen .tag{background:rgba(181,149,106,.1);color:#7a5c2a;border:1px solid rgba(181,149,106,.3);padding:4px 10px;border-radius:2px;font-family:'IBM Plex Mono',monospace;font-size:.72rem;display:inline-block;margin:3px}
+.linen .float-icon{background:rgba(181,149,106,0.1);border-color:rgba(181,149,106,0.3)}
 
-/* ════════════════════════════════════════════════════
-   THEME 6 — GROVE (botanical green)
-════════════════════════════════════════════════════ */
-body.grove{background:#08140a;color:#c8e8c0;font-family:'Cormorant Garamond',serif}
-.grove .hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:80px 40px;background:radial-gradient(ellipse 80% 40% at 50% 100%,rgba(111,207,151,.07),transparent 60%),#08140a}
-.grove .h-name{font-size:clamp(3rem,8vw,6.5rem);font-weight:600;color:#a8dca0;letter-spacing:-1px;margin-bottom:6px}
-.grove .h-divider{width:50px;height:1px;background:#6fcf97;margin:14px auto;opacity:.4}
-.grove .h-title{font-family:'IBM Plex Mono',monospace;font-size:.72rem;letter-spacing:4px;text-transform:uppercase;color:#6fcf97;margin-bottom:18px}
-.grove .h-summary{font-style:italic;font-size:1.1rem;color:rgba(200,232,192,.6);max-width:500px;line-height:1.7}
-.grove .h-contact{margin-top:12px;font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:rgba(111,207,151,.5)}
-.grove .sec-label{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:600;color:#a8dca0;text-align:center;margin-bottom:28px;letter-spacing:1px}
-.grove .card{background:rgba(111,207,151,.04);border:1px solid rgba(111,207,151,.1);border-radius:8px;padding:18px 22px;margin-bottom:10px;transition:all .2s}
-.grove .card:hover{border-color:rgba(111,207,151,.25)}
-.grove .c-title{font-size:1.1rem;font-weight:600;color:#c8e8c0;margin-bottom:4px}
-.grove .c-sub{font-family:'IBM Plex Mono',monospace;color:#6fcf97;font-size:.72rem;margin-bottom:6px}
-.grove .c-desc{font-style:italic;color:rgba(200,232,192,.55);font-size:.9rem;white-space:pre-line;line-height:1.6}
-.grove .tag{background:rgba(111,207,151,.08);color:#6fcf97;border:1px solid rgba(111,207,151,.15);padding:4px 12px;border-radius:20px;font-size:.78rem;display:inline-block;margin:3px}
+/* ════════════════════════════════════════════════════════════════════
+   THEME 7 — CHALK
+════════════════════════════════════════════════════════════════════ */
+body.chalk{background:#f8f7f5;color:#1a1a2e;font-family:'DM Sans',sans-serif}
+.chalk .hero{min-height:90vh;display:flex;flex-direction:column;justify-content:center;padding:80px;background:#f8f7f5;border-bottom:1px solid #e5e7eb}
+.chalk .h-dots{display:flex;gap:8px;margin-bottom:20px}
+.chalk .h-dot{width:12px;height:12px;border-radius:50%}
+.chalk .h-name{font-family:'Syne',sans-serif;font-size:clamp(2.5rem,6vw,5rem);font-weight:800;color:#1a1a2e;margin-bottom:8px;letter-spacing:-2px}
+.chalk .h-title{font-size:.9rem;color:#6b7280;margin-bottom:18px}
+.chalk .h-summary{color:#374151;line-height:1.7;max-width:520px;font-size:.95rem}
+.chalk .h-contact{margin-top:12px;font-size:.82rem;color:#9ca3af}
+.chalk .sec-label{font-family:'Syne',sans-serif;font-size:.85rem;font-weight:700;color:#1a1a2e;margin-bottom:20px;display:flex;align-items:center;gap:10px}
+.chalk .sec-label::after{content:'';flex:1;height:2px;background:linear-gradient(90deg,#6c63ff,transparent)}
+.chalk .card{background:#fff;border-radius:12px;padding:18px 20px;margin-bottom:10px;border:1px solid #e5e7eb;transition:all .2s}
+.chalk .card:hover{box-shadow:0 4px 20px rgba(0,0,0,.08);transform:translateY(-2px)}
+.chalk .c-title{font-weight:700;color:#1a1a2e;margin-bottom:4px}
+.chalk .c-sub{font-size:.8rem;color:#6c63ff;margin-bottom:6px}
+.chalk .c-desc{color:#4b5563;font-size:.88rem;white-space:pre-line;line-height:1.6}
+.chalk .tag{font-size:.72rem;padding:4px 10px;border-radius:20px;display:inline-block;margin:3px;font-weight:600}
+.chalk .float-icon{background:rgba(108,99,255,0.08);border-color:rgba(108,99,255,0.2);color:#6c63ff}
 
-/* ════════════════════════════════════════════════════
-   THEME 7 — AMBER (warm amber/brass dark)
-════════════════════════════════════════════════════ */
-body.amber{background:#0a0600;color:#f0d890;font-family:'Outfit',sans-serif}
-.amber .hero{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;background:#0a0600}
-.amber .hero-l{padding:80px 60px;display:flex;flex-direction:column;justify-content:center;background:linear-gradient(135deg,#0f0900,#0a0600)}
-.amber .hero-r{background:linear-gradient(135deg,#f59e0b,#d97706);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
-.amber .hero-r::before{content:'';position:absolute;width:500px;height:500px;border-radius:50%;border:100px solid rgba(255,255,255,.07);top:-150px;right:-150px}
-.amber .h-eyebrow{font-size:.68rem;letter-spacing:4px;text-transform:uppercase;color:rgba(240,216,144,.4);margin-bottom:16px;font-family:'IBM Plex Mono',monospace}
-.amber .h-name{font-family:'Syne',sans-serif;font-size:clamp(2rem,4.5vw,4rem);font-weight:800;color:#f0d890;letter-spacing:-1px;margin-bottom:8px}
-.amber .h-title{color:#f59e0b;font-size:.9rem;margin-bottom:18px}
-.amber .h-summary{color:rgba(240,216,144,.55);line-height:1.7}
-.amber .h-contact{margin-top:12px;color:rgba(245,158,11,.5);font-size:.78rem}
-.amber .hero-init-big{font-family:'Syne',sans-serif;font-size:12rem;font-weight:800;color:rgba(255,255,255,.15);line-height:1}
-.amber .sec-label{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:#f59e0b;margin-bottom:24px;text-transform:uppercase;letter-spacing:1px}
-.amber .card{border-left:2px solid #f59e0b;padding:14px 18px;margin-bottom:14px;background:rgba(245,158,11,.04);transition:background .2s}
-.amber .card:hover{background:rgba(245,158,11,.08)}
-.amber .c-title{font-weight:700;color:#f0d890;margin-bottom:4px}
-.amber .c-sub{color:#f59e0b;font-size:.8rem;margin-bottom:6px}
-.amber .c-desc{color:rgba(240,216,144,.5);font-size:.88rem;white-space:pre-line;line-height:1.6}
-.amber .tag{background:rgba(245,158,11,.1);color:#f59e0b;border:1px solid rgba(245,158,11,.2);padding:4px 12px;border-radius:4px;font-size:.78rem;display:inline-block;margin:3px}
+/* ════════════════════════════════════════════════════════════════════
+   THEME 8 — PAPER
+════════════════════════════════════════════════════════════════════ */
+body.paper{background:#fffef9;color:#1a1a1a;font-family:'Cormorant Garamond',serif}
+.paper .hero{min-height:90vh;display:flex;flex-direction:column;justify-content:flex-end;padding:80px;border-left:6px solid #1a1a1a;margin:40px;background:#fffef9}
+.paper .h-name{font-size:clamp(3rem,7vw,6rem);font-weight:700;line-height:.9;letter-spacing:-3px;margin-bottom:12px}
+.paper .h-title{font-family:'IBM Plex Mono',monospace;font-size:.72rem;letter-spacing:3px;text-transform:uppercase;color:#555;margin-bottom:14px}
+.paper .h-summary{font-style:italic;font-size:1rem;color:#444;max-width:500px;line-height:1.7}
+.paper .h-contact{margin-top:12px;font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:#999}
+.paper .sec-label{font-family:'IBM Plex Mono',monospace;font-size:.65rem;letter-spacing:4px;text-transform:uppercase;color:#1a1a1a;margin-bottom:20px;padding-bottom:8px;border-bottom:2px solid #1a1a1a}
+.paper .card{padding:16px 0;border-bottom:1px solid #eee}
+.paper .c-title{font-size:1.1rem;font-weight:700;margin-bottom:4px}
+.paper .c-sub{font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:#777;margin-bottom:6px}
+.paper .c-desc{font-style:italic;color:#555;font-size:.9rem;white-space:pre-line;line-height:1.6}
+.paper .tag{border:1px solid #1a1a1a;font-family:'IBM Plex Mono',monospace;font-size:.68rem;padding:3px 8px;border-radius:2px;display:inline-block;margin:3px;color:#1a1a1a}
+.paper .float-icon{background:rgba(0,0,0,0.04);border-color:rgba(0,0,0,0.15);color:#555}
 
-/* ════════════════════════════════════════════════════
-   THEME 8 — CHALK (clean white minimal)
-════════════════════════════════════════════════════ */
-body.chalk{background:#fafafa;color:#111;font-family:'DM Sans',sans-serif}
-.chalk .hero{min-height:78vh;display:flex;align-items:center;padding:80px max(40px,10vw);border-bottom:1px solid #e8e8e8;gap:60px}
-.chalk .hero-l{flex:1}
-.chalk .h-name{font-family:'Fraunces',serif;font-size:clamp(3rem,7vw,6rem);font-weight:700;line-height:.92;letter-spacing:-3px;margin-bottom:12px}
-.chalk .h-title{color:#888;font-size:.9rem;margin-bottom:18px;font-weight:400;letter-spacing:1px}
-.chalk .h-summary{color:#555;line-height:1.7;max-width:460px}
-.chalk .h-contact{margin-top:12px;color:#bbb;font-size:.8rem;font-family:'IBM Plex Mono',monospace}
-.chalk .hero-r{width:200px;flex-shrink:0;text-align:center}
-.chalk .hero-circle{width:160px;height:160px;border-radius:50%;background:#111;display:flex;align-items:center;justify-content:center;margin:0 auto}
-.chalk .hero-init{font-family:'Fraunces',serif;font-size:3.5rem;font-weight:700;color:#fafafa}
-.chalk .sec-label{font-family:'Fraunces',serif;font-size:1.6rem;font-weight:700;color:#111;margin-bottom:24px}
-.chalk .card{padding:18px 0;border-bottom:1px solid #f0f0f0;display:flex;justify-content:space-between;align-items:flex-start;gap:20px}
-.chalk .c-body{flex:1}
-.chalk .c-title{font-weight:600;color:#111;margin-bottom:4px}
-.chalk .c-sub{color:#bbb;font-size:.8rem;margin-bottom:6px;font-family:'IBM Plex Mono',monospace}
-.chalk .c-desc{color:#888;font-size:.88rem;white-space:pre-line;line-height:1.6}
-.chalk .c-date{font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:#ccc;white-space:nowrap}
-.chalk .tag{background:#f3f3f3;color:#666;border:1px solid #e8e8e8;padding:4px 12px;border-radius:100px;font-size:.78rem;display:inline-block;margin:3px}
+/* ════════════════════════════════════════════════════════════════════
+   THEME 9 — COTTON
+════════════════════════════════════════════════════════════════════ */
+body.cotton{background:#f0f7ff;color:#1e293b;font-family:'DM Sans',sans-serif}
+.cotton .hero{min-height:100vh;background:#1e40af;display:flex;flex-direction:column;justify-content:flex-end;padding:80px}
+.cotton .h-name{font-family:'Syne',sans-serif;font-size:clamp(3rem,7vw,6rem);font-weight:800;color:#fff;letter-spacing:-2px;margin-bottom:8px}
+.cotton .h-title{font-size:.85rem;color:#93c5fd;letter-spacing:2px;text-transform:uppercase;margin-bottom:16px}
+.cotton .h-summary{color:rgba(255,255,255,.7);line-height:1.7;max-width:520px}
+.cotton .h-contact{margin-top:12px;font-size:.8rem;color:rgba(255,255,255,.4)}
+.cotton .sec-label{font-family:'Syne',sans-serif;font-size:.85rem;font-weight:800;color:#1e40af;margin-bottom:20px;text-transform:uppercase;letter-spacing:2px}
+.cotton .card{background:#fff;border-radius:12px;padding:18px 22px;margin-bottom:10px;border-left:4px solid #1e40af;box-shadow:0 2px 10px rgba(30,64,175,.06);transition:all .2s}
+.cotton .card:hover{box-shadow:0 6px 20px rgba(30,64,175,.12);transform:translateX(4px)}
+.cotton .c-title{font-weight:700;color:#1e293b;margin-bottom:4px}
+.cotton .c-sub{font-size:.8rem;color:#1e40af;margin-bottom:6px}
+.cotton .c-desc{color:#64748b;font-size:.88rem;white-space:pre-line;line-height:1.6}
+.cotton .tag{background:#dbeafe;color:#1e40af;font-size:.72rem;padding:4px 10px;border-radius:20px;display:inline-block;margin:3px;font-weight:600}
+.cotton .float-icon{background:rgba(30,64,175,0.08);border-color:rgba(30,64,175,0.2);color:#1e40af}
 
-/* ════════════════════════════════════════════════════
-   THEME 9 — VELVET (deep purple luxury)
-════════════════════════════════════════════════════ */
-body.velvet{background:#0c0015;color:#e8d8f8;font-family:'Outfit',sans-serif}
-.velvet .hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:80px 40px;background:radial-gradient(ellipse 60% 40% at 50% 0%,rgba(192,132,252,.1),transparent 60%),#0c0015;position:relative}
-.velvet .h-crown{font-size:2rem;margin-bottom:12px;filter:drop-shadow(0 0 20px rgba(192,132,252,.5))}
-.velvet .h-name{font-family:'Cormorant Garamond',serif;font-size:clamp(3rem,8vw,6.5rem);font-weight:600;color:#e8d8f8;letter-spacing:2px;margin-bottom:6px}
-.velvet .h-title{color:#c084fc;font-size:.8rem;letter-spacing:5px;text-transform:uppercase;margin-bottom:22px}
-.velvet .h-summary{max-width:520px;color:rgba(232,216,248,.5);line-height:1.7;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem}
-.velvet .h-contact{margin-top:12px;color:rgba(192,132,252,.4);font-size:.8rem}
-.velvet .sec-label{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:600;color:#c084fc;margin-bottom:24px;letter-spacing:2px;text-align:center}
-.velvet .card{background:rgba(192,132,252,.04);border:1px solid rgba(192,132,252,.1);border-radius:12px;padding:18px 22px;margin-bottom:10px;transition:all .2s}
-.velvet .card:hover{border-color:rgba(192,132,252,.3)}
-.velvet .c-title{font-family:'Cormorant Garamond',serif;font-size:1.15rem;color:#e8d8f8;margin-bottom:4px}
-.velvet .c-sub{color:#c084fc;font-size:.8rem;margin-bottom:6px}
-.velvet .c-desc{color:rgba(232,216,248,.45);font-size:.88rem;white-space:pre-line;line-height:1.6}
-.velvet .tag{background:rgba(192,132,252,.08);color:#c084fc;border:1px solid rgba(192,132,252,.15);padding:4px 12px;border-radius:20px;font-size:.78rem;display:inline-block;margin:3px}
+/* ════════════════════════════════════════════════════════════════════
+   THEME 10 — VELVET
+════════════════════════════════════════════════════════════════════ */
+body.velvet{background:#0f0520;color:#f5e6c8;font-family:'Playfair Display',serif}
+.velvet .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:80px 40px;background:linear-gradient(160deg,#0f0520,#1a0a35);position:relative;overflow:hidden}
+.velvet .hero::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,#d4af37,transparent)}
+.velvet .hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,#d4af37,transparent)}
+.velvet .h-name{font-size:clamp(3rem,8vw,7rem);font-weight:700;letter-spacing:-2px;color:#f5e6c8;margin-bottom:10px;line-height:.9}
+.velvet .h-divider{display:flex;align-items:center;justify-content:center;gap:10px;margin:14px 0}
+.velvet .h-divider-line{width:60px;height:1px;background:rgba(212,175,55,.4)}
+.velvet .h-divider-gem{color:#d4af37;font-size:.8rem}
+.velvet .h-title{color:#d4af37;font-family:'IBM Plex Mono',monospace;font-size:.72rem;letter-spacing:3px;text-transform:uppercase;margin-bottom:18px}
+.velvet .h-summary{font-style:italic;color:rgba(245,230,200,.6);max-width:520px;line-height:1.7}
+.velvet .h-contact{margin-top:14px;font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:rgba(212,175,55,.5)}
+.velvet .sec-label{font-family:'IBM Plex Mono',monospace;font-size:.68rem;letter-spacing:4px;text-transform:uppercase;color:#d4af37;margin-bottom:24px;text-align:center;display:flex;align-items:center;gap:10px}
+.velvet .sec-label::before,.velvet .sec-label::after{content:'';flex:1;height:1px;background:rgba(212,175,55,.25)}
+.velvet .card{padding:18px;border:1px solid rgba(212,175,55,.1);border-radius:8px;margin-bottom:10px;background:rgba(212,175,55,.03);transition:all .2s}
+.velvet .card:hover{border-color:rgba(212,175,55,.25);background:rgba(212,175,55,.06)}
+.velvet .c-title{font-size:1.1rem;font-weight:700;margin-bottom:4px;color:#f5e6c8}
+.velvet .c-sub{font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:#d4af37;margin-bottom:6px}
+.velvet .c-desc{font-style:italic;color:rgba(245,230,200,.55);font-size:.9rem;white-space:pre-line;line-height:1.6}
+.velvet .tag{background:rgba(212,175,55,.1);color:#d4af37;border:1px solid rgba(212,175,55,.25);padding:4px 10px;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:.7rem;display:inline-block;margin:3px}
+.velvet .float-icon{background:rgba(212,175,55,0.1);border-color:rgba(212,175,55,0.25)}
 
-/* ════════════════════════════════════════════════════
-   THEME 10 — IRON (dark red industrial)
-════════════════════════════════════════════════════ */
-body.iron{background:#080808;color:#f0e0e0;font-family:'Outfit',sans-serif}
-.iron .hero{min-height:100vh;display:flex;align-items:center;padding:80px max(40px,8vw);gap:60px;background:#080808;position:relative;overflow:hidden}
-.iron .hero::after{content:'';position:absolute;right:-100px;top:50%;transform:translateY(-50%);width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(220,38,38,.08),transparent 70%)}
-.iron .hero-l{flex:1;z-index:1}
-.iron .h-bar{width:40px;height:3px;background:#dc2626;margin-bottom:20px}
-.iron .h-name{font-family:'Syne',sans-serif;font-size:clamp(2.5rem,5vw,5rem);font-weight:800;color:#fff;letter-spacing:-2px;margin-bottom:8px}
-.iron .h-title{color:#dc2626;font-size:.9rem;font-weight:400;margin-bottom:18px;letter-spacing:1px}
-.iron .h-summary{color:#808080;line-height:1.7;max-width:480px}
-.iron .h-contact{margin-top:12px;color:#444;font-size:.78rem;font-family:'IBM Plex Mono',monospace}
-.iron .sec-label{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:#dc2626;margin-bottom:24px;text-transform:uppercase;letter-spacing:2px}
-.iron .card{border-left:2px solid #dc2626;padding:14px 18px;margin-bottom:14px;background:rgba(220,38,38,.04);transition:background .2s}
-.iron .card:hover{background:rgba(220,38,38,.08)}
-.iron .c-title{font-weight:700;color:#f0e0e0;margin-bottom:4px}
-.iron .c-sub{color:#dc2626;font-size:.8rem;margin-bottom:6px}
-.iron .c-desc{color:#606060;font-size:.88rem;white-space:pre-line;line-height:1.6}
-.iron .tag{background:rgba(220,38,38,.08);color:#dc2626;border:1px solid rgba(220,38,38,.18);padding:4px 12px;border-radius:2px;font-size:.75rem;font-family:'IBM Plex Mono',monospace;display:inline-block;margin:3px}
+/* ════════════════════════════════════════════════════════════════════
+   THEME 11 — AMBER
+════════════════════════════════════════════════════════════════════ */
+body.amber{background:#100a00;color:#fef3c7;font-family:'DM Sans',sans-serif}
+.amber .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding:80px;background:linear-gradient(160deg,#100a00,#1c1208)}
+.amber .h-bar{width:60px;height:3px;background:linear-gradient(90deg,#fbbf24,#f59e0b);border-radius:2px;margin-bottom:18px}
+.amber .h-name{font-family:'Unbounded',sans-serif;font-size:clamp(2rem,5vw,4.5rem);font-weight:900;color:#fbbf24;letter-spacing:-2px;line-height:.9;margin-bottom:10px;text-transform:uppercase}
+.amber .h-title{font-size:.78rem;color:#d97706;text-transform:uppercase;letter-spacing:2px;margin-bottom:16px}
+.amber .h-summary{color:rgba(254,243,199,.5);line-height:1.7;max-width:520px}
+.amber .h-contact{margin-top:12px;font-size:.8rem;color:rgba(217,119,6,.5)}
+.amber .sec-label{font-family:'Unbounded',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#fbbf24;margin-bottom:20px;display:flex;align-items:center;gap:10px}
+.amber .sec-label::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(251,191,36,.4),transparent)}
+.amber .card{background:rgba(251,191,36,.04);border:1px solid rgba(251,191,36,.08);border-radius:8px;padding:16px 20px;margin-bottom:10px;transition:all .2s}
+.amber .card:hover{border-color:rgba(251,191,36,.25);background:rgba(251,191,36,.07)}
+.amber .c-title{font-weight:700;color:#fef3c7;margin-bottom:4px}
+.amber .c-sub{font-size:.8rem;color:#f59e0b;margin-bottom:6px}
+.amber .c-desc{color:rgba(254,243,199,.5);font-size:.88rem;white-space:pre-line;line-height:1.6}
+.amber .tag{background:rgba(251,191,36,.1);color:#fbbf24;border:1px solid rgba(251,191,36,.25);padding:4px 10px;border-radius:3px;font-size:.72rem;display:inline-block;margin:3px}
+.amber .float-icon{background:rgba(251,191,36,0.1);border-color:rgba(251,191,36,0.25)}
 
-/* ════════════════════════════════════════════════════
-   THEME 11 — DUSK (orange sunset)
-════════════════════════════════════════════════════ */
-body.dusk{background:#110a18;color:#fde8cc;font-family:'Outfit',sans-serif}
-.dusk .hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:80px 40px;background:radial-gradient(ellipse 60% 40% at 50% 80%,rgba(249,115,22,.1),transparent 60%),linear-gradient(180deg,#110a18,#1e1030)}
-.dusk .h-name{font-family:'Syne',sans-serif;font-size:clamp(3rem,9vw,7.5rem);font-weight:800;background:linear-gradient(135deg,#f97316,#fbbf24,#f97316);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-2px;margin-bottom:8px}
-.dusk .h-title{color:#f97316;font-size:.82rem;letter-spacing:4px;text-transform:uppercase;margin-bottom:20px}
-.dusk .h-summary{max-width:520px;color:rgba(253,232,204,.5);line-height:1.7}
-.dusk .h-contact{margin-top:12px;color:rgba(249,115,22,.45);font-size:.8rem}
-.dusk .sec-label{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:#f97316;margin-bottom:24px}
-.dusk .card{background:rgba(249,115,22,.04);border:1px solid rgba(249,115,22,.1);border-radius:10px;padding:18px 22px;margin-bottom:10px;transition:all .2s}
-.dusk .card:hover{border-color:rgba(249,115,22,.3)}
-.dusk .c-title{font-weight:700;color:#fde8cc;margin-bottom:4px}
-.dusk .c-sub{color:#f97316;font-size:.8rem;margin-bottom:6px}
-.dusk .c-desc{color:rgba(253,232,204,.45);font-size:.88rem;white-space:pre-line;line-height:1.6}
-.dusk .tag{background:rgba(249,115,22,.1);color:#f97316;border:1px solid rgba(249,115,22,.2);padding:4px 12px;border-radius:20px;font-size:.78rem;display:inline-block;margin:3px}
+/* ════════════════════════════════════════════════════════════════════
+   THEME 12 — CORAL
+════════════════════════════════════════════════════════════════════ */
+body.coral{background:#fff5f5;color:#1a1a1a;font-family:'DM Sans',sans-serif}
+.coral .hero{min-height:100vh;background:linear-gradient(135deg,#ff6b6b,#ee5a24);display:flex;flex-direction:column;justify-content:flex-end;padding:80px}
+.coral .h-name{font-family:'Syne',sans-serif;font-size:clamp(3rem,7vw,6rem);font-weight:800;color:#fff;letter-spacing:-2px;margin-bottom:8px}
+.coral .h-title{font-size:.85rem;color:rgba(255,255,255,.8);letter-spacing:2px;text-transform:uppercase;margin-bottom:16px}
+.coral .h-summary{color:rgba(255,255,255,.7);line-height:1.7;max-width:520px}
+.coral .h-contact{margin-top:12px;font-size:.8rem;color:rgba(255,255,255,.5)}
+.coral .sec-label{font-family:'Syne',sans-serif;font-size:.85rem;font-weight:800;color:#ee5a24;margin-bottom:20px;text-transform:uppercase;letter-spacing:2px}
+.coral .card{background:#fff;border-radius:12px;padding:18px 22px;margin-bottom:10px;border-bottom:3px solid #ff6b6b;transition:all .2s;box-shadow:0 2px 10px rgba(238,90,36,.05)}
+.coral .card:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(238,90,36,.1)}
+.coral .c-title{font-weight:700;color:#1a1a1a;margin-bottom:4px}
+.coral .c-sub{font-size:.8rem;color:#ee5a24;margin-bottom:6px}
+.coral .c-desc{color:#555;font-size:.88rem;white-space:pre-line;line-height:1.6}
+.coral .tag{background:#ffe4e4;color:#ee5a24;font-size:.72rem;padding:4px 10px;border-radius:20px;display:inline-block;margin:3px;font-weight:600}
+.coral .float-icon{background:rgba(238,90,36,0.08);border-color:rgba(238,90,36,0.2);color:#ee5a24}
 
-/* ════════════════════════════════════════════════════
-   THEME 12 — JADE (deep teal luxury)
-════════════════════════════════════════════════════ */
-body.jade{background:#001410;color:#ccf0e8;font-family:'Cormorant Garamond',serif}
-.jade .hero{min-height:100vh;display:flex;align-items:center;padding:80px max(40px,8vw);gap:60px;background:linear-gradient(135deg,#001410,#002820)}
-.jade .hero-l{flex:1}
-.jade .h-gem{font-size:1.5rem;margin-bottom:16px}
-.jade .h-name{font-size:clamp(3rem,7vw,6rem);font-weight:600;color:#b8e8d8;letter-spacing:-1px;margin-bottom:8px}
-.jade .h-title{font-family:'IBM Plex Mono',monospace;font-size:.72rem;letter-spacing:4px;text-transform:uppercase;color:#2dd4bf;margin-bottom:18px}
-.jade .h-summary{font-style:italic;color:rgba(204,240,232,.55);line-height:1.7;max-width:480px;font-size:1.05rem}
-.jade .h-contact{margin-top:12px;font-family:'IBM Plex Mono',monospace;color:rgba(45,212,191,.45);font-size:.72rem}
-.jade .hero-r{width:240px;flex-shrink:0}
-.jade .hero-gem-box{background:linear-gradient(135deg,#004030,#002820);border:1px solid rgba(45,212,191,.2);border-radius:16px;padding:40px;text-align:center}
-.jade .hero-gem-init{font-size:4rem;font-weight:600;color:rgba(45,212,191,.4)}
-.jade .sec-label{font-size:1.8rem;font-weight:600;color:#2dd4bf;margin-bottom:24px;letter-spacing:1px}
-.jade .card{background:rgba(45,212,191,.04);border:1px solid rgba(45,212,191,.1);border-radius:10px;padding:18px 22px;margin-bottom:10px;transition:all .2s}
-.jade .card:hover{border-color:rgba(45,212,191,.3)}
-.jade .c-title{font-size:1.1rem;font-weight:600;color:#ccf0e8;margin-bottom:4px}
-.jade .c-sub{font-family:'IBM Plex Mono',monospace;color:#2dd4bf;font-size:.72rem;margin-bottom:6px}
-.jade .c-desc{font-style:italic;color:rgba(204,240,232,.5);font-size:.9rem;white-space:pre-line;line-height:1.6}
-.jade .tag{background:rgba(45,212,191,.08);color:#2dd4bf;border:1px solid rgba(45,212,191,.15);padding:4px 12px;border-radius:20px;font-size:.78rem;display:inline-block;margin:3px}
+/* ════════════════════════════════════════════════════════════════════
+   THEME 13 — DUSK
+════════════════════════════════════════════════════════════════════ */
+body.dusk{background:#0d0820;color:#e2d9f3;font-family:'Outfit',sans-serif}
+.dusk .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:80px 40px;background:linear-gradient(160deg,#1a0533,#2d1b4e,#0d1b3e);position:relative;overflow:hidden}
+.dusk .hero::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#ff6b6b,#ffd93d,#6bcb77,#4d96ff,#ff6b6b)}
+.dusk .h-name{font-family:'Syne',sans-serif;font-size:clamp(3rem,8vw,7rem);font-weight:800;color:#fff;letter-spacing:-2px;margin-bottom:8px;line-height:.9}
+.dusk .h-title{color:#c084fc;font-size:.85rem;letter-spacing:3px;text-transform:uppercase;margin-bottom:20px}
+.dusk .h-summary{color:rgba(226,217,243,.55);max-width:540px;line-height:1.7}
+.dusk .h-contact{margin-top:12px;font-size:.8rem;color:rgba(192,132,252,.4)}
+.dusk .sec-label{font-family:'Syne',sans-serif;font-size:.8rem;font-weight:700;color:#c084fc;margin-bottom:22px;display:flex;align-items:center;gap:10px}
+.dusk .sec-label::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(192,132,252,.4),transparent)}
+.dusk .card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:18px 22px;margin-bottom:10px;transition:all .2s}
+.dusk .card:hover{border-color:rgba(192,132,252,.3);background:rgba(192,132,252,.06)}
+.dusk .c-title{font-weight:700;color:#e2d9f3;margin-bottom:4px}
+.dusk .c-sub{font-size:.8rem;color:#c084fc;margin-bottom:6px}
+.dusk .c-desc{color:rgba(226,217,243,.5);font-size:.88rem;white-space:pre-line;line-height:1.6}
+.dusk .tag{background:rgba(255,255,255,.06);color:#e2d9f3;border:1px solid rgba(255,255,255,.1);padding:4px 12px;border-radius:20px;font-size:.75rem;display:inline-block;margin:3px}
+.dusk .float-icon{background:rgba(192,132,252,0.1);border-color:rgba(192,132,252,0.25)}
 
-/* ─ FOOTER ─ */
-.footer{text-align:center;padding:44px 20px;opacity:.35;font-size:.78rem;font-family:'IBM Plex Mono',monospace;letter-spacing:2px}
+/* ════════════════════════════════════════════════════════════════════
+   THEME 14 — AURORA
+════════════════════════════════════════════════════════════════════ */
+body.aurora{background:#030810;color:#e0f7f0;font-family:'DM Sans',sans-serif}
+.aurora .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:80px 40px;position:relative;overflow:hidden}
+.aurora .aurora-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 20% 40%,rgba(0,255,150,.08),transparent 50%),radial-gradient(ellipse 60% 50% at 80% 60%,rgba(0,180,255,.08),transparent 50%),radial-gradient(ellipse 50% 40% at 50% 20%,rgba(150,0,255,.06),transparent 50%),#030810;animation:auroraMove 8s ease-in-out infinite alternate}
+@keyframes auroraMove{0%{background-position:0% 0%}100%{background-position:100% 100%}}
+.aurora .h-name{font-family:'Syne',sans-serif;font-size:clamp(3rem,8vw,7rem);font-weight:800;background:linear-gradient(135deg,#00ff96,#00b4ff,#9b59ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-2px;margin-bottom:8px;position:relative;line-height:.9}
+.aurora .h-title{color:#67e8f9;font-size:.85rem;letter-spacing:3px;text-transform:uppercase;margin-bottom:20px;position:relative}
+.aurora .h-summary{color:rgba(224,247,240,.5);max-width:540px;line-height:1.7;position:relative}
+.aurora .h-contact{margin-top:12px;font-size:.8rem;color:rgba(0,255,150,.4);position:relative}
+.aurora .sec-label{font-size:.72rem;letter-spacing:4px;text-transform:uppercase;color:#00ff96;margin-bottom:24px;display:flex;align-items:center;gap:14px}
+.aurora .sec-label::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(0,255,150,.4),transparent)}
+.aurora .card{background:rgba(0,255,150,.03);border:1px solid rgba(0,255,150,.08);border-radius:12px;padding:18px 22px;margin-bottom:10px;transition:all .2s}
+.aurora .card:hover{border-color:rgba(0,255,150,.25);background:rgba(0,255,150,.06)}
+.aurora .c-title{font-weight:700;color:#e0f7f0;margin-bottom:4px}
+.aurora .c-sub{font-size:.8rem;color:#00ff96;margin-bottom:6px}
+.aurora .c-desc{color:rgba(224,247,240,.5);font-size:.88rem;white-space:pre-line;line-height:1.6}
+.aurora .tag{background:rgba(0,255,150,.1);color:#00ff96;border:1px solid rgba(0,255,150,.2);padding:4px 12px;border-radius:20px;font-size:.75rem;display:inline-block;margin:3px}
+.aurora .float-icon{background:rgba(0,255,150,0.08);border-color:rgba(0,255,150,0.2)}
 
-@media(max-width:768px){
-  .noir .hero,.amber .hero,.iron .hero,.jade .hero{grid-template-columns:1fr;flex-direction:column}
-  .slate .hero,.chalk .hero{flex-direction:column}
-  .slate .hero-r,.chalk .hero-r,.jade .hero-r,.amber .hero-r{display:none}
-  .noir .hero-r,.amber .hero-r{min-height:180px}
-  .section{padding:50px 24px}
-  .linen .hero,.noir .hero-l{padding:60px 24px}
+/* ════════════════════════════════════════════════════════════════════
+   THEME 15 — NEON
+════════════════════════════════════════════════════════════════════ */
+body.neon{background:#000;color:#fff;font-family:'Space Mono',monospace}
+.neon .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:80px;background:#000;position:relative;overflow:hidden}
+.neon .hero::before{content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,transparent,transparent 40px,rgba(255,0,255,.03) 40px,rgba(255,0,255,.03) 41px),repeating-linear-gradient(90deg,transparent,transparent 40px,rgba(0,255,255,.03) 40px,rgba(0,255,255,.03) 41px)}
+.neon .h-name{font-family:'Unbounded',sans-serif;font-size:clamp(2.5rem,6vw,5rem);font-weight:900;color:#fff;text-shadow:0 0 20px #ff00ff,0 0 40px #ff00ff;letter-spacing:-2px;margin-bottom:10px;line-height:.9}
+.neon .h-bar{height:2px;background:linear-gradient(90deg,#ff00ff,#00ffff);margin:14px 0;max-width:300px}
+.neon .h-title{font-size:.75rem;color:#00ffff;text-shadow:0 0 10px #00ffff;letter-spacing:3px;text-transform:uppercase;margin-bottom:16px}
+.neon .h-summary{color:rgba(255,255,255,.5);line-height:1.7;max-width:520px;font-size:.9rem}
+.neon .h-contact{margin-top:12px;font-size:.75rem;color:rgba(255,0,255,.5)}
+.neon .sec-label{font-size:.68rem;letter-spacing:5px;text-transform:uppercase;color:#ff00ff;margin-bottom:22px;text-shadow:0 0 8px #ff00ff}
+.neon .card{background:transparent;border:1px solid rgba(255,0,255,.15);padding:16px 20px;margin-bottom:10px;border-radius:4px;transition:all .2s}
+.neon .card:hover{border-color:rgba(255,0,255,.5);box-shadow:0 0 20px rgba(255,0,255,.1)}
+.neon .c-title{font-weight:700;color:#fff;margin-bottom:4px;text-shadow:0 0 8px rgba(255,255,255,.3)}
+.neon .c-sub{font-size:.75rem;color:#00ffff;text-shadow:0 0 6px #00ffff;margin-bottom:6px}
+.neon .c-desc{color:rgba(255,255,255,.4);font-size:.85rem;white-space:pre-line;line-height:1.6}
+.neon .tag{border:1px solid #ff00ff;color:#ff00ff;font-size:.7rem;padding:3px 10px;border-radius:2px;display:inline-block;margin:3px;text-shadow:0 0 5px #ff00ff}
+.neon .float-icon{background:rgba(255,0,255,0.08);border-color:rgba(255,0,255,0.3)}
+
+/* ════════════════════════════════════════════════════════════════════
+   THEME 16 — RETRO
+════════════════════════════════════════════════════════════════════ */
+body.retro{background:#12001f;color:#ff71ce;font-family:'Space Mono',monospace}
+.retro .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:80px;background:#12001f;position:relative;overflow:hidden}
+.retro .hero::before{content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,transparent,transparent 24px,rgba(255,113,206,.04) 24px,rgba(255,113,206,.04) 25px);pointer-events:none}
+.retro .h-eyebrow{font-size:.65rem;color:#01cdfe;letter-spacing:3px;text-transform:uppercase;margin-bottom:10px}
+.retro .h-name{font-family:'Unbounded',sans-serif;font-size:clamp(2.5rem,6vw,5rem);font-weight:900;color:#ff71ce;text-shadow:3px 3px 0 #b000a0;letter-spacing:-2px;margin-bottom:8px;text-transform:uppercase;line-height:.9}
+.retro .h-title{font-size:.75rem;color:#01cdfe;letter-spacing:2px;text-transform:uppercase;margin-bottom:16px}
+.retro .h-summary{color:rgba(255,113,206,.6);line-height:1.7;max-width:500px;font-size:.88rem}
+.retro .h-contact{margin-top:12px;font-size:.7rem;color:rgba(1,205,254,.5)}
+.retro .sec-label{font-size:.65rem;letter-spacing:4px;text-transform:uppercase;color:#fffb96;margin-bottom:22px;display:flex;align-items:center;gap:10px}
+.retro .sec-label::before{content:'★ ';color:#fffb96}
+.retro .card{background:rgba(255,113,206,.04);border:1px solid rgba(255,113,206,.15);padding:16px 20px;margin-bottom:10px;border-radius:0;transition:all .2s;position:relative}
+.retro .card::before{content:'> ';color:#01cdfe;position:absolute;left:8px;top:18px;font-size:.8rem}
+.retro .card{padding-left:28px}
+.retro .card:hover{border-color:rgba(255,113,206,.4);background:rgba(255,113,206,.07)}
+.retro .c-title{font-weight:700;color:#ff71ce;margin-bottom:4px;font-size:.88rem}
+.retro .c-sub{font-size:.72rem;color:#01cdfe;margin-bottom:6px}
+.retro .c-desc{color:rgba(255,113,206,.5);font-size:.82rem;white-space:pre-line;line-height:1.6}
+.retro .tag{background:rgba(255,113,206,.1);color:#ff71ce;border:1px solid rgba(255,113,206,.3);font-size:.68rem;padding:3px 8px;display:inline-block;margin:3px}
+.retro .float-icon{background:rgba(255,113,206,0.08);border-color:rgba(255,113,206,0.25)}
+
+/* ════════════════════════════════════════════════════════════════════
+   THEME 17 — GLASS
+════════════════════════════════════════════════════════════════════ */
+body.glass{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;font-family:'DM Sans',sans-serif;min-height:100vh}
+.glass .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:80px 40px;position:relative;overflow:hidden}
+.glass .glass-card{background:rgba(255,255,255,.12);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.2);border-radius:20px}
+.glass .hero-card{padding:50px;max-width:600px}
+.glass .h-name{font-family:'Syne',sans-serif;font-size:clamp(2.5rem,6vw,5rem);font-weight:800;color:#fff;letter-spacing:-2px;margin-bottom:8px}
+.glass .h-title{font-size:.85rem;color:rgba(255,255,255,.7);letter-spacing:2px;text-transform:uppercase;margin-bottom:16px}
+.glass .h-summary{color:rgba(255,255,255,.6);line-height:1.7}
+.glass .h-contact{margin-top:12px;font-size:.8rem;color:rgba(255,255,255,.4)}
+.glass .sec-label{font-family:'Syne',sans-serif;font-size:.85rem;font-weight:700;color:#fff;margin-bottom:20px;display:flex;align-items:center;gap:10px}
+.glass .sec-label::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.2)}
+.glass .card{padding:18px 22px;margin-bottom:10px;transition:all .2s}
+.glass .card:hover{background:rgba(255,255,255,.18)}
+.glass .c-title{font-weight:700;color:#fff;margin-bottom:4px}
+.glass .c-sub{font-size:.8rem;color:rgba(255,255,255,.6);margin-bottom:6px}
+.glass .c-desc{color:rgba(255,255,255,.5);font-size:.88rem;white-space:pre-line;line-height:1.6}
+.glass .tag{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.25);padding:4px 12px;border-radius:20px;font-size:.75rem;display:inline-block;margin:3px}
+.glass .float-icon{background:rgba(255,255,255,0.15);border-color:rgba(255,255,255,0.3)}
+
+/* ════════════════════════════════════════════════════════════════════
+   THEME 18 — NAVY
+════════════════════════════════════════════════════════════════════ */
+body.navy{background:#f8fafc;color:#1e293b;font-family:'DM Sans',sans-serif}
+.navy .hero{min-height:100vh;background:#0f172a;display:flex;flex-direction:column;justify-content:flex-end;padding:80px;border-bottom:3px solid #3b82f6}
+.navy .h-name{font-family:'Syne',sans-serif;font-size:clamp(3rem,7vw,6rem);font-weight:800;color:#fff;letter-spacing:-2px;margin-bottom:8px}
+.navy .h-title{font-size:.85rem;color:#3b82f6;letter-spacing:2px;text-transform:uppercase;margin-bottom:16px}
+.navy .h-summary{color:rgba(255,255,255,.55);line-height:1.7;max-width:520px}
+.navy .h-contact{margin-top:12px;font-size:.8rem;color:rgba(59,130,246,.5)}
+.navy .sec-label{font-family:'Syne',sans-serif;font-size:.85rem;font-weight:800;color:#1e3a5f;margin-bottom:20px;text-transform:uppercase;letter-spacing:2px;padding-bottom:10px;border-bottom:2px solid #e2e8f0}
+.navy .card{background:#fff;border-radius:8px;padding:18px 22px;margin-bottom:10px;border-left:4px solid #3b82f6;box-shadow:0 1px 6px rgba(0,0,0,.04);transition:all .2s}
+.navy .card:hover{box-shadow:0 4px 16px rgba(59,130,246,.1);transform:translateX(4px)}
+.navy .c-title{font-weight:700;color:#1e293b;margin-bottom:4px}
+.navy .c-sub{font-size:.8rem;color:#3b82f6;margin-bottom:6px}
+.navy .c-desc{color:#64748b;font-size:.88rem;white-space:pre-line;line-height:1.6}
+.navy .tag{background:rgba(59,130,246,.1);color:#1e40af;border:1px solid rgba(59,130,246,.2);padding:4px 10px;border-radius:3px;font-size:.72rem;display:inline-block;margin:3px}
+.navy .float-icon{background:rgba(59,130,246,0.08);border-color:rgba(59,130,246,0.2);color:#3b82f6}
+
+/* ════════════════════════════════════════════════════════════════════
+   THEME 19 — GROVE
+════════════════════════════════════════════════════════════════════ */
+body.grove{background:#0a1a0a;color:#f0fdf4;font-family:'Playfair Display',serif}
+.grove .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding:80px;background:linear-gradient(160deg,#0a1a0a,#0f2010)}
+.grove .h-accent{width:40px;height:3px;background:#4ade80;border-radius:2px;margin-bottom:16px}
+.grove .h-name{font-size:clamp(3rem,7vw,6rem);font-weight:700;color:#f0fdf4;letter-spacing:-2px;margin-bottom:8px;line-height:.9}
+.grove .h-title{font-family:'IBM Plex Mono',monospace;font-size:.72rem;letter-spacing:3px;text-transform:uppercase;color:#4ade80;margin-bottom:16px}
+.grove .h-summary{font-style:italic;color:rgba(240,253,244,.6);max-width:520px;line-height:1.7}
+.grove .h-contact{margin-top:12px;font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:rgba(74,222,128,.4)}
+.grove .sec-label{font-family:'IBM Plex Mono',monospace;font-size:.68rem;letter-spacing:4px;text-transform:uppercase;color:#4ade80;margin-bottom:22px;display:flex;align-items:center;gap:10px}
+.grove .sec-label::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(74,222,128,.4),transparent)}
+.grove .card{padding:16px 0;border-bottom:1px solid rgba(74,222,128,.08)}
+.grove .c-title{font-size:1.1rem;font-weight:700;margin-bottom:4px;color:#f0fdf4}
+.grove .c-sub{font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:#4ade80;margin-bottom:6px}
+.grove .c-desc{font-style:italic;color:rgba(240,253,244,.5);font-size:.9rem;white-space:pre-line;line-height:1.6}
+.grove .tag{background:rgba(74,222,128,.1);color:#4ade80;border:1px solid rgba(74,222,128,.2);padding:4px 10px;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:.7rem;display:inline-block;margin:3px}
+.grove .float-icon{background:rgba(74,222,128,0.1);border-color:rgba(74,222,128,0.25)}
+
+/* ════════════════════════════════════════════════════════════════════
+   THEME 20 — SLATE
+════════════════════════════════════════════════════════════════════ */
+body.slate{background:#f1f5f9;color:#1e293b;font-family:'DM Sans',sans-serif}
+.slate .hero{min-height:100vh;display:grid;grid-template-columns:280px 1fr;background:#fff}
+.slate .hero-side{background:#1e293b;display:flex;flex-direction:column;justify-content:center;padding:60px 40px;gap:20px}
+.slate .sl-dot{width:10px;height:10px;background:#3b82f6;border-radius:50%}
+.slate .hero-main{padding:80px 60px;display:flex;flex-direction:column;justify-content:center}
+.slate .h-name{font-family:'Syne',sans-serif;font-size:clamp(2.5rem,5vw,4rem);font-weight:800;color:#1e293b;letter-spacing:-2px;margin-bottom:8px}
+.slate .h-title{font-size:.85rem;color:#3b82f6;letter-spacing:2px;text-transform:uppercase;margin-bottom:16px}
+.slate .h-summary{color:#64748b;line-height:1.7;max-width:480px}
+.slate .h-contact{margin-top:12px;font-size:.8rem;color:#94a3b8}
+.slate .sec-label{font-family:'Syne',sans-serif;font-size:.85rem;font-weight:700;color:#1e293b;margin-bottom:20px;display:flex;align-items:center;gap:10px}
+.slate .sec-label::after{content:'';flex:1;height:2px;background:#e2e8f0}
+.slate .card{background:#fff;border-radius:8px;padding:18px 22px;margin-bottom:10px;box-shadow:0 1px 6px rgba(0,0,0,.06);border-top:2px solid #e2e8f0;transition:all .2s}
+.slate .card:hover{box-shadow:0 4px 16px rgba(0,0,0,.08);border-top-color:#3b82f6}
+.slate .c-title{font-weight:700;color:#1e293b;margin-bottom:4px}
+.slate .c-sub{font-size:.8rem;color:#3b82f6;margin-bottom:6px}
+.slate .c-desc{color:#64748b;font-size:.88rem;white-space:pre-line;line-height:1.6}
+.slate .tag{background:#e2e8f0;color:#475569;font-size:.72rem;padding:4px 10px;border-radius:3px;display:inline-block;margin:3px}
+.slate .float-icon{background:rgba(59,130,246,0.08);border-color:rgba(59,130,246,0.2);color:#3b82f6}
+
+/* ── RESPONSIVE ─────────────────────────────────────────────────── */
+@media(max-width:900px){
+  #theme-panel{display:none}
+  #topbar{right:16px}
 }
 </style>
 </head>
-<body class="cyber" id="B">
+<body class="cyber">
 
+<div id="theme-transition"></div>
+
+<!-- TOP BAR -->
 <div id="topbar">
-  <button class="tpill" onclick="copyLink()">🔗 Share Link</button>
-  <button class="tpill" onclick="window.print()">⬇ Save PDF</button>
+  <button class="tpill" onclick="copyLink()">🔗 Share</button>
+  <button class="tpill" onclick="savePDF()">⬇ Save PDF</button>
+  <button class="tpill" onclick="window.close()">✕ Close</button>
 </div>
 
-<div id="portfolio-root"></div>
+<!-- MAIN LAYOUT -->
+<div id="app-layout">
 
-<div class="footer">BUILT WITH FOLIO</div>
+  <!-- LEFT: PORTFOLIO VIEW -->
+  <div id="portfolio-view">
+    <div id="portfolio-content"></div>
+  </div>
 
-<div id="dock">
-  <span id="dock-label">Theme</span>
-  <div class="tdot on" data-t="cyber"   title="Cyber"   onclick="T('cyber')"></div>
-  <div class="tdot"    data-t="noir"    title="Noir"    onclick="T('noir')"></div>
-  <div class="tdot"    data-t="linen"   title="Linen"   onclick="T('linen')"></div>
-  <div class="tdot"    data-t="plasma"  title="Plasma"  onclick="T('plasma')"></div>
-  <div class="tdot"    data-t="slate"   title="Slate"   onclick="T('slate')"></div>
-  <div class="tdot"    data-t="grove"   title="Grove"   onclick="T('grove')"></div>
-  <div class="tdot"    data-t="amber"   title="Amber"   onclick="T('amber')"></div>
-  <div class="tdot"    data-t="chalk"   title="Chalk"   onclick="T('chalk')"></div>
-  <div class="tdot"    data-t="velvet"  title="Velvet"  onclick="T('velvet')"></div>
-  <div class="tdot"    data-t="iron"    title="Iron"    onclick="T('iron')"></div>
-  <div class="tdot"    data-t="dusk"    title="Dusk"    onclick="T('dusk')"></div>
-  <div class="tdot"    data-t="jade"    title="Jade"    onclick="T('jade')"></div>
+  <!-- RIGHT: THEME PANEL -->
+  <div id="theme-panel">
+    <div class="tp-header">
+      <div class="tp-title">✦ Themes</div>
+      <div class="tp-sub">Click any theme to apply</div>
+    </div>
+    <div class="tp-list" id="theme-list"></div>
+  </div>
+
 </div>
 
 <div id="toast"></div>
 
 <script>
-// ── LOAD DATA ─────────────────────────────────────────────────────────────────
+// ── DATA ───────────────────────────────────────────────────────────
 let D = {};
-// From URL hash (shareable link)
+let theme = 'cyber';
+
 try {
-  if (location.hash.length > 1) D = JSON.parse(atob(decodeURIComponent(location.hash.slice(1))));
+  const raw = localStorage.getItem('folio_portfolio');
+  if (raw) D = JSON.parse(raw);
 } catch(e) {}
-// Fallback: localStorage
+
+// URL hash fallback
 if (!D.name) {
-  try { D = JSON.parse(localStorage.getItem('folio_portfolio') || '{}'); } catch(e) {}
-}
-
-let theme = new URLSearchParams(location.search).get('theme') ||
-            localStorage.getItem('folio_ptheme') || 'cyber';
-
-// ── RENDER ────────────────────────────────────────────────────────────────────
-function render() {
-  if (!D || !D.name) {
-    document.getElementById('portfolio-root').innerHTML = `
-      <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:40px">
-        <div><div style="font-size:4rem;margin-bottom:16px">🌐</div>
-        <h2 style="margin-bottom:10px;font-size:1.5rem">No portfolio data</h2>
-        <p style="color:#888;max-width:320px">Go back to Folio, generate your resume, then click "View Portfolio".</p></div>
-      </div>`;
-    return;
-  }
-
-  document.title = D.name + ' — Portfolio';
-  document.getElementById('page-title').textContent = D.name + ' — Portfolio';
-  const t = theme;
-  const contact = [D.email, D.phone, D.location].filter(Boolean).join(' · ');
-  const init = (D.name||'U')[0].toUpperCase();
-
-  // Social
-  const socials = [
-    D.linkedin  ? `<a class="s-btn li"  href="https://${D.linkedin.replace(/^https?:\/\//,'')}"   target="_blank">💼 LinkedIn</a>` : '',
-    D.github    ? `<a class="s-btn gh"  href="https://${D.github.replace(/^https?:\/\//,'')}"     target="_blank">🐙 GitHub</a>` : '',
-    D.instagram ? `<a class="s-btn ig"  href="https://instagram.com/${D.instagram.replace(/.*instagram\.com\//,'').replace('@','')}" target="_blank">📸 Instagram</a>` : '',
-    D.whatsapp  ? `<a class="s-btn wa"  href="https://wa.me/${D.whatsapp.replace(/\D/g,'')}"       target="_blank">💬 WhatsApp</a>` : ''
-  ].filter(Boolean).join('');
-  const socHtml = socials ? `<div class="s-links">${socials}</div>` : '';
-
-  // Helper
-  const cards = (arr, fn) => (arr||[]).filter(fn ? fn : x=>x).map(e => {
-    const card = `<div class="card">`;
-    return card;
-  });
-
-  function expCards() {
-    return (D.exps||[]).filter(e=>e.title).map(e => {
-      const date = [e.start,e.end].filter(Boolean).join(' – ');
-      if (t==='linen') return `<div class="card"><div class="c-date">${date}</div><div class="c-body"><div class="c-title">${e.title}${e.company?' @ '+e.company:''}</div><div class="c-sub">${date}</div>${e.desc?`<div class="c-desc">${e.desc}</div>`:''}</div></div>`;
-      if (t==='chalk') return `<div class="card"><div class="c-body"><div class="c-title">${e.title}${e.company?' — '+e.company:''}</div><div class="c-sub">${date}</div>${e.desc?`<div class="c-desc">${e.desc}</div>`:''}</div><div class="c-date">${date}</div></div>`;
-      return `<div class="card"><div class="c-title">${e.title}${e.company?' — '+e.company:''}</div><div class="c-sub">${date}</div>${e.desc?`<div class="c-desc">${e.desc}</div>`:''}</div>`;
-    }).join('');
-  }
-  function eduCards() {
-    return (D.edus||[]).filter(e=>e.degree).map(e => {
-      if (t==='linen') return `<div class="card"><div class="c-date">${e.year||''}</div><div class="c-body"><div class="c-title">${e.degree}</div><div class="c-sub">${e.school||''}</div></div></div>`;
-      if (t==='chalk') return `<div class="card"><div class="c-body"><div class="c-title">${e.degree}</div><div class="c-sub">${e.school||''}</div></div><div class="c-date">${e.year||''}</div></div>`;
-      return `<div class="card"><div class="c-title">${e.degree}</div><div class="c-sub">${e.school||''} ${e.year?'· '+e.year:''}</div></div>`;
-    }).join('');
-  }
-  function projCards() {
-    return (D.projs||[]).filter(p=>p.name).map(p =>
-      `<div class="card"><div class="c-title">${p.name}${p.url?` <span style="opacity:.4;font-size:.8em">· ${p.url}</span>`:''}</div>${p.desc?`<div class="c-desc">${p.desc}</div>`:''}</div>`
-    ).join('');
-  }
-  const skillsHtml = (D.skills||[]).map(s=>`<span class="tag">${s}</span>`).join('');
-
-  // Hero per theme
-  const heroes = {
-    cyber: `<div class="hero"><div class="h-name">${D.name}</div><div class="h-title">${D.title||''}</div><div class="h-summary">${D.summary||''}</div><div class="h-contact">${contact}</div>${socHtml}</div>`,
-    noir:  `<div class="hero"><div class="hero-l"><div class="h-eyebrow">Portfolio · ${new Date().getFullYear()}</div><div class="h-name">${D.name}</div><div class="h-title">${D.title||''}</div></div><div class="hero-r"><div class="h-summary">${D.summary||''}</div><div class="h-contact" style="margin-top:16px;line-height:2">${[D.email,D.phone,D.location,D.website].filter(Boolean).join('<br>')}</div>${socHtml}</div></div>`,
-    linen: `<div class="hero"><div><div class="h-issue">VOL.I · ${new Date().getFullYear()}</div><div class="h-name">${D.name}</div><div class="h-title">${D.title||''}</div><div class="h-summary">${D.summary||''}</div><div class="h-contact">${contact}</div>${socHtml}</div></div>`,
-    plasma:`<div class="hero"><div class="h-name">${D.name}</div><div class="h-title">${D.title||''}</div><div class="h-summary">${D.summary||''}</div><div class="h-contact">${contact}</div>${socHtml}</div>`,
-    slate: `<div class="hero"><div class="hero-l"><div class="h-badge">Open to Opportunities</div><div class="h-name">${D.name}</div><div class="h-title">${D.title||''}</div><div class="h-summary">${D.summary||''}</div><div class="h-contact">${contact}</div>${socHtml}</div><div class="hero-r"><div class="hero-card"><div class="hero-init">${init}</div><div style="margin-top:8px;font-family:'Syne',sans-serif;font-weight:700;color:#fff">${D.name}</div><div style="color:#38bdf8;font-size:.82rem;margin-top:4px">${D.title||''}</div></div></div></div>`,
-    grove: `<div class="hero"><div class="h-name">${D.name}</div><div class="h-divider"></div><div class="h-title">${D.title||''}</div><div class="h-summary">${D.summary||''}</div><div class="h-contact">${contact}</div>${socHtml}</div>`,
-    amber: `<div class="hero"><div class="hero-l"><div class="h-eyebrow">Portfolio</div><div class="h-name">${D.name}</div><div class="h-title">${D.title||''}</div><div class="h-summary">${D.summary||''}</div><div class="h-contact">${contact}</div>${socHtml}</div><div class="hero-r"><div class="hero-init-big">${init}</div></div></div>`,
-    chalk: `<div class="hero"><div class="hero-l"><div class="h-name">${D.name}</div><div class="h-title">${D.title||''}</div><div class="h-summary">${D.summary||''}</div><div class="h-contact">${contact}</div>${socHtml}</div><div class="hero-r"><div class="hero-circle"><div class="hero-init">${init}</div></div></div></div>`,
-    velvet:`<div class="hero"><div class="h-crown">✦</div><div class="h-name">${D.name}</div><div class="h-title">${D.title||''}</div><div class="h-summary">${D.summary||''}</div><div class="h-contact">${contact}</div>${socHtml}</div>`,
-    iron:  `<div class="hero"><div class="hero-l"><div class="h-bar"></div><div class="h-name">${D.name}</div><div class="h-title">${D.title||''}</div><div class="h-summary">${D.summary||''}</div><div class="h-contact">${contact}</div>${socHtml}</div></div>`,
-    dusk:  `<div class="hero"><div class="h-name">${D.name}</div><div class="h-title">${D.title||''}</div><div class="h-summary">${D.summary||''}</div><div class="h-contact">${contact}</div>${socHtml}</div>`,
-    jade:  `<div class="hero"><div class="hero-l"><div class="h-gem">◆</div><div class="h-name">${D.name}</div><div class="h-title">${D.title||''}</div><div class="h-summary">${D.summary||''}</div><div class="h-contact">${contact}</div>${socHtml}</div><div class="hero-r"><div class="hero-gem-box"><div class="hero-gem-init">${init}</div></div></div></div>`
-  };
-
-  const SL = { linen:'sec-label', noir:'sec-label', cyber:'sec-label', plasma:'sec-label', grove:'sec-label', velvet:'sec-label', jade:'sec-label' };
-  const secCls = SL[t] || 'sec-label';
-
-  const expH  = expCards();
-  const eduH  = eduCards();
-  const projH = projCards();
-
-  document.getElementById('portfolio-root').innerHTML = `
-    ${heroes[t] || heroes.cyber}
-    ${expH  ? `<div class="section"><div class="${secCls}">Experience</div>${expH}</div>` : ''}
-    ${projH ? `<div class="section"><div class="${secCls}">Projects</div>${projH}</div>` : ''}
-    ${eduH  ? `<div class="section"><div class="${secCls}">Education</div>${eduH}</div>` : ''}
-    ${skillsHtml ? `<div class="section"><div class="${secCls}">Skills</div><div style="margin-top:6px">${skillsHtml}</div></div>` : ''}
-  `;
-}
-
-// ── THEME SWITCH ─────────────────────────────────────────────────────────────
-function T(t) {
-  theme = t;
-  document.getElementById('B').className = t;
-  document.querySelectorAll('.tdot').forEach(d => d.classList.toggle('on', d.dataset.t === t));
-  localStorage.setItem('folio_ptheme', t);
-  render();
-  setTimeout(initAnimations, 100);
-}
-
-// ── SHARE LINK ────────────────────────────────────────────────────────────────
-function copyLink() {
   try {
-    // Safe unicode encoding
-    const json = JSON.stringify(D);
-    const encoded = btoa(encodeURIComponent(json).replace(/%([0-9A-F]{2})/g,
-      (match, p1) => String.fromCharCode('0x' + p1)));
-    const url = location.origin + '/portfolio.html?theme=' + theme + '#' + encoded;
-    navigator.clipboard.writeText(url).then(() => toast('🔗 Portfolio link copied!'));
-  } catch(e) { toast('Could not copy link'); }
+    const hash = location.hash.slice(1);
+    if (hash) {
+      const decoded = decodeURIComponent(atob(hash).split('').map(c=>('%'+('00'+c.charCodeAt(0).toString(16)).slice(-2))).join(''));
+      D = JSON.parse(decoded);
+    }
+  } catch(e) {}
 }
 
-function toast(msg) {
-  const el = document.getElementById('toast');
-  el.textContent = msg; el.style.opacity = '1';
-  setTimeout(() => el.style.opacity = '0', 2600);
+// URL theme param
+const urlTheme = new URLSearchParams(location.search).get('theme');
+if (urlTheme) theme = urlTheme;
+
+// ── THEMES LIST ────────────────────────────────────────────────────
+const THEMES = [
+  {id:'cyber',    name:'Cyber',         cat:'Dark',         colors:['#050a10','#00ffcc','#7b2fff']},
+  {id:'noir',     name:'Noir',          cat:'Dark',         colors:['#080808','#fff','#333']},
+  {id:'midnight', name:'Midnight',      cat:'Dark',         colors:['#0a0a1a','#c9a84c','#e8dcc8']},
+  {id:'obsidian', name:'Obsidian',      cat:'Dark',         colors:['#141414','#ff6b35','#fff']},
+  {id:'plasma',   name:'Plasma',        cat:'Colorful',     colors:['#08020f','#ff6edf','#c084fc']},
+  {id:'linen',    name:'Linen',         cat:'Light',        colors:['#f4ede0','#b5956a','#1c1208']},
+  {id:'chalk',    name:'Chalk',         cat:'Light',        colors:['#f8f7f5','#6c63ff','#f59e0b']},
+  {id:'paper',    name:'Paper',         cat:'Light',        colors:['#fffef9','#1a1a1a','#555']},
+  {id:'cotton',   name:'Cotton',        cat:'Professional', colors:['#f0f7ff','#1e40af','#93c5fd']},
+  {id:'velvet',   name:'Velvet',        cat:'Creative',     colors:['#0f0520','#d4af37','#f5e6c8']},
+  {id:'amber',    name:'Amber',         cat:'Dark',         colors:['#100a00','#fbbf24','#f59e0b']},
+  {id:'coral',    name:'Coral',         cat:'Colorful',     colors:['#fff5f5','#ff6b6b','#ee5a24']},
+  {id:'dusk',     name:'Dusk',          cat:'Colorful',     colors:['#0d0820','#c084fc','#4d96ff']},
+  {id:'aurora',   name:'Aurora',        cat:'Creative',     colors:['#030810','#00ff96','#00b4ff']},
+  {id:'neon',     name:'Neon',          cat:'Creative',     colors:['#000','#ff00ff','#00ffff']},
+  {id:'retro',    name:'Retro',         cat:'Creative',     colors:['#12001f','#ff71ce','#01cdfe']},
+  {id:'glass',    name:'Glassmorphism', cat:'Creative',     colors:['#667eea','#764ba2','rgba(255,255,255,.2)']},
+  {id:'navy',     name:'Navy',          cat:'Professional', colors:['#0f172a','#3b82f6','#f8fafc']},
+  {id:'grove',    name:'Grove',         cat:'Professional', colors:['#0a1a0a','#4ade80','#f0fdf4']},
+  {id:'slate',    name:'Slate',         cat:'Professional', colors:['#f1f5f9','#1e293b','#3b82f6']},
+];
+
+// ── BUILD THEME PANEL ──────────────────────────────────────────────
+function buildThemePanel() {
+  const list = document.getElementById('theme-list');
+  list.innerHTML = THEMES.map(t => `
+    <div class="tr ${t.id === theme ? 'active' : ''}" id="tr-${t.id}" onclick="applyTheme('${t.id}')">
+      <div class="tr-preview">
+        <div class="tr-preview-inner" id="prev-${t.id}"></div>
+      </div>
+      <div class="tr-meta">
+        <div>
+          <div class="tr-name">${t.name}</div>
+          <div class="tr-cat">${t.cat}</div>
+        </div>
+        <button class="tr-select" onclick="event.stopPropagation();applyTheme('${t.id}')">
+          ${t.id === theme ? '✓ Active' : 'Select'}
+        </button>
+      </div>
+    </div>
+  `).join('');
 }
 
-// ── FADE UP STAGGER ANIMATIONS ───────────────────────────────────────────────
-function initAnimations() {
-  // Add base animation styles
-  const style = document.createElement('style');
-  style.textContent = `
-    .anim-ready { opacity: 0; transform: translateY(36px); transition: opacity .65s ease, transform .65s ease; }
-    .anim-visible { opacity: 1 !important; transform: translateY(0) !important; }
-    .hero { opacity: 1 !important; transform: none !important; }
-    .hero > * { opacity: 0; transform: translateY(28px); transition: opacity .6s ease, transform .6s ease; }
-    .hero > *.anim-visible { opacity: 1; transform: translateY(0); }
-    @keyframes heroFadeIn { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
-  `;
-  document.head.appendChild(style);
-
-  // Stagger hero children
+// ── APPLY THEME ────────────────────────────────────────────────────
+function applyTheme(t) {
+  if (t === theme) return;
+  const overlay = document.getElementById('theme-transition');
+  overlay.classList.add('flash');
   setTimeout(() => {
-    const heroChildren = document.querySelectorAll('.hero > *');
-    heroChildren.forEach((el, i) => {
-      setTimeout(() => el.classList.add('anim-visible'), i * 120);
-    });
-  }, 100);
+    theme = t;
+    document.body.className = t;
+    renderPortfolio();
+    // Update panel
+    document.querySelectorAll('.tr').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tr-select').forEach(btn => btn.textContent = 'Select');
+    const active = document.getElementById('tr-' + t);
+    if (active) {
+      active.classList.add('active');
+      active.querySelector('.tr-select').textContent = '✓ Active';
+      active.scrollIntoView({behavior:'smooth', block:'nearest'});
+    }
+    overlay.classList.remove('flash');
+    setupScrollAnimations();
+  }, 250);
+}
 
-  // Observe sections and cards
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const el = entry.target;
-        const delay = el.dataset.delay || 0;
-        setTimeout(() => el.classList.add('anim-visible'), parseInt(delay));
-        observer.unobserve(el);
+// ── SOCIAL LINKS ───────────────────────────────────────────────────
+function socialHtml(d) {
+  const links = [];
+  if (d.linkedin)  links.push(`<a class="s-btn li" href="https://${d.linkedin.replace(/^https?:\/\//,'')}" target="_blank">💼 LinkedIn</a>`);
+  if (d.github)    links.push(`<a class="s-btn gh" href="https://${d.github.replace(/^https?:\/\//,'')}" target="_blank">🐙 GitHub</a>`);
+  if (d.instagram) links.push(`<a class="s-btn ig" href="https://instagram.com/${d.instagram.replace(/.*instagram\.com\//,'').replace('@','')}" target="_blank">📸 Instagram</a>`);
+  if (d.whatsapp)  links.push(`<a class="s-btn wa" href="https://wa.me/${d.whatsapp.replace(/\D/g,'')}" target="_blank">💬 WhatsApp</a>`);
+  return links.length ? `<div class="s-links">${links.join('')}</div>` : '';
+}
+
+// ── HERO HTML ──────────────────────────────────────────────────────
+function heroHtml(d) {
+  const contact = [d.email, d.phone, d.location, d.website].filter(Boolean).join(' · ');
+  const social  = socialHtml(d);
+
+  if (theme === 'noir') return `
+    <div class="hero">
+      <div class="hero-l fade-up">
+        <div class="h-eyebrow">Portfolio</div>
+        <div class="h-name">${d.name||'Your Name'}</div>
+        <div class="h-title">${d.title||''}</div>
+      </div>
+      <div class="hero-r fade-up">
+        <div class="h-summary">${d.summary||''}</div>
+        <div class="h-contact">${contact}</div>
+        ${social}
+      </div>
+    </div>`;
+
+  if (theme === 'slate') return `
+    <div class="hero">
+      <div class="hero-side">
+        <div class="sl-dot"></div><div class="sl-dot"></div><div class="sl-dot"></div>
+      </div>
+      <div class="hero-main fade-up">
+        <div class="h-name">${d.name||'Your Name'}</div>
+        <div class="h-title">${d.title||''}</div>
+        <div class="h-summary">${d.summary||''}</div>
+        <div class="h-contact">${contact}</div>
+        ${social}
+      </div>
+    </div>`;
+
+  if (theme === 'glass') return `
+    <div class="hero">
+      <div class="glass-card hero-card fade-up">
+        <div class="h-name">${d.name||'Your Name'}</div>
+        <div class="h-title">${d.title||''}</div>
+        <div class="h-summary">${d.summary||''}</div>
+        <div class="h-contact">${contact}</div>
+        ${social}
+      </div>
+    </div>`;
+
+  if (theme === 'obsidian') return `
+    <div class="hero">
+      <div class="hero-top fade-up">
+        <div class="h-name">${d.name||'Your Name'}</div>
+        <div class="h-title">${d.title||''}</div>
+        <div class="h-summary">${d.summary||''}</div>
+        <div class="h-contact">${contact}</div>
+        ${social}
+      </div>
+    </div>`;
+
+  if (theme === 'aurora') return `
+    <div class="hero">
+      <div class="aurora-bg"></div>
+      <div class="h-name fade-up">${d.name||'Your Name'}</div>
+      <div class="h-title fade-up">${d.title||''}</div>
+      <div class="h-summary fade-up">${d.summary||''}</div>
+      <div class="h-contact fade-up">${contact}</div>
+      ${social}
+    </div>`;
+
+  if (theme === 'midnight') return `
+    <div class="hero fade-up">
+      <div class="h-accent"></div>
+      <div class="h-name">${d.name||'Your Name'}</div>
+      <div class="h-title">${d.title||''}</div>
+      <div class="h-summary">${d.summary||''}</div>
+      <div class="h-contact">${contact}</div>
+      ${social}
+    </div>`;
+
+  if (theme === 'velvet') return `
+    <div class="hero">
+      <div class="h-name fade-up">${d.name||'Your Name'}</div>
+      <div class="h-divider fade-up"><div class="h-divider-line"></div><div class="h-divider-gem">◆</div><div class="h-divider-line"></div></div>
+      <div class="h-title fade-up">${d.title||''}</div>
+      <div class="h-summary fade-up">${d.summary||''}</div>
+      <div class="h-contact fade-up">${contact}</div>
+      ${social}
+    </div>`;
+
+  if (theme === 'neon') return `
+    <div class="hero fade-up">
+      <div class="h-name">${d.name||'YOUR NAME'}</div>
+      <div class="h-bar"></div>
+      <div class="h-title">${d.title||''}</div>
+      <div class="h-summary">${d.summary||''}</div>
+      <div class="h-contact">${contact}</div>
+      ${social}
+    </div>`;
+
+  if (theme === 'retro') return `
+    <div class="hero fade-up">
+      <div class="h-eyebrow">★ WELCOME TO MY PORTFOLIO ★</div>
+      <div class="h-name">${d.name||'YOUR NAME'}</div>
+      <div class="h-title">${d.title||''}</div>
+      <div class="h-summary">${d.summary||''}</div>
+      <div class="h-contact">${contact}</div>
+      ${social}
+    </div>`;
+
+  if (theme === 'linen') return `
+    <div class="hero fade-up">
+      <div>
+        <div class="h-name">${d.name||'Your Name'}</div>
+        <div class="h-title">${d.title||''}</div>
+        <div class="h-summary">${d.summary||''}</div>
+        <div class="h-contact">${contact}</div>
+        ${social}
+      </div>
+    </div>`;
+
+  if (theme === 'amber') return `
+    <div class="hero fade-up">
+      <div class="h-bar"></div>
+      <div class="h-name">${d.name||'YOUR NAME'}</div>
+      <div class="h-title">${d.title||''}</div>
+      <div class="h-summary">${d.summary||''}</div>
+      <div class="h-contact">${contact}</div>
+      ${social}
+    </div>`;
+
+  // Default hero (cyber, plasma, chalk, paper, cotton, coral, dusk, grove, navy)
+  return `
+    <div class="hero fade-up">
+      ${theme==='chalk'?`<div class="h-dots"><div class="h-dot" style="background:#6c63ff"></div><div class="h-dot" style="background:#f59e0b"></div><div class="h-dot" style="background:#10b981"></div></div>`:''}
+      ${theme==='grove'?`<div class="h-accent"></div>`:''}
+      <div class="h-name">${d.name||'Your Name'}</div>
+      <div class="h-title">${d.title||''}</div>
+      <div class="h-summary">${d.summary||''}</div>
+      <div class="h-contact">${contact}</div>
+      ${social}
+    </div>`;
+}
+
+// ── SECTION HTML ───────────────────────────────────────────────────
+function sectionHtml(icon, label, content) {
+  if (!content) return '';
+  return `
+    <div class="section-wrap">
+      <div class="float-icon">${icon}</div>
+      <div class="section fade-up">
+        <div class="sec-label">${label}</div>
+        ${content}
+      </div>
+    </div>`;
+}
+
+function cardHtml(title, sub, desc) {
+  return `<div class="card fade-up">
+    <div class="c-title">${title}</div>
+    ${sub ? `<div class="c-sub">${sub}</div>` : ''}
+    ${desc ? `<div class="c-desc">${desc}</div>` : ''}
+  </div>`;
+}
+
+function tagsHtml(skills) {
+  if (!skills || !skills.length) return '';
+  const chalkColors = ['#ede9fe;color:#7c3aed','#fef3c7;color:#d97706','#d1fae5;color:#065f46','#fce7f3;color:#9d174d','#dbeafe;color:#1e40af'];
+  return `<div style="display:flex;flex-wrap:wrap;gap:6px">${skills.map((s,i)=>{
+    if (theme==='chalk') return `<span class="tag" style="background:${chalkColors[i%chalkColors.length].split(';')[0].replace('background:','')};${chalkColors[i%chalkColors.length]}">${s}</span>`;
+    return `<span class="tag">${s}</span>`;
+  }).join('')}</div>`;
+}
+
+// ── RENDER PORTFOLIO ───────────────────────────────────────────────
+function renderPortfolio() {
+  document.body.className = theme;
+  document.title = (D.name || 'Portfolio') + ' — Folio';
+  document.getElementById('page-title') && (document.getElementById('page-title').textContent = document.title);
+
+  const expHtml  = (D.exps||[]).filter(e=>e.title).map(e=>cardHtml(e.title+(e.company?` — ${e.company}`:''), [e.start,e.end].filter(Boolean).join(' – '), e.desc)).join('');
+  const eduHtml  = (D.edus||[]).filter(e=>e.degree).map(e=>cardHtml(e.degree, e.school+(e.year?` · ${e.year}`:''), '')).join('');
+  const projHtml = (D.projs||[]).filter(p=>p.name).map(p=>cardHtml(p.name+(p.url?` <span style="opacity:.5;font-size:.8em">${p.url}</span>`:''), '', p.desc)).join('');
+
+  document.getElementById('portfolio-content').innerHTML =
+    heroHtml(D) +
+    (D.summary ? '' : '') +
+    sectionHtml('💼', 'Experience',  expHtml) +
+    sectionHtml('🎓', 'Education',   eduHtml) +
+    sectionHtml('🚀', 'Projects',    projHtml) +
+    sectionHtml('⚡', 'Skills',      tagsHtml(D.skills));
+}
+
+// ── SCROLL ANIMATIONS ──────────────────────────────────────────────
+function setupScrollAnimations() {
+  const pv = document.getElementById('portfolio-view');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
       }
     });
-  }, { threshold: 0.12 });
+  }, { threshold: 0.1, root: pv });
 
-  // Observe section titles
-  document.querySelectorAll('.sec-label').forEach((el, i) => {
-    el.classList.add('anim-ready');
-    el.dataset.delay = i * 60;
+  document.querySelectorAll('.fade-up, .section-wrap').forEach(el => {
+    el.classList.remove('visible');
     observer.observe(el);
   });
 
-  // Observe cards with stagger
-  document.querySelectorAll('.section').forEach(section => {
-    const cards = section.querySelectorAll('.card, .tag');
-    cards.forEach((card, i) => {
-      card.classList.add('anim-ready');
-      card.dataset.delay = i * 80;
-      observer.observe(card);
-    });
-  });
-
-  // Observe skill tags
-  document.querySelectorAll('.tag').forEach((tag, i) => {
-    tag.classList.add('anim-ready');
-    tag.dataset.delay = i * 40;
-    observer.observe(tag);
-  });
+  // Trigger hero immediately
+  setTimeout(() => {
+    document.querySelectorAll('.hero .fade-up, .hero').forEach(el => el.classList.add('visible'));
+  }, 100);
 }
 
-// ── INIT ──────────────────────────────────────────────────────────────────────
-T(theme);
-setTimeout(initAnimations, 200);
+// ── TOAST ──────────────────────────────────────────────────────────
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ── SHARE ──────────────────────────────────────────────────────────
+function copyLink() {
+  const url = location.origin + '/portfolio.html?theme=' + theme;
+  navigator.clipboard.writeText(url).then(() => toast('🔗 Portfolio link copied!'));
+}
+
+// ── SAVE PDF ───────────────────────────────────────────────────────
+function savePDF() {
+  toast('📄 Opening print dialog...');
+  setTimeout(() => window.print(), 500);
+}
+
+// ── INIT ───────────────────────────────────────────────────────────
+buildThemePanel();
+renderPortfolio();
+setTimeout(setupScrollAnimations, 200);
 </script>
 </body>
 </html>
