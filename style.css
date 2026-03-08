@@ -349,26 +349,51 @@ select option { background: #1a1a28; color: #e0e0ff; }
   flex-direction: column;
   overflow: hidden;
   border-right: 1px solid rgba(255,255,255,0.06);
-  background: #0a0a10;
+  background: #111118;
+  min-width: 0;
 }
-.sp-preview-wrap {
+
+/* A4 resume wrapper */
+#step5-resume-preview {
   flex: 1;
   overflow-y: auto;
-  padding: 20px 24px;
+  overflow-x: hidden;
+  padding: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  background: #111118;
 }
-.sp-preview-wrap::-webkit-scrollbar { width: 5px; }
-.sp-preview-wrap::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 3px; }
+#step5-resume-preview::-webkit-scrollbar { width: 5px; }
+#step5-resume-preview::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 3px; }
 
-/* Scale resume inside step5 preview */
-#step5-resume-preview > * {
-  transform-origin: top left;
-  transform: scale(0.72);
-  width: 138.88%;
-  pointer-events: none;
+/* The actual A4 resume sheet — fixed 794px wide (A4 at 96dpi) */
+.resume-sheet {
+  width: 794px !important;
+  min-height: 1123px;
+  flex-shrink: 0;
+  transform-origin: top center;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.7);
+  background: #fff;
+  overflow: hidden;
 }
+/* Force all template root divs to fill the sheet */
+.resume-sheet > div {
+  width: 100% !important;
+  min-height: 1123px;
+  box-sizing: border-box;
+}
+
 /* Portfolio preview in step6 */
 #step6-portfolio-preview {
-  min-height: 100%;
+  flex: 1;
+  overflow: hidden;
+}
+#step6-portfolio-preview iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
 }
 
 /* Bottom action bar */

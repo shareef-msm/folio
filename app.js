@@ -519,8 +519,23 @@ function selectResumeTmpl(id) {
 function refreshResumePrev() {
   const el = document.getElementById('step5-resume-preview');
   if (!el) return;
-  el.innerHTML = buildResume(collectData());
+  el.innerHTML = `<div class="resume-sheet">${buildResume(collectData())}</div>`;
+  scaleResumeSheet();
 }
+
+function scaleResumeSheet() {
+  const el = document.getElementById('step5-resume-preview');
+  if (!el) return;
+  const sheet = el.querySelector('.resume-sheet');
+  if (!sheet) return;
+  const availW = el.clientWidth - 48;
+  const scale = Math.min(1, availW / 794);
+  sheet.style.transform = `scale(${scale})`;
+  sheet.style.transformOrigin = 'top center';
+  sheet.style.marginBottom = `${(1123 * scale) - 1123}px`;
+}
+
+window.addEventListener('resize', scaleResumeSheet);
 
 // ── STEP 6: PORTFOLIO PANEL ───────────────────────────────────────────────────
 let portfolioTheme = 'cyber';
@@ -672,7 +687,7 @@ function refreshPortfolioPrev() {
   if (existing) {
     existing.src = src;
   } else {
-    wrap.innerHTML = `<iframe src="${src}" style="width:100%;height:100%;border:none;min-height:calc(100vh - 140px)" frameborder="0"></iframe>`;
+    wrap.innerHTML = `<iframe src="${src}" style="width:100%;height:100%;border:none;display:block" frameborder="0"></iframe>`;
   }
 }
 
