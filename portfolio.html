@@ -78,8 +78,40 @@ a{text-decoration:none;color:inherit}
 .tr:hover{border-color:rgba(255,255,255,0.2);transform:translateX(-2px)}
 .tr.active{border-color:#6c63ff;box-shadow:0 0 16px rgba(108,99,255,0.3)}
 
-.tr-preview{height:70px;position:relative;overflow:hidden;pointer-events:none}
-.tr-preview-inner{transform:scale(0.35);transform-origin:top left;width:286%;pointer-events:none}
+.tr-preview{
+  height:90px;
+  position:relative;
+  overflow:hidden;
+  padding:12px 14px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+}
+.tr-prev-content{flex:1}
+.tr-prev-name{
+  font-size:13px;
+  font-weight:700;
+  margin-bottom:6px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.tr-prev-bar{height:2px;border-radius:1px;margin-bottom:6px;opacity:0.8}
+.tr-prev-tags{display:flex;gap:4px;flex-wrap:wrap}
+.tr-prev-tag{
+  font-size:9px;
+  padding:2px 6px;
+  border-radius:3px;
+  font-family:'DM Sans',sans-serif;
+  white-space:nowrap;
+}
+.tr-prev-icons{
+  display:flex;
+  gap:6px;
+  opacity:0.5;
+  font-size:10px;
+  margin-top:4px;
+}
 
 .tr-meta{
   padding:8px 12px 10px;
@@ -263,23 +295,27 @@ body.obsidian{background:#141414;color:#e0e0e0;font-family:'Unbounded',sans-seri
 .obsidian .float-icon{background:rgba(255,107,53,0.1);border-color:rgba(255,107,53,0.25)}
 
 /* ════════════════════════════════════════════════════════════════════
-   THEME 5 — PLASMA
+   THEME 5 — STEEL (dark silver industrial)
 ════════════════════════════════════════════════════════════════════ */
-body.plasma{background:#08020f;color:#f0d8ff;font-family:'Outfit',sans-serif}
-.plasma .hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:80px 40px;background:radial-gradient(ellipse 70% 50% at 50% 0%,rgba(255,110,223,.08),transparent 60%),#08020f;position:relative}
-.plasma .h-name{font-family:'Syne',sans-serif;font-size:clamp(3.5rem,10vw,8rem);font-weight:800;background:linear-gradient(135deg,#ff6edf,#c084fc,#ff6edf);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-2px;margin-bottom:8px}
-.plasma .h-title{color:#c084fc;font-size:.85rem;letter-spacing:4px;text-transform:uppercase;margin-bottom:20px}
-.plasma .h-summary{max-width:540px;margin:0 auto;color:rgba(240,216,255,.55);line-height:1.7}
-.plasma .h-contact{margin-top:12px;color:rgba(192,132,252,.5);font-size:.8rem}
-.plasma .sec-label{font-size:.72rem;letter-spacing:4px;text-transform:uppercase;color:#ff6edf;margin-bottom:24px;display:flex;align-items:center;gap:14px}
-.plasma .sec-label::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(255,110,223,.4),transparent)}
-.plasma .card{background:rgba(255,110,223,.04);border:1px solid rgba(255,110,223,.1);border-radius:12px;padding:18px 22px;margin-bottom:10px;transition:all .2s}
-.plasma .card:hover{border-color:rgba(255,110,223,.3)}
-.plasma .c-title{font-weight:700;color:#f0d8ff;margin-bottom:4px}
-.plasma .c-sub{color:#ff6edf;font-size:.8rem;margin-bottom:6px}
-.plasma .c-desc{color:rgba(240,216,255,.5);font-size:.88rem;white-space:pre-line;line-height:1.6}
-.plasma .tag{background:rgba(192,132,252,.1);color:#c084fc;border:1px solid rgba(192,132,252,.2);padding:4px 12px;border-radius:20px;font-size:.78rem;display:inline-block;margin:3px}
-.plasma .float-icon{background:rgba(255,110,223,0.1);border-color:rgba(255,110,223,0.25)}
+body.steel{background:#111416;color:#c8d0d8;font-family:'DM Sans',sans-serif}
+.steel .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding:80px;background:linear-gradient(160deg,#0d0f11,#161b20);position:relative;overflow:hidden}
+.steel .hero::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#dc2626,#ef4444,#dc2626)}
+.steel .hero::after{content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(90deg,transparent,transparent 60px,rgba(255,255,255,.01) 60px,rgba(255,255,255,.01) 61px);pointer-events:none}
+.steel .h-tag{display:inline-block;background:rgba(220,38,38,.15);border:1px solid rgba(220,38,38,.3);color:#ef4444;font-size:.68rem;letter-spacing:2px;text-transform:uppercase;padding:4px 12px;border-radius:2px;margin-bottom:16px;font-family:'IBM Plex Mono',monospace}
+.steel .h-name{font-family:'Unbounded',sans-serif;font-size:clamp(2.5rem,6vw,5rem);font-weight:900;color:#e8ecf0;letter-spacing:-3px;line-height:.88;margin-bottom:12px;text-transform:uppercase}
+.steel .h-title{font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:#dc2626;letter-spacing:3px;text-transform:uppercase;margin-bottom:16px}
+.steel .h-summary{color:rgba(200,208,216,.5);line-height:1.7;max-width:520px;font-size:.9rem}
+.steel .h-contact{margin-top:12px;font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:rgba(200,208,216,.3)}
+.steel .sec-label{font-family:'IBM Plex Mono',monospace;font-size:.68rem;letter-spacing:4px;text-transform:uppercase;color:#dc2626;margin-bottom:22px;display:flex;align-items:center;gap:10px}
+.steel .sec-label::before{content:'//';color:rgba(220,38,38,.5)}
+.steel .sec-label::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(220,38,38,.3),transparent)}
+.steel .card{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-left:2px solid #dc2626;padding:16px 20px;margin-bottom:8px;border-radius:0 4px 4px 0;transition:all .2s}
+.steel .card:hover{background:rgba(255,255,255,.04);border-left-color:#ef4444}
+.steel .c-title{font-weight:700;color:#e8ecf0;margin-bottom:4px;font-size:.95rem}
+.steel .c-sub{font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:#dc2626;margin-bottom:6px}
+.steel .c-desc{color:rgba(200,208,216,.45);font-size:.85rem;white-space:pre-line;line-height:1.6}
+.steel .tag{background:rgba(255,255,255,.05);color:#9ca3af;border:1px solid rgba(255,255,255,.08);padding:4px 10px;border-radius:2px;font-family:'IBM Plex Mono',monospace;font-size:.7rem;display:inline-block;margin:3px}
+.steel .float-icon{background:rgba(220,38,38,0.1);border-color:rgba(220,38,38,0.3)}
 
 /* ════════════════════════════════════════════════════════════════════
    THEME 6 — LINEN
@@ -647,26 +683,106 @@ if (urlTheme) theme = urlTheme;
 
 // ── THEMES LIST ────────────────────────────────────────────────────
 const THEMES = [
-  {id:'cyber',    name:'Cyber',         cat:'Dark',         colors:['#050a10','#00ffcc','#7b2fff']},
-  {id:'noir',     name:'Noir',          cat:'Dark',         colors:['#080808','#fff','#333']},
-  {id:'midnight', name:'Midnight',      cat:'Dark',         colors:['#0a0a1a','#c9a84c','#e8dcc8']},
-  {id:'obsidian', name:'Obsidian',      cat:'Dark',         colors:['#141414','#ff6b35','#fff']},
-  {id:'plasma',   name:'Plasma',        cat:'Colorful',     colors:['#08020f','#ff6edf','#c084fc']},
-  {id:'linen',    name:'Linen',         cat:'Light',        colors:['#f4ede0','#b5956a','#1c1208']},
-  {id:'chalk',    name:'Chalk',         cat:'Light',        colors:['#f8f7f5','#6c63ff','#f59e0b']},
-  {id:'paper',    name:'Paper',         cat:'Light',        colors:['#fffef9','#1a1a1a','#555']},
-  {id:'cotton',   name:'Cotton',        cat:'Professional', colors:['#f0f7ff','#1e40af','#93c5fd']},
-  {id:'velvet',   name:'Velvet',        cat:'Creative',     colors:['#0f0520','#d4af37','#f5e6c8']},
-  {id:'amber',    name:'Amber',         cat:'Dark',         colors:['#100a00','#fbbf24','#f59e0b']},
-  {id:'coral',    name:'Coral',         cat:'Colorful',     colors:['#fff5f5','#ff6b6b','#ee5a24']},
-  {id:'dusk',     name:'Dusk',          cat:'Colorful',     colors:['#0d0820','#c084fc','#4d96ff']},
-  {id:'aurora',   name:'Aurora',        cat:'Creative',     colors:['#030810','#00ff96','#00b4ff']},
-  {id:'neon',     name:'Neon',          cat:'Creative',     colors:['#000','#ff00ff','#00ffff']},
-  {id:'retro',    name:'Retro',         cat:'Creative',     colors:['#12001f','#ff71ce','#01cdfe']},
-  {id:'glass',    name:'Glassmorphism', cat:'Creative',     colors:['#667eea','#764ba2','rgba(255,255,255,.2)']},
-  {id:'navy',     name:'Navy',          cat:'Professional', colors:['#0f172a','#3b82f6','#f8fafc']},
-  {id:'grove',    name:'Grove',         cat:'Professional', colors:['#0a1a0a','#4ade80','#f0fdf4']},
-  {id:'slate',    name:'Slate',         cat:'Professional', colors:['#f1f5f9','#1e293b','#3b82f6']},
+  {id:'cyber',    name:'Cyber',         cat:'Dark',         icons:['⬡','◈','⚡','▸'],
+   preview:`background:#050a10;background-image:linear-gradient(rgba(0,255,204,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,204,.06) 1px,transparent 1px);background-size:20px 20px`,
+   name_style:`font-family:'Bebas Neue',cursive;color:#00ffcc;font-size:14px;text-shadow:0 0 8px #00ffcc`,
+   bar:`background:linear-gradient(90deg,#00ffcc,#7b2fff)`,
+   tag:`background:rgba(123,47,255,.3);color:#c084fc;border:1px solid rgba(123,47,255,.5)`},
+  {id:'noir',     name:'Noir',          cat:'Dark',         icons:['◆','▪','—','·'],
+   preview:`background:#080808;border-top:3px solid #fff`,
+   name_style:`font-family:Georgia,serif;color:#fff;font-size:13px;font-weight:700`,
+   bar:`background:#333`,
+   tag:`background:#111;color:#666;border:1px solid #222`},
+  {id:'midnight', name:'Midnight',      cat:'Dark',         icons:['✦','◇','✧','❖'],
+   preview:`background:linear-gradient(135deg,#0a0a1a,#0d0d2b)`,
+   name_style:`font-family:Georgia,serif;color:#e8dcc8;font-size:13px`,
+   bar:`background:linear-gradient(90deg,#c9a84c,#e8c97a)`,
+   tag:`background:rgba(201,168,76,.15);color:#c9a84c;border:1px solid rgba(201,168,76,.3)`},
+  {id:'obsidian', name:'Obsidian',      cat:'Dark',         icons:['▶','●','◉','▸'],
+   preview:`background:#111;border-top:3px solid #ff6b35`,
+   name_style:`font-family:'Arial Black',sans-serif;color:#fff;font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:1px`,
+   bar:`background:#ff6b35`,
+   tag:`background:rgba(255,107,53,.15);color:#ff6b35;border:1px solid rgba(255,107,53,.3)`},
+  {id:'steel',    name:'Steel',         cat:'Dark',         icons:['//','#','{}','→'],
+   preview:`background:linear-gradient(160deg,#0d0f11,#161b20);border-top:3px solid #dc2626`,
+   name_style:`font-family:'Arial Black',sans-serif;color:#e8ecf0;font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:-1px`,
+   bar:`background:linear-gradient(90deg,#dc2626,#ef4444)`,
+   tag:`background:rgba(220,38,38,.1);color:#ef4444;border:1px solid rgba(220,38,38,.2)`},
+  {id:'linen',    name:'Linen',         cat:'Light',        icons:['❧','§','¶','†'],
+   preview:`background:#f4ede0;border-bottom:2px solid #1c1208`,
+   name_style:`font-family:Georgia,serif;color:#1c1208;font-size:14px;font-weight:700`,
+   bar:`background:#b5956a`,
+   tag:`background:rgba(181,149,106,.15);color:#7a5c2a;border:1px solid rgba(181,149,106,.3)`},
+  {id:'chalk',    name:'Chalk',         cat:'Light',        icons:['○','□','△','◇'],
+   preview:`background:#f8f7f5`,
+   name_style:`font-family:'Arial',sans-serif;color:#1a1a2e;font-size:13px;font-weight:800`,
+   bar:`background:linear-gradient(90deg,#6c63ff,#f59e0b,#10b981)`,
+   tag:`background:#ede9fe;color:#7c3aed;border:none`},
+  {id:'paper',    name:'Paper',         cat:'Light',        icons:['→','—','·','◦'],
+   preview:`background:#fffef9;border-left:5px solid #1a1a1a`,
+   name_style:`font-family:Georgia,serif;color:#1a1a1a;font-size:14px;font-weight:700`,
+   bar:`background:#1a1a1a`,
+   tag:`background:transparent;color:#1a1a1a;border:1px solid #1a1a1a`},
+  {id:'cotton',   name:'Cotton',        cat:'Professional', icons:['◉','▷','★','◈'],
+   preview:`background:#1e40af`,
+   name_style:`font-family:'Arial',sans-serif;color:#fff;font-size:13px;font-weight:800`,
+   bar:`background:#93c5fd`,
+   tag:`background:rgba(255,255,255,.2);color:#fff;border:none`},
+  {id:'velvet',   name:'Velvet',        cat:'Creative',     icons:['◆','❖','✦','♦'],
+   preview:`background:linear-gradient(135deg,#0f0520,#1a0a35)`,
+   name_style:`font-family:Georgia,serif;color:#f5e6c8;font-size:13px;font-weight:700`,
+   bar:`background:linear-gradient(90deg,#d4af37,#e8c97a)`,
+   tag:`background:rgba(212,175,55,.15);color:#d4af37;border:1px solid rgba(212,175,55,.3)`},
+  {id:'amber',    name:'Amber',         cat:'Dark',         icons:['▸','⬡','◈','✦'],
+   preview:`background:linear-gradient(160deg,#100a00,#1c1208)`,
+   name_style:`font-family:'Arial Black',sans-serif;color:#fbbf24;font-size:11px;font-weight:900;text-transform:uppercase`,
+   bar:`background:linear-gradient(90deg,#fbbf24,#f59e0b)`,
+   tag:`background:rgba(251,191,36,.1);color:#fbbf24;border:1px solid rgba(251,191,36,.25)`},
+  {id:'coral',    name:'Coral',         cat:'Colorful',     icons:['✿','❀','◉','★'],
+   preview:`background:linear-gradient(135deg,#ff6b6b,#ee5a24)`,
+   name_style:`font-family:'Arial',sans-serif;color:#fff;font-size:13px;font-weight:800`,
+   bar:`background:rgba(255,255,255,.4)`,
+   tag:`background:rgba(255,255,255,.2);color:#fff;border:none`},
+  {id:'dusk',     name:'Dusk',          cat:'Colorful',     icons:['✦','◈','⬡','✧'],
+   preview:`background:linear-gradient(160deg,#1a0533,#2d1b4e,#0d1b3e);border-top:3px solid transparent;border-image:linear-gradient(90deg,#ff6b6b,#ffd93d,#4d96ff) 1`,
+   name_style:`font-family:'Arial',sans-serif;color:#fff;font-size:13px;font-weight:800`,
+   bar:`background:linear-gradient(90deg,#ff6b6b,#ffd93d,#4d96ff)`,
+   tag:`background:rgba(255,255,255,.08);color:#e2d9f3;border:1px solid rgba(255,255,255,.12)`},
+  {id:'aurora',   name:'Aurora',        cat:'Creative',     icons:['◈','⬡','✦','⚡'],
+   preview:`background:radial-gradient(ellipse at 20% 40%,rgba(0,255,150,.15),transparent 50%),radial-gradient(ellipse at 80% 60%,rgba(0,180,255,.12),transparent 50%),#030810`,
+   name_style:`font-family:'Arial',sans-serif;color:#00ff96;font-size:13px;font-weight:800;text-shadow:0 0 8px rgba(0,255,150,.5)`,
+   bar:`background:linear-gradient(90deg,#00ff96,#00b4ff)`,
+   tag:`background:rgba(0,255,150,.1);color:#00ff96;border:1px solid rgba(0,255,150,.2)`},
+  {id:'neon',     name:'Neon',          cat:'Creative',     icons:['◉','▶','✦','⬡'],
+   preview:`background:#000`,
+   name_style:`font-family:'Arial Black',sans-serif;color:#fff;font-size:12px;font-weight:900;text-shadow:0 0 10px #ff00ff,0 0 20px #ff00ff`,
+   bar:`background:linear-gradient(90deg,#ff00ff,#00ffff)`,
+   tag:`background:transparent;color:#ff00ff;border:1px solid #ff00ff`},
+  {id:'retro',    name:'Retro',         cat:'Creative',     icons:['★','◆','▸','✦'],
+   preview:`background:#12001f;background-image:repeating-linear-gradient(0deg,transparent,transparent 8px,rgba(255,113,206,.04) 8px,rgba(255,113,206,.04) 9px)`,
+   name_style:`font-family:'Arial Black',sans-serif;color:#ff71ce;font-size:11px;font-weight:900;text-transform:uppercase;text-shadow:2px 2px 0 #b000a0`,
+   bar:`background:linear-gradient(90deg,#ff71ce,#01cdfe)`,
+   tag:`background:rgba(255,113,206,.1);color:#ff71ce;border:1px solid rgba(255,113,206,.3)`},
+  {id:'glass',    name:'Glassmorphism', cat:'Creative',     icons:['◈','○','△','□'],
+   preview:`background:linear-gradient(135deg,#667eea,#764ba2)`,
+   name_style:`font-family:'Arial',sans-serif;color:#fff;font-size:13px;font-weight:800`,
+   bar:`background:rgba(255,255,255,.3)`,
+   tag:`background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.25)`},
+  {id:'navy',     name:'Navy',          cat:'Professional', icons:['▷','◈','■','→'],
+   preview:`background:#0f172a;border-bottom:3px solid #3b82f6`,
+   name_style:`font-family:'Arial',sans-serif;color:#fff;font-size:13px;font-weight:800`,
+   bar:`background:#3b82f6`,
+   tag:`background:rgba(59,130,246,.15);color:#60a5fa;border:1px solid rgba(59,130,246,.2)`},
+  {id:'grove',    name:'Grove',         cat:'Professional', icons:['❧','◉','✦','◇'],
+   preview:`background:linear-gradient(160deg,#0a1a0a,#0f2010)`,
+   name_style:`font-family:Georgia,serif;color:#f0fdf4;font-size:13px;font-weight:700`,
+   bar:`background:#4ade80`,
+   tag:`background:rgba(74,222,128,.1);color:#4ade80;border:1px solid rgba(74,222,128,.2)`},
+  {id:'slate',    name:'Slate',         cat:'Professional', icons:['▷','◈','●','▸'],
+   preview:`background:#f1f5f9`,
+   name_style:`font-family:'Arial',sans-serif;color:#1e293b;font-size:13px;font-weight:800`,
+   bar:`background:#3b82f6`,
+   tag:`background:#e2e8f0;color:#475569;border:none`},
 ];
 
 // ── BUILD THEME PANEL ──────────────────────────────────────────────
@@ -674,8 +790,17 @@ function buildThemePanel() {
   const list = document.getElementById('theme-list');
   list.innerHTML = THEMES.map(t => `
     <div class="tr ${t.id === theme ? 'active' : ''}" id="tr-${t.id}" onclick="applyTheme('${t.id}')">
-      <div class="tr-preview">
-        <div class="tr-preview-inner" id="prev-${t.id}"></div>
+      <div class="tr-preview" style="${t.preview}">
+        <div class="tr-prev-content">
+          <div class="tr-prev-name" style="${t.name_style}">${D.name || 'Alex Johnson'}</div>
+          <div class="tr-prev-bar" style="${t.bar}"></div>
+          <div class="tr-prev-tags">
+            ${['React','Node','Design'].map(s=>`<span class="tr-prev-tag" style="${t.tag}">${s}</span>`).join('')}
+          </div>
+        </div>
+        <div class="tr-prev-icons">
+          ${t.icons.map(ic=>`<span class="tr-prev-icon">${ic}</span>`).join('')}
+        </div>
       </div>
       <div class="tr-meta">
         <div>
@@ -713,7 +838,34 @@ function applyTheme(t) {
   }, 250);
 }
 
-// ── SOCIAL LINKS ───────────────────────────────────────────────────
+// ── THEME ICONS ────────────────────────────────────────────────────
+const THEME_ICONS = {
+  cyber:    {exp:'⬡', edu:'◈', proj:'⚡', skills:'▸'},
+  noir:     {exp:'◆', edu:'▪', proj:'—', skills:'·'},
+  midnight: {exp:'✦', edu:'◇', proj:'✧', skills:'❖'},
+  obsidian: {exp:'▶', edu:'●', proj:'◉', skills:'▸'},
+  steel:    {exp:'//', edu:'#', proj:'{}', skills:'→'},
+  linen:    {exp:'❧', edu:'§', proj:'¶', skills:'†'},
+  chalk:    {exp:'○', edu:'□', proj:'△', skills:'◇'},
+  paper:    {exp:'→', edu:'—', proj:'·', skills:'◦'},
+  cotton:   {exp:'◉', edu:'▷', proj:'★', skills:'◈'},
+  velvet:   {exp:'◆', edu:'❖', proj:'✦', skills:'♦'},
+  amber:    {exp:'▸', edu:'⬡', proj:'◈', skills:'✦'},
+  coral:    {exp:'✿', edu:'❀', proj:'◉', skills:'★'},
+  dusk:     {exp:'✦', edu:'◈', proj:'⬡', skills:'✧'},
+  aurora:   {exp:'◈', edu:'⬡', proj:'✦', skills:'⚡'},
+  neon:     {exp:'◉', edu:'▶', proj:'✦', skills:'⬡'},
+  retro:    {exp:'★', edu:'◆', proj:'▸', skills:'✦'},
+  glass:    {exp:'◈', edu:'○', proj:'△', skills:'□'},
+  navy:     {exp:'▷', edu:'◈', proj:'■', skills:'→'},
+  grove:    {exp:'❧', edu:'◉', proj:'✦', skills:'◇'},
+  slate:    {exp:'▷', edu:'◈', proj:'●', skills:'▸'},
+};
+
+function getIcon(section) {
+  const icons = THEME_ICONS[theme] || THEME_ICONS.cyber;
+  return icons[section] || '◈';
+}
 function socialHtml(d) {
   const links = [];
   if (d.linkedin)  links.push(`<a class="s-btn li" href="https://${d.linkedin.replace(/^https?:\/\//,'')}" target="_blank">💼 LinkedIn</a>`);
@@ -849,7 +1001,17 @@ function heroHtml(d) {
       ${social}
     </div>`;
 
-  // Default hero (cyber, plasma, chalk, paper, cotton, coral, dusk, grove, navy)
+  if (theme === 'steel') return `
+    <div class="hero fade-up">
+      <div class="h-tag">// PORTFOLIO</div>
+      <div class="h-name">${d.name||'YOUR NAME'}</div>
+      <div class="h-title">${d.title||''}</div>
+      <div class="h-summary">${d.summary||''}</div>
+      <div class="h-contact">${contact}</div>
+      ${social}
+    </div>`;
+
+  // Default hero
   return `
     <div class="hero fade-up">
       ${theme==='chalk'?`<div class="h-dots"><div class="h-dot" style="background:#6c63ff"></div><div class="h-dot" style="background:#f59e0b"></div><div class="h-dot" style="background:#10b981"></div></div>`:''}
@@ -904,11 +1066,10 @@ function renderPortfolio() {
 
   document.getElementById('portfolio-content').innerHTML =
     heroHtml(D) +
-    (D.summary ? '' : '') +
-    sectionHtml('💼', 'Experience',  expHtml) +
-    sectionHtml('🎓', 'Education',   eduHtml) +
-    sectionHtml('🚀', 'Projects',    projHtml) +
-    sectionHtml('⚡', 'Skills',      tagsHtml(D.skills));
+    sectionHtml(getIcon('exp'),    'Experience',  expHtml) +
+    sectionHtml(getIcon('edu'),    'Education',   eduHtml) +
+    sectionHtml(getIcon('proj'),   'Projects',    projHtml) +
+    sectionHtml(getIcon('skills'), 'Skills',      tagsHtml(D.skills));
 }
 
 // ── SCROLL ANIMATIONS ──────────────────────────────────────────────
