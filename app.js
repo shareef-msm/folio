@@ -127,6 +127,7 @@ function showStep(n) {
     if (line) line.classList.toggle('done', i < n);
   }
   if (n === 5) buildTemplatePanel();
+  if (n === 6) buildPortfolioStep();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 function goStep(n) { showStep(n); }
@@ -440,51 +441,221 @@ function esc(s) {
   return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
-// ── TEMPLATE PANEL (STEP 5) ───────────────────────────────────────────────────
+// ── STEP 5: TEMPLATE PANEL ───────────────────────────────────────────────────
 function buildTemplatePanel() {
   const list = document.getElementById('tmpl-panel-list');
   if (!list) return;
   const d = collectData();
   const nm = d.name && d.name !== 'Your Name' ? d.name : 'Alex Johnson';
   list.innerHTML = RESUME_TEMPLATES.map(t => `
-    <div class="tr2 ${t.id === selectedTemplate ? 'active' : ''}" id="tr2-${t.id}" onclick="selectTemplate2('${t.id}')">
-      <div class="tr2-preview" style="${t.prev}">
-        <div class="tr2-prev-name" style="${t.nameStyle}">${nm}</div>
-        <div class="tr2-prev-bar" style="${t.barStyle}"></div>
-        <div class="tr2-prev-tags">
-          ${['React','Node','AWS'].map(s=>`<span class="tr2-prev-tag" style="${t.tagStyle}">${s}</span>`).join('')}
+    <div class="tc ${t.id === selectedTemplate ? 'active' : ''}" id="tc-${t.id}" onclick="selectResumeTmpl('${t.id}')">
+      <div class="tc-preview" style="${t.prev}">
+        <div class="tc-prev-name" style="${t.nameStyle}">${nm}</div>
+        <div class="tc-prev-bar" style="${t.barStyle}"></div>
+        <div class="tc-prev-tags">
+          ${['React','Node','AWS'].map(s=>`<span class="tc-prev-tag" style="${t.tagStyle}">${s}</span>`).join('')}
         </div>
       </div>
-      <div class="tr2-meta">
+      <div class="tc-meta">
         <div>
-          <div class="tr2-name">${t.name}</div>
-          <span class="tr2-badge">${t.badge}</span>
+          <div class="tc-name">${t.name}</div>
+          <span class="tc-badge">${t.badge}</span>
         </div>
-        <button class="tr2-select" onclick="event.stopPropagation();selectTemplate2('${t.id}')">
+        <button class="tc-select" onclick="event.stopPropagation();selectResumeTmpl('${t.id}')">
           ${t.id === selectedTemplate ? '✓' : 'Use'}
         </button>
       </div>
     </div>
   `).join('');
-  refreshStep5Preview();
+  refreshResumePrev();
 }
 
-function selectTemplate2(id) {
+function selectResumeTmpl(id) {
   selectedTemplate = id;
-  // update panel UI
-  document.querySelectorAll('.tr2').forEach(el => el.classList.remove('active'));
-  document.querySelectorAll('.tr2-select').forEach(b => b.textContent = 'Use');
-  const active = document.getElementById('tr2-' + id);
-  if (active) { active.classList.add('active'); active.querySelector('.tr2-select').textContent = '✓'; }
-  refreshStep5Preview();
+  document.querySelectorAll('.tc').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tc-select').forEach(b => b.textContent = 'Use');
+  const active = document.getElementById('tc-' + id);
+  if (active) {
+    active.classList.add('active');
+    active.querySelector('.tc-select').textContent = '✓';
+    active.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+  refreshResumePrev();
   updateLivePreview();
 }
 
-function refreshStep5Preview() {
+function refreshResumePrev() {
   const el = document.getElementById('step5-resume-preview');
   if (!el) return;
+  el.innerHTML = buildResume(collectData());
+}
+
+// ── STEP 6: PORTFOLIO PANEL ───────────────────────────────────────────────────
+let portfolioTheme = 'cyber';
+
+const PORTFOLIO_THEMES = [
+  {id:'cyber',    name:'Cyber',          cat:'Dark',
+   preview:`background:#050a10;background-image:linear-gradient(rgba(0,255,204,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,204,.06) 1px,transparent 1px);background-size:20px 20px`,
+   nameStyle:`font-family:'Bebas Neue',cursive;color:#00ffcc;font-size:13px`,
+   bar:`background:linear-gradient(90deg,#00ffcc,#7b2fff)`,
+   tag:`background:rgba(123,47,255,.3);color:#c084fc;border:1px solid rgba(123,47,255,.5)`},
+  {id:'noir',     name:'Noir',           cat:'Dark',
+   preview:`background:#080808;border-top:3px solid #fff`,
+   nameStyle:`font-family:Georgia,serif;color:#fff;font-size:12px;font-weight:700`,
+   bar:`background:#333`,tag:`background:#111;color:#666;border:1px solid #222`},
+  {id:'midnight', name:'Midnight',       cat:'Dark',
+   preview:`background:linear-gradient(135deg,#0a0a1a,#0d0d2b)`,
+   nameStyle:`font-family:Georgia,serif;color:#e8dcc8;font-size:12px`,
+   bar:`background:linear-gradient(90deg,#c9a84c,#e8c97a)`,
+   tag:`background:rgba(201,168,76,.15);color:#c9a84c;border:1px solid rgba(201,168,76,.3)`},
+  {id:'obsidian', name:'Obsidian',       cat:'Dark',
+   preview:`background:#0c0c0c`,
+   nameStyle:`font-family:'Space Mono',monospace;color:#e0e0e0;font-size:11px`,
+   bar:`background:#333`,tag:`background:#1a1a1a;color:#888;border:1px solid #2a2a2a`},
+  {id:'steel',    name:'Steel',          cat:'Dark',
+   preview:`background:#111416`,
+   nameStyle:`font-family:'Unbounded',sans-serif;color:#f0f0f0;font-size:10px`,
+   bar:`background:#dc2626`,tag:`background:#1c1f22;color:#9ca3af;border:1px solid #2d3035`},
+  {id:'linen',    name:'Linen',          cat:'Light',
+   preview:`background:#faf7f2`,
+   nameStyle:`font-family:'Cormorant Garamond',serif;color:#2c2416;font-size:13px`,
+   bar:`background:#8b7355`,tag:`background:#e8e0d4;color:#6b5a45;border:1px solid #d4c9b8`},
+  {id:'chalk',    name:'Chalk',          cat:'Light',
+   preview:`background:#f5f3ef`,
+   nameStyle:`font-family:'DM Sans',sans-serif;color:#1a1a1a;font-size:12px`,
+   bar:`background:#ccc`,tag:`background:#eee;color:#555;border:1px solid #ddd`},
+  {id:'paper',    name:'Paper',          cat:'Light',
+   preview:`background:#fdfcfa`,
+   nameStyle:`font-family:Georgia,serif;color:#111;font-size:12px`,
+   bar:`background:#999`,tag:`background:#f0ede8;color:#666;border:1px solid #e0ddd8`},
+  {id:'cotton',   name:'Cotton',         cat:'Professional',
+   preview:`background:#f8fafc`,
+   nameStyle:`font-family:'Outfit',sans-serif;color:#0f172a;font-size:12px;font-weight:600`,
+   bar:`background:#3b82f6`,tag:`background:#eff6ff;color:#3b82f6;border:1px solid #bfdbfe`},
+  {id:'velvet',   name:'Velvet',         cat:'Creative',
+   preview:`background:#1a0a2e`,
+   nameStyle:`font-family:'Playfair Display',serif;color:#e8c97a;font-size:12px`,
+   bar:`background:linear-gradient(90deg,#9333ea,#e8c97a)`,
+   tag:`background:rgba(147,51,234,.2);color:#c084fc;border:1px solid rgba(147,51,234,.4)`},
+  {id:'amber',    name:'Amber',          cat:'Dark',
+   preview:`background:#0f0900`,
+   nameStyle:`font-family:'Syne',sans-serif;color:#fbbf24;font-size:12px`,
+   bar:`background:linear-gradient(90deg,#f59e0b,#fbbf24)`,
+   tag:`background:rgba(251,191,36,.1);color:#fbbf24;border:1px solid rgba(251,191,36,.3)`},
+  {id:'coral',    name:'Coral',          cat:'Colorful',
+   preview:`background:#fff5f3`,
+   nameStyle:`font-family:'Fraunces',serif;color:#c0392b;font-size:12px`,
+   bar:`background:linear-gradient(90deg,#e74c3c,#f39c12)`,
+   tag:`background:#fff0ee;color:#c0392b;border:1px solid #fbd0ca`},
+  {id:'dusk',     name:'Dusk',           cat:'Colorful',
+   preview:`background:linear-gradient(135deg,#1a0533,#0d1433)`,
+   nameStyle:`font-family:'Outfit',sans-serif;color:#f8b4ff;font-size:12px`,
+   bar:`background:linear-gradient(90deg,#f8b4ff,#93c5fd)`,
+   tag:`background:rgba(248,180,255,.1);color:#f8b4ff;border:1px solid rgba(248,180,255,.3)`},
+  {id:'aurora',   name:'Aurora',         cat:'Creative',
+   preview:`background:#0a1628`,
+   nameStyle:`font-family:'Syne',sans-serif;color:#67e8f9;font-size:12px`,
+   bar:`background:linear-gradient(90deg,#67e8f9,#a78bfa,#34d399)`,
+   tag:`background:rgba(103,232,249,.1);color:#67e8f9;border:1px solid rgba(103,232,249,.3)`},
+  {id:'neon',     name:'Neon',           cat:'Creative',
+   preview:`background:#050505`,
+   nameStyle:`font-family:'Space Mono',monospace;color:#39ff14;font-size:11px`,
+   bar:`background:#39ff14`,tag:`background:rgba(57,255,20,.1);color:#39ff14;border:1px solid rgba(57,255,20,.3)`},
+  {id:'retro',    name:'Retro',          cat:'Creative',
+   preview:`background:#1a0a00`,
+   nameStyle:`font-family:'Space Mono',monospace;color:#ff6b35;font-size:11px`,
+   bar:`background:#ff6b35`,tag:`background:rgba(255,107,53,.15);color:#ff6b35;border:1px solid rgba(255,107,53,.4)`},
+  {id:'glass',    name:'Glassmorphism',  cat:'Creative',
+   preview:`background:linear-gradient(135deg,#1a1a2e,#16213e)`,
+   nameStyle:`font-family:'DM Sans',sans-serif;color:rgba(255,255,255,.9);font-size:12px`,
+   bar:`background:rgba(255,255,255,.3)`,tag:`background:rgba(255,255,255,.1);color:rgba(255,255,255,.8);border:1px solid rgba(255,255,255,.2)`},
+  {id:'navy',     name:'Navy',           cat:'Professional',
+   preview:`background:#0a1628`,
+   nameStyle:`font-family:'IBM Plex Mono',monospace;color:#e2e8f0;font-size:11px`,
+   bar:`background:#3b82f6`,tag:`background:rgba(59,130,246,.15);color:#93c5fd;border:1px solid rgba(59,130,246,.3)`},
+  {id:'grove',    name:'Grove',          cat:'Professional',
+   preview:`background:#0a1a0f`,
+   nameStyle:`font-family:'Fraunces',serif;color:#a3e635;font-size:12px`,
+   bar:`background:linear-gradient(90deg,#4ade80,#a3e635)`,
+   tag:`background:rgba(74,222,128,.1);color:#4ade80;border:1px solid rgba(74,222,128,.3)`},
+  {id:'slate',    name:'Slate',          cat:'Professional',
+   preview:`background:#0f172a`,
+   nameStyle:`font-family:'Outfit',sans-serif;color:#94a3b8;font-size:12px`,
+   bar:`background:#475569`,tag:`background:#1e293b;color:#94a3b8;border:1px solid #334155`},
+];
+
+function buildPortfolioStep() {
+  // Save data so portfolio preview can use it
   const data = collectData();
-  el.innerHTML = buildResume(data);
+  try { localStorage.setItem('folio_portfolio', JSON.stringify(data)); } catch(e) {}
+  autoSaveResume(data);
+
+  // Build theme panel
+  const list = document.getElementById('theme-panel-list');
+  if (!list) return;
+  const nm = data.name && data.name !== 'Your Name' ? data.name : 'Alex Johnson';
+  list.innerHTML = PORTFOLIO_THEMES.map(t => `
+    <div class="tc ${t.id === portfolioTheme ? 'active' : ''}" id="pth-${t.id}" onclick="selectPortfolioTheme('${t.id}')">
+      <div class="tc-preview" style="${t.preview}">
+        <div class="tc-prev-name" style="${t.nameStyle}">${nm}</div>
+        <div class="tc-prev-bar" style="${t.bar}"></div>
+        <div class="tc-prev-tags">
+          ${['React','Node','AWS'].map(s=>`<span class="tc-prev-tag" style="${t.tag}">${s}</span>`).join('')}
+        </div>
+      </div>
+      <div class="tc-meta">
+        <div>
+          <div class="tc-name">${t.name}</div>
+          <span class="tc-badge">${t.cat}</span>
+        </div>
+        <button class="tc-select" onclick="event.stopPropagation();selectPortfolioTheme('${t.id}')">
+          ${t.id === portfolioTheme ? '✓' : 'Use'}
+        </button>
+      </div>
+    </div>
+  `).join('');
+  refreshPortfolioPrev();
+}
+
+function selectPortfolioTheme(id) {
+  portfolioTheme = id;
+  document.querySelectorAll('#theme-panel-list .tc').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('#theme-panel-list .tc-select').forEach(b => b.textContent = 'Use');
+  const active = document.getElementById('pth-' + id);
+  if (active) {
+    active.classList.add('active');
+    active.querySelector('.tc-select').textContent = '✓';
+    active.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+  refreshPortfolioPrev();
+}
+
+function refreshPortfolioPrev() {
+  const wrap = document.getElementById('step6-portfolio-preview');
+  if (!wrap) return;
+  // Render portfolio inline using an iframe so all portfolio.html CSS applies correctly
+  const data = collectData();
+  try { localStorage.setItem('folio_portfolio', JSON.stringify(data)); } catch(e) {}
+  // Use iframe pointing to portfolio.html with theme param
+  const existing = wrap.querySelector('iframe');
+  const src = `/portfolio.html?theme=${portfolioTheme}&t=${Date.now()}`;
+  if (existing) {
+    existing.src = src;
+  } else {
+    wrap.innerHTML = `<iframe src="${src}" style="width:100%;height:100%;border:none;min-height:calc(100vh - 160px)" frameborder="0"></iframe>`;
+  }
+}
+
+function copyPortfolioLink() {
+  const url = window.location.origin + `/portfolio.html?theme=${portfolioTheme}`;
+  navigator.clipboard.writeText(url).then(() => showToast('🔗 Portfolio link copied!'));
+}
+
+function savePortfolioPDF() {
+  const data = collectData();
+  try { localStorage.setItem('folio_portfolio', JSON.stringify(data)); } catch(e) {}
+  const win = window.open(`/portfolio.html?theme=${portfolioTheme}&print=1`, '_blank');
+  setTimeout(() => { try { win.print(); } catch(e) {} }, 1200);
 }
 
 // ── CLAUDE API ────────────────────────────────────────────────────────────────
@@ -777,22 +948,6 @@ function buildResume(d) {
 }
 
 // ── GENERATE ──────────────────────────────────────────────────────────────────
-function generateResume() {
-  const data = collectData();
-  autoSaveResume(data);
-  try { localStorage.setItem('folio_portfolio', JSON.stringify(data)); } catch(e) {}
-  document.getElementById('resume-output').innerHTML = buildResume(data);
-  document.getElementById('share-url').textContent = `folio.app/r/${shareId}`;
-  goStep(6);
-}
-
-function generatePortfolio() {
-  const data = collectData();
-  autoSaveResume(data);
-  try { localStorage.setItem('folio_portfolio', JSON.stringify(data)); } catch(e) {}
-  window.open('/portfolio.html', '_blank');
-}
-
 // ── DOWNLOAD PDF ──────────────────────────────────────────────────────────────
 function downloadPDF() {
   const data = collectData();

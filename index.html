@@ -146,13 +146,13 @@
     </div>
     <div class="step-line" id="line-4"></div>
     <div class="ic-step" id="dot-5" onclick="jumpStep(5)">
-      <div class="ic-dot"><span class="ic-icon">🎨</span><span class="ic-check">✓</span></div>
-      <span class="ic-label">Template</span>
+      <div class="ic-dot"><span class="ic-icon">📋</span><span class="ic-check">✓</span></div>
+      <span class="ic-label">Resume</span>
     </div>
     <div class="step-line" id="line-5"></div>
     <div class="ic-step" id="dot-6" onclick="jumpStep(6)">
-      <div class="ic-dot"><span class="ic-icon">👁</span><span class="ic-check">✓</span></div>
-      <span class="ic-label">Preview</span>
+      <div class="ic-dot"><span class="ic-icon">🌐</span><span class="ic-check">✓</span></div>
+      <span class="ic-label">Portfolio</span>
     </div>
   </div>
 
@@ -290,58 +290,57 @@
     </div>
   </div>
 
-  <!-- STEP 5: TEMPLATE SPLIT -->
-  <div class="step-panel" id="step-5">
+  <!-- STEP 5: RESUME — left preview, right templates -->
+  <div class="step-panel full-split-panel" id="step-5">
 
-    <!-- LEFT: resume preview + generate buttons -->
-    <div class="tmpl-split-left">
-      <div class="tmpl-split-left-header">
-        <div class="section-title">Choose Template</div>
-        <div class="section-sub">Live preview updates instantly — pick your style then generate.</div>
-      </div>
-      <div class="tmpl-resume-preview" id="step5-resume-preview"></div>
-      <div class="tmpl-generate-bar">
-        <button class="btn-outline" onclick="goStep(4)">← Back</button>
-        <button class="btn-generate" onclick="generateResume()">⬇ Generate Resume</button>
-        <button class="btn-gen-portfolio" onclick="generatePortfolio()">🌐 Generate Portfolio</button>
+    <!-- LEFT: resume preview -->
+    <div class="sp-left">
+      <div class="sp-preview-wrap" id="step5-resume-preview"></div>
+      <div class="sp-bottom-bar">
+        <button class="sp-btn-back" onclick="goStep(4)">← Back</button>
+        <button class="sp-btn-primary" onclick="downloadPDF()">⬇ Download PDF</button>
+        <button class="sp-btn-green" onclick="goStep(6)">🌐 Generate Portfolio</button>
       </div>
     </div>
 
-    <!-- RIGHT: template panel -->
-    <div class="tmpl-split-right">
-      <div class="tmpl-panel-header">
-        <div class="tmpl-panel-title">✦ Templates</div>
-        <div class="tmpl-panel-sub">Click to switch instantly</div>
+    <!-- RIGHT: 6 template cards -->
+    <div class="sp-right">
+      <div class="sp-panel-header">
+        <div class="sp-panel-title">✦ Templates</div>
+        <div class="sp-panel-sub">Click to switch instantly</div>
       </div>
-      <div class="tmpl-panel-list" id="tmpl-panel-list"></div>
+      <div class="sp-panel-list" id="tmpl-panel-list"></div>
     </div>
 
   </div>
 
-  <!-- STEP 6: PREVIEW -->
-  <div class="step-panel" id="step-6">
-    <div class="section-title">Your Resume is Ready! 🎉</div>
-    <div class="section-sub">Download, share, or view your portfolio.</div>
-    <div class="preview-actions">
-      <button class="btn-primary" onclick="downloadPDF()">⬇ Download PDF</button>
-      <button class="btn-portfolio" onclick="viewPortfolio()">🌐 View Portfolio</button>
-      <button class="btn-outline" onclick="goStep(2)">✎ Edit Info</button>
-      <button class="btn-outline" onclick="goStep(5)">🎨 Change Template</button>
+  <!-- STEP 6: PORTFOLIO — left portfolio preview, right 20 themes -->
+  <div class="step-panel full-split-panel" id="step-6">
+
+    <!-- LEFT: portfolio preview -->
+    <div class="sp-left">
+      <div class="sp-preview-wrap" id="step6-portfolio-preview"></div>
+      <div class="sp-bottom-bar">
+        <button class="sp-btn-back" onclick="goStep(5)">← Back</button>
+        <button class="sp-btn-outline" onclick="copyPortfolioLink()">🔗 Share Link</button>
+        <button class="sp-btn-primary" onclick="savePortfolioPDF()">📄 Save as PDF</button>
+      </div>
     </div>
-    <div class="share-row">
-      <div class="share-url" id="share-url">folio.app/r/loading...</div>
-      <button class="copy-btn" onclick="copyLink()">Copy Link</button>
+
+    <!-- RIGHT: 20 theme cards -->
+    <div class="sp-right">
+      <div class="sp-panel-header">
+        <div class="sp-panel-title">✦ Themes</div>
+        <div class="sp-panel-sub">Click to switch instantly</div>
+      </div>
+      <div class="sp-panel-list" id="theme-panel-list"></div>
     </div>
-    <div id="resume-output"></div>
-    <div class="nav-actions" style="margin-top:32px">
-      <button class="btn-outline" onclick="goStep(5)">← Back to Template</button>
-      <button class="btn-outline" onclick="goHome()">🏠 Back to Home</button>
-    </div>
+
   </div>
 
   </div><!-- end split-left -->
 
-  <!-- RIGHT: LIVE PREVIEW -->
+  <!-- RIGHT: LIVE PREVIEW (steps 1–4 only) -->
   <div class="split-right" id="split-right">
     <div class="preview-panel">
       <div class="preview-panel-header">
