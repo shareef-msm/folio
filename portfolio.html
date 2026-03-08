@@ -689,6 +689,9 @@ if (isEmbed) {
     const tb = document.getElementById('topbar');
     if (tp) tp.style.display = 'none';
     if (tb) tb.style.display = 'none';
+    // Make portfolio-view take full width
+    const pv = document.getElementById('portfolio-view');
+    if (pv) { pv.style.width = '100%'; pv.style.height = '100vh'; }
   });
 }
 
