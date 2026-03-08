@@ -47,14 +47,15 @@ async function loadSavedResume() {
     const sb = getSB();
     if (!sb) return;
     const { data } = await sb.from('profiles').select('resume_data').eq('id', user.id).single();
-    if (data?.resume_data) { fillForm(data.resume_data); setTimeout(() => updateLivePreview(), 100); }
+    if (data?.resume_data) { autofill(data.resume_data); setTimeout(() => updateLivePreview(), 100); }
   } catch(e) {}
 }
 
 // ── STATE ─────────────────────────────────────────────────────────────────────
 let selectedTemplate = 'classic';
 let skills = [];
-let expCount = 0, eduCount = 0, projCount = 0;
+let expCount = 0, eduCount = 0, projCount = 0, certCount = 0, langCount = 0, achieveCount = 0;
+const certImages = {};
 let shareId = Math.random().toString(36).substr(2, 8);
 
 // ── START APP ─────────────────────────────────────────────────────────────────
@@ -86,8 +87,11 @@ function showStep(n) {
     dot.classList.remove('active', 'done');
     if (i < n) dot.classList.add('done');
     if (i === n) dot.classList.add('active');
-    // Always clickable
-    dot.style.cursor = 'pointer';
+  }
+  // Update connector lines
+  for (let i = 1; i <= 5; i++) {
+    const line = document.getElementById('line-' + i);
+    if (line) line.classList.toggle('done', i < n);
   }
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
@@ -220,7 +224,10 @@ async function autofill(data) {
   document.getElementById('exp-list').innerHTML  = '';
   document.getElementById('edu-list').innerHTML  = '';
   document.getElementById('proj-list').innerHTML = '';
-  expCount = 0; eduCount = 0; projCount = 0;
+  document.getElementById('cert-list').innerHTML = '';
+  document.getElementById('lang-list').innerHTML = '';
+  document.getElementById('achieve-list').innerHTML = '';
+  expCount = 0; eduCount = 0; projCount = 0; certCount = 0; langCount = 0; achieveCount = 0;
 
   if (Array.isArray(data.experience) && data.experience.length) data.experience.forEach(addExp);
   else addExp();
@@ -285,10 +292,97 @@ function addEdu(p = {}) {
     <button class="remove-btn" onclick="document.getElementById('edu-${id}').remove()">Remove</button>
     <div class="form-grid">
       <div class="field"><label>Degree</label><input type="text" id="edu-degree-${id}" placeholder="B.Sc. Computer Science" value="${esc(p.degree)}"/></div>
-      <div class="field"><label>School</label><input type="text" id="edu-school-${id}" placeholder="MIT" value="${esc(p.school)}"/></div>
-      <div class="field full"><label>Year</label><input type="text" id="edu-year-${id}" placeholder="2018 – 2022" value="${esc(p.year)}"/></div>
+      <div class="field"><label>School / University</label><input type="text" id="edu-school-${id}" placeholder="MIT" value="${esc(p.school)}"/></div>
+      <div class="field"><label>Year</label><input type="text" id="edu-year-${id}" placeholder="2018 – 2022" value="${esc(p.year)}"/></div>
+      <div class="field"><label>Percentage / CGPA <span class="opt">optional</span></label><input type="text" id="edu-grade-${id}" placeholder="8.5 CGPA or 85%" value="${esc(p.grade)}"/></div>
     </div>`;
   document.getElementById('edu-list').appendChild(div);
+}
+
+// cert images stored as base64
+function addCert(p = {}) {
+  const id = certCount++;
+  const div = document.createElement('div');
+  div.className = 'repeater-item'; div.id = 'cert-' + id;
+  div.innerHTML = `
+    <button class="remove-btn" onclick="document.getElementById('cert-${id}').remove()">Remove</button>
+    <div class="form-grid">
+      <div class="field"><label>Certificate Name</label><input type="text" id="cert-name-${id}" placeholder="AWS Cloud Practitioner" value="${esc(p.name)}"/></div>
+      <div class="field"><label>Issuer</label><input type="text" id="cert-issuer-${id}" placeholder="Amazon Web Services" value="${esc(p.issuer)}"/></div>
+      <div class="field"><label>Year</label><input type="text" id="cert-year-${id}" placeholder="2024" value="${esc(p.year)}"/></div>
+      <div class="field">
+        <label>Upload Certificate Image <span class="opt">optional</span></label>
+        <div class="cert-upload-zone" onclick="document.getElementById('cert-file-${id}').click()" id="cert-zone-${id}">
+          <span class="cert-upload-icon">🏆</span>
+          <span class="cert-upload-text">Click to upload certificate image</span>
+          <span class="cert-upload-sub">JPG, PNG, WEBP — high quality</span>
+        </div>
+        <input type="file" id="cert-file-${id}" accept="image/*" style="display:none" onchange="loadCertImage(${id}, this)"/>
+        <div class="cert-preview" id="cert-preview-${id}" style="display:none">
+          <img id="cert-img-${id}" style="width:100%;border-radius:8px;border:1px solid rgba(255,255,255,0.1)"/>
+          <button class="remove-btn" style="position:relative;margin-top:8px" onclick="removeCertImage(${id})">✕ Remove Image</button>
+        </div>
+      </div>
+    </div>`;
+  document.getElementById('cert-list').appendChild(div);
+}
+
+function loadCertImage(id, input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    certImages[id] = e.target.result;
+    document.getElementById('cert-preview-' + id).style.display = 'block';
+    document.getElementById('cert-img-' + id).src = e.target.result;
+    document.getElementById('cert-zone-' + id).style.display = 'none';
+  };
+  reader.readAsDataURL(file);
+}
+
+function removeCertImage(id) {
+  delete certImages[id];
+  document.getElementById('cert-preview-' + id).style.display = 'none';
+  document.getElementById('cert-zone-' + id).style.display = 'flex';
+  document.getElementById('cert-file-' + id).value = '';
+}
+
+function addLang(p = {}) {
+  const id = langCount++;
+  const div = document.createElement('div');
+  div.className = 'repeater-item'; div.id = 'lang-' + id;
+  div.innerHTML = `
+    <button class="remove-btn" onclick="document.getElementById('lang-${id}').remove()">Remove</button>
+    <div class="form-grid">
+      <div class="field"><label>Language</label><input type="text" id="lang-name-${id}" placeholder="English" value="${esc(p.name)}"/></div>
+      <div class="field">
+        <label>Proficiency</label>
+        <select id="lang-level-${id}" style="width:100%;padding:10px 14px;border-radius:10px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#e0e0ff;font-family:inherit;font-size:0.88rem">
+          <option value="Native" ${(p.level||'Native')==='Native'?'selected':''}>Native</option>
+          <option value="Fluent" ${p.level==='Fluent'?'selected':''}>Fluent</option>
+          <option value="Advanced" ${p.level==='Advanced'?'selected':''}>Advanced</option>
+          <option value="Intermediate" ${p.level==='Intermediate'?'selected':''}>Intermediate</option>
+          <option value="Basic" ${p.level==='Basic'?'selected':''}>Basic</option>
+        </select>
+      </div>
+    </div>`;
+  document.getElementById('lang-list').appendChild(div);
+}
+
+function addAchieve(p = {}) {
+  const id = achieveCount++;
+  const div = document.createElement('div');
+  div.className = 'repeater-item'; div.id = 'achieve-' + id;
+  div.innerHTML = `
+    <button class="remove-btn" onclick="document.getElementById('achieve-${id}').remove()">Remove</button>
+    <div class="form-grid">
+      <div class="field full"><label>Achievement Title</label><input type="text" id="achieve-title-${id}" placeholder="1st Place — National Hackathon 2024" value="${esc(p.title)}"/></div>
+      <div class="field full">
+        <label>Description <span class="opt">optional</span></label>
+        <textarea id="achieve-desc-${id}" placeholder="Brief description of the achievement…" style="min-height:70px">${esc(p.desc)}</textarea>
+      </div>
+    </div>`;
+  document.getElementById('achieve-list').appendChild(div);
 }
 function addProj(p = {}) {
   const id = projCount++;
@@ -373,14 +467,53 @@ function collectData() {
     const id = el.id.replace('exp-title-','');
     exps.push({ title: el.value, company: document.getElementById('exp-company-'+id)?.value||'', start: document.getElementById('exp-start-'+id)?.value||'', end: document.getElementById('exp-end-'+id)?.value||'', desc: document.getElementById('exp-desc-'+id)?.value||'' });
   });
-  document.querySelectorAll('[id^="edu-degree-"]').forEach(el => {
-    const id = el.id.replace('edu-degree-','');
-    edus.push({ degree: el.value, school: document.getElementById('edu-school-'+id)?.value||'', year: document.getElementById('edu-year-'+id)?.value||'' });
-  });
   document.querySelectorAll('[id^="proj-name-"]').forEach(el => {
     const id = el.id.replace('proj-name-','');
     projs.push({ name: el.value, url: document.getElementById('proj-url-'+id)?.value||'', desc: document.getElementById('proj-desc-'+id)?.value||'' });
   });
+  // education — now includes grade
+  document.querySelectorAll('[id^="edu-degree-"]').forEach(el => {
+    const id = el.id.replace('edu-degree-','');
+    edus.push({
+      degree: el.value,
+      school: document.getElementById('edu-school-'+id)?.value||'',
+      year:   document.getElementById('edu-year-'+id)?.value||'',
+      grade:  document.getElementById('edu-grade-'+id)?.value||''
+    });
+  });
+
+  // certs
+  const certs = [];
+  document.querySelectorAll('[id^="cert-name-"]').forEach(el => {
+    const id = el.id.replace('cert-name-','');
+    certs.push({
+      name:   el.value,
+      issuer: document.getElementById('cert-issuer-'+id)?.value||'',
+      year:   document.getElementById('cert-year-'+id)?.value||'',
+      image:  certImages[id]||''
+    });
+  });
+
+  // languages
+  const langs = [];
+  document.querySelectorAll('[id^="lang-name-"]').forEach(el => {
+    const id = el.id.replace('lang-name-','');
+    langs.push({
+      name:  el.value,
+      level: document.getElementById('lang-level-'+id)?.value||'Fluent'
+    });
+  });
+
+  // achievements
+  const achievements = [];
+  document.querySelectorAll('[id^="achieve-title-"]').forEach(el => {
+    const id = el.id.replace('achieve-title-','');
+    achievements.push({
+      title: el.value,
+      desc:  document.getElementById('achieve-desc-'+id)?.value||''
+    });
+  });
+
   return {
     name: document.getElementById('name').value||'Your Name',
     title: document.getElementById('title').value||'Professional Title',
@@ -393,7 +526,7 @@ function collectData() {
     github: document.getElementById('github').value,
     instagram: document.getElementById('instagram').value,
     whatsapp: document.getElementById('whatsapp').value,
-    skills, exps, edus, projs
+    skills, exps, edus, projs, certs, langs, achievements
   };
 }
 
@@ -412,16 +545,19 @@ function buildResume(d) {
   const contact  = [d.email,d.phone,d.location,d.website].filter(Boolean).join(' · ');
   const social   = socialLinksHtml(d);
   const expHtml  = d.exps.filter(e=>e.title).map(e=>`<div class="entry"><div class="entry-head"><span>${e.title}${e.company?' — '+e.company:''}</span><span>${[e.start,e.end].filter(Boolean).join(' – ')}</span></div>${e.desc?`<div class="entry-desc">${e.desc}</div>`:''}</div>`).join('');
-  const eduHtml  = d.edus.filter(e=>e.degree).map(e=>`<div class="entry"><div class="entry-head"><span>${e.degree}</span><span>${e.year}</span></div>${e.school?`<div class="entry-sub">${e.school}</div>`:''}</div>`).join('');
+  const eduHtml  = d.edus.filter(e=>e.degree).map(e=>`<div class="entry"><div class="entry-head"><span>${e.degree}</span><span>${e.year||''}</span></div>${e.school?`<div class="entry-sub">${e.school}${e.grade?` <span style="opacity:0.6;font-size:0.85em">· ${e.grade}</span>`:''}` : ''}${e.grade&&!e.school?`<div class="entry-sub">${e.grade}`:''}${(e.school||e.grade)?'</div>':''}</div>`).join('');
   const projHtml = d.projs.filter(p=>p.name).map(p=>`<div class="entry"><div class="entry-head"><span>${p.name}</span>${p.url?`<span style="font-size:0.8em;opacity:0.6">${p.url}</span>`:''}</div>${p.desc?`<div class="entry-desc">${p.desc}</div>`:''}</div>`).join('');
+  const certHtml = (d.certs||[]).filter(c=>c.name).map(c=>`<div class="entry"><div class="entry-head"><span>🏆 ${c.name}</span><span>${c.year||''}</span></div>${c.issuer?`<div class="entry-sub">${c.issuer}</div>`:''}</div>`).join('');
+  const langHtml = (d.langs||[]).filter(l=>l.name).map(l=>`<span class="skill-tag lang-tag">${l.name} <span style="opacity:0.6;font-size:0.85em">· ${l.level}</span></span>`).join('');
+  const achieveHtml = (d.achievements||[]).filter(a=>a.title).map(a=>`<div class="entry"><div class="entry-head"><span>⭐ ${a.title}</span></div>${a.desc?`<div class="entry-desc">${a.desc}</div>`:''}</div>`).join('');
 
   const tmpl = selectedTemplate;
-  if (tmpl==='classic') { const s=d.skills.map(x=>`<span class="skill-tag classic-skill">${x}</span>`).join(''); return `<div class="resume-classic"><h1>${d.name}</h1><div class="subtitle">${d.title}</div><div class="contact">${contact}</div>${social}${d.summary?`<h2>Summary</h2><p>${d.summary}</p>`:''}${expHtml?`<h2>Experience</h2>${expHtml}`:''}${eduHtml?`<h2>Education</h2>${eduHtml}`:''}${projHtml?`<h2>Projects</h2>${projHtml}`:''}${s?`<h2>Skills</h2><div class="skill-list">${s}</div>`:''}</div>`; }
-  if (tmpl==='modern')  { const s=d.skills.map(x=>`<span class="skill-tag modern-skill">${x}</span>`).join(''); return `<div class="resume-modern"><div class="rm-header"><h1>${d.name}</h1><div class="subtitle">${d.title}</div><div class="contact">${contact}</div>${social}</div><div class="rm-body">${d.summary?`<h2>About</h2><p style="color:#ccc">${d.summary}</p>`:''}${expHtml?`<h2>Experience</h2>${expHtml}`:''}${eduHtml?`<h2>Education</h2>${eduHtml}`:''}${projHtml?`<h2>Projects</h2>${projHtml}`:''}${s?`<h2>Skills</h2><div class="skill-list">${s}</div>`:''}</div></div>`; }
-  if (tmpl==='minimal') { const s=d.skills.map(x=>`<span class="skill-tag minimal-skill">${x}</span>`).join(''); return `<div class="resume-minimal"><h1>${d.name}</h1><div class="subtitle">${d.title}</div><div class="contact">${contact}</div>${social}${d.summary?`<h2>Profile</h2><p>${d.summary}</p>`:''}${expHtml?`<h2>Experience</h2>${expHtml}`:''}${eduHtml?`<h2>Education</h2>${eduHtml}`:''}${projHtml?`<h2>Projects</h2>${projHtml}`:''}${s?`<h2>Skills</h2><div class="skill-list">${s}</div>`:''}</div>`; }
-  if (tmpl==='bold')    { const s=d.skills.map(x=>`<span class="skill-tag bold-skill">${x}</span>`).join(''); return `<div class="resume-bold"><div class="bold-header"><h1>${d.name}</h1><div class="bold-bar"></div><div class="subtitle">${d.title}</div><div class="contact">${contact}</div>${social}</div><div class="bold-body">${d.summary?`<h2>About</h2><p style="color:#ccc">${d.summary}</p>`:''}${expHtml?`<h2>Experience</h2>${expHtml}`:''}${eduHtml?`<h2>Education</h2>${eduHtml}`:''}${projHtml?`<h2>Projects</h2>${projHtml}`:''}${s?`<h2>Skills</h2><div class="skill-list">${s}</div>`:''}</div></div>`; }
-  if (tmpl==='elegant') { const s=d.skills.map(x=>`<span class="skill-tag elegant-skill">${x}</span>`).join(''); return `<div class="resume-elegant"><h1>${d.name}</h1><div class="subtitle">${d.title}</div><div class="contact">${contact}</div>${social}${d.summary?`<h2>Profile</h2><p>${d.summary}</p>`:''}${expHtml?`<h2>Experience</h2>${expHtml}`:''}${eduHtml?`<h2>Education</h2>${eduHtml}`:''}${projHtml?`<h2>Projects</h2>${projHtml}`:''}${s?`<h2>Skills</h2><div class="skill-list">${s}</div>`:''}</div>`; }
-  const s=d.skills.map(x=>`<span class="skill-tag tech-skill">${x}</span>`).join(''); return `<div class="resume-tech"><div class="tech-comment">// ${d.name.toLowerCase().replace(/ /g,'_')}.resume.js</div><h1>${d.name}</h1><div class="subtitle">${d.title}</div><div class="contact">${contact}</div>${social}${d.summary?`<h2>about</h2><p>${d.summary}</p>`:''}${expHtml?`<h2>experience</h2>${expHtml}`:''}${eduHtml?`<h2>education</h2>${eduHtml}`:''}${projHtml?`<h2>projects</h2>${projHtml}`:''}${s?`<h2>skills</h2><div class="skill-list">${s}</div>`:''}</div>`;
+  if (tmpl==='classic') { const s=d.skills.map(x=>`<span class="skill-tag classic-skill">${x}</span>`).join(''); return `<div class="resume-classic"><h1>${d.name}</h1><div class="subtitle">${d.title}</div><div class="contact">${contact}</div>${social}${d.summary?`<h2>Summary</h2><p>${d.summary}</p>`:''}${expHtml?`<h2>Experience</h2>${expHtml}`:''}${eduHtml?`<h2>Education</h2>${eduHtml}`:''}${projHtml?`<h2>Projects</h2>${projHtml}`:''}${certHtml?`<h2>Certifications</h2>${certHtml}`:''}${achieveHtml?`<h2>Achievements</h2>${achieveHtml}`:''}${s?`<h2>Skills</h2><div class="skill-list">${s}</div>`:''}${langHtml?`<h2>Languages</h2><div class="skill-list">${langHtml}</div>`:''}</div>`; }
+  if (tmpl==='modern')  { const s=d.skills.map(x=>`<span class="skill-tag modern-skill">${x}</span>`).join(''); return `<div class="resume-modern"><div class="rm-header"><h1>${d.name}</h1><div class="subtitle">${d.title}</div><div class="contact">${contact}</div>${social}</div><div class="rm-body">${d.summary?`<h2>About</h2><p style="color:#ccc">${d.summary}</p>`:''}${expHtml?`<h2>Experience</h2>${expHtml}`:''}${eduHtml?`<h2>Education</h2>${eduHtml}`:''}${projHtml?`<h2>Projects</h2>${projHtml}`:''}${certHtml?`<h2>Certifications</h2>${certHtml}`:''}${achieveHtml?`<h2>Achievements</h2>${achieveHtml}`:''}${s?`<h2>Skills</h2><div class="skill-list">${s}</div>`:''}${langHtml?`<h2>Languages</h2><div class="skill-list">${langHtml}</div>`:''}</div></div>`; }
+  if (tmpl==='minimal') { const s=d.skills.map(x=>`<span class="skill-tag minimal-skill">${x}</span>`).join(''); return `<div class="resume-minimal"><h1>${d.name}</h1><div class="subtitle">${d.title}</div><div class="contact">${contact}</div>${social}${d.summary?`<h2>Profile</h2><p>${d.summary}</p>`:''}${expHtml?`<h2>Experience</h2>${expHtml}`:''}${eduHtml?`<h2>Education</h2>${eduHtml}`:''}${projHtml?`<h2>Projects</h2>${projHtml}`:''}${certHtml?`<h2>Certifications</h2>${certHtml}`:''}${achieveHtml?`<h2>Achievements</h2>${achieveHtml}`:''}${s?`<h2>Skills</h2><div class="skill-list">${s}</div>`:''}${langHtml?`<h2>Languages</h2><div class="skill-list">${langHtml}</div>`:''}</div>`; }
+  if (tmpl==='bold')    { const s=d.skills.map(x=>`<span class="skill-tag bold-skill">${x}</span>`).join(''); return `<div class="resume-bold"><div class="bold-header"><h1>${d.name}</h1><div class="bold-bar"></div><div class="subtitle">${d.title}</div><div class="contact">${contact}</div>${social}</div><div class="bold-body">${d.summary?`<h2>About</h2><p style="color:#ccc">${d.summary}</p>`:''}${expHtml?`<h2>Experience</h2>${expHtml}`:''}${eduHtml?`<h2>Education</h2>${eduHtml}`:''}${projHtml?`<h2>Projects</h2>${projHtml}`:''}${certHtml?`<h2>Certifications</h2>${certHtml}`:''}${achieveHtml?`<h2>Achievements</h2>${achieveHtml}`:''}${s?`<h2>Skills</h2><div class="skill-list">${s}</div>`:''}${langHtml?`<h2>Languages</h2><div class="skill-list">${langHtml}</div>`:''}</div></div>`; }
+  if (tmpl==='elegant') { const s=d.skills.map(x=>`<span class="skill-tag elegant-skill">${x}</span>`).join(''); return `<div class="resume-elegant"><h1>${d.name}</h1><div class="subtitle">${d.title}</div><div class="contact">${contact}</div>${social}${d.summary?`<h2>Profile</h2><p>${d.summary}</p>`:''}${expHtml?`<h2>Experience</h2>${expHtml}`:''}${eduHtml?`<h2>Education</h2>${eduHtml}`:''}${projHtml?`<h2>Projects</h2>${projHtml}`:''}${certHtml?`<h2>Certifications</h2>${certHtml}`:''}${achieveHtml?`<h2>Achievements</h2>${achieveHtml}`:''}${s?`<h2>Skills</h2><div class="skill-list">${s}</div>`:''}${langHtml?`<h2>Languages</h2><div class="skill-list">${langHtml}</div>`:''}</div>`; }
+  const s=d.skills.map(x=>`<span class="skill-tag tech-skill">${x}</span>`).join(''); return `<div class="resume-tech"><div class="tech-comment">// ${d.name.toLowerCase().replace(/ /g,'_')}.resume.js</div><h1>${d.name}</h1><div class="subtitle">${d.title}</div><div class="contact">${contact}</div>${social}${d.summary?`<h2>about</h2><p>${d.summary}</p>`:''}${expHtml?`<h2>experience</h2>${expHtml}`:''}${eduHtml?`<h2>education</h2>${eduHtml}`:''}${projHtml?`<h2>projects</h2>${projHtml}`:''}${certHtml?`<h2>certifications</h2>${certHtml}`:''}${achieveHtml?`<h2>achievements</h2>${achieveHtml}`:''}${s?`<h2>skills</h2><div class="skill-list">${s}</div>`:''}${langHtml?`<h2>languages</h2><div class="skill-list">${langHtml}</div>`:''}</div>`;
 }
 
 // ── GENERATE ──────────────────────────────────────────────────────────────────

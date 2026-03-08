@@ -124,21 +124,36 @@
 <div id="app" style="display:none">
 
   <!-- Steps Bar -->
-  <div class="steps-bar">
-    <div class="step-dot active" id="dot-1" onclick="jumpStep(1)" title="Upload">1</div>
-    <div class="step-line"></div>
-    <div class="step-dot" id="dot-2" onclick="jumpStep(2)" title="Personal Info">2</div>
-    <div class="step-line"></div>
-    <div class="step-dot" id="dot-3" onclick="jumpStep(3)" title="Social Links">3</div>
-    <div class="step-line"></div>
-    <div class="step-dot" id="dot-4" onclick="jumpStep(4)" title="Experience">4</div>
-    <div class="step-line"></div>
-    <div class="step-dot" id="dot-5" onclick="jumpStep(5)" title="Template">5</div>
-    <div class="step-line"></div>
-    <div class="step-dot" id="dot-6" onclick="jumpStep(6)" title="Preview">6</div>
-  </div>
-  <div class="steps-labels">
-    <span>Upload</span><span></span><span>Info</span><span></span><span>Links</span><span></span><span>Experience</span><span></span><span>Template</span><span></span><span>Preview</span>
+  <div class="steps-bar" id="steps-bar">
+    <div class="ic-step active" id="dot-1" onclick="jumpStep(1)">
+      <div class="ic-dot"><span class="ic-icon">📄</span><span class="ic-check">✓</span></div>
+      <span class="ic-label">Upload</span>
+    </div>
+    <div class="step-line" id="line-1"></div>
+    <div class="ic-step" id="dot-2" onclick="jumpStep(2)">
+      <div class="ic-dot"><span class="ic-icon">👤</span><span class="ic-check">✓</span></div>
+      <span class="ic-label">Info</span>
+    </div>
+    <div class="step-line" id="line-2"></div>
+    <div class="ic-step" id="dot-3" onclick="jumpStep(3)">
+      <div class="ic-dot"><span class="ic-icon">🔗</span><span class="ic-check">✓</span></div>
+      <span class="ic-label">Links</span>
+    </div>
+    <div class="step-line" id="line-3"></div>
+    <div class="ic-step" id="dot-4" onclick="jumpStep(4)">
+      <div class="ic-dot"><span class="ic-icon">💼</span><span class="ic-check">✓</span></div>
+      <span class="ic-label">Experience</span>
+    </div>
+    <div class="step-line" id="line-4"></div>
+    <div class="ic-step" id="dot-5" onclick="jumpStep(5)">
+      <div class="ic-dot"><span class="ic-icon">🎨</span><span class="ic-check">✓</span></div>
+      <span class="ic-label">Template</span>
+    </div>
+    <div class="step-line" id="line-5"></div>
+    <div class="ic-step" id="dot-6" onclick="jumpStep(6)">
+      <div class="ic-dot"><span class="ic-icon">👁</span><span class="ic-check">✓</span></div>
+      <span class="ic-label">Preview</span>
+    </div>
   </div>
 
   <!-- SPLIT LAYOUT -->
@@ -255,6 +270,20 @@
     <div class="rep-title" style="margin-top:28px">Projects <span class="opt">optional</span></div>
     <div class="repeater" id="proj-list"></div>
     <button class="add-btn" onclick="addProj()">+ Add Project</button>
+
+    <div class="rep-title" style="margin-top:28px">Certifications <span class="opt">optional</span></div>
+    <div class="section-sub" style="margin-bottom:16px">Upload certificate images — they'll appear in your portfolio.</div>
+    <div class="repeater" id="cert-list"></div>
+    <button class="add-btn" onclick="addCert()">+ Add Certification</button>
+
+    <div class="rep-title" style="margin-top:28px">Languages <span class="opt">optional</span></div>
+    <div class="repeater" id="lang-list"></div>
+    <button class="add-btn" onclick="addLang()">+ Add Language</button>
+
+    <div class="rep-title" style="margin-top:28px">Achievements <span class="opt">optional</span></div>
+    <div class="repeater" id="achieve-list"></div>
+    <button class="add-btn" onclick="addAchieve()">+ Add Achievement</button>
+
     <div class="nav-actions">
       <button class="btn-outline" onclick="goStep(3)">← Back</button>
       <button class="btn-primary" onclick="goStep(5)">Next: Template →</button>
