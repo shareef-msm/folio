@@ -665,16 +665,14 @@ function selectPortfolioTheme(id) {
 function refreshPortfolioPrev() {
   const wrap = document.getElementById('step6-portfolio-preview');
   if (!wrap) return;
-  // Render portfolio inline using an iframe so all portfolio.html CSS applies correctly
   const data = collectData();
   try { localStorage.setItem('folio_portfolio', JSON.stringify(data)); } catch(e) {}
-  // Use iframe pointing to portfolio.html with theme param
+  const src = `/portfolio.html?theme=${portfolioTheme}&embed=1&t=${Date.now()}`;
   const existing = wrap.querySelector('iframe');
-  const src = `/portfolio.html?theme=${portfolioTheme}&t=${Date.now()}`;
   if (existing) {
     existing.src = src;
   } else {
-    wrap.innerHTML = `<iframe src="${src}" style="width:100%;height:100%;border:none;min-height:calc(100vh - 160px)" frameborder="0"></iframe>`;
+    wrap.innerHTML = `<iframe src="${src}" style="width:100%;height:100%;border:none;min-height:calc(100vh - 140px)" frameborder="0"></iframe>`;
   }
 }
 

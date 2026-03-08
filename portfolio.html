@@ -681,6 +681,17 @@ if (!D.name) {
 const urlTheme = new URLSearchParams(location.search).get('theme');
 if (urlTheme) theme = urlTheme;
 
+// Embed mode — hide theme panel and topbar (used inside iframe in step 6)
+const isEmbed = new URLSearchParams(location.search).get('embed') === '1';
+if (isEmbed) {
+  document.addEventListener('DOMContentLoaded', () => {
+    const tp = document.getElementById('theme-panel');
+    const tb = document.getElementById('topbar');
+    if (tp) tp.style.display = 'none';
+    if (tb) tb.style.display = 'none';
+  });
+}
+
 // ── THEMES LIST ────────────────────────────────────────────────────
 const THEMES = [
   {id:'cyber',    name:'Cyber',         cat:'Dark',         icons:['⬡','◈','⚡','▸'],
