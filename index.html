@@ -290,78 +290,32 @@
     </div>
   </div>
 
-  <!-- STEP 5: TEMPLATE -->
+  <!-- STEP 5: TEMPLATE SPLIT -->
   <div class="step-panel" id="step-5">
-    <div class="section-title">Choose Your Template</div>
-    <div class="section-sub">6 templates — pick the one that fits your style.</div>
-    <div class="templates-grid">
-      <div class="tmpl-card selected" data-tmpl="classic" onclick="selectTemplate(this)">
-        <div class="tmpl-preview" style="background:#fff;color:#111;font-family:Georgia,serif;padding:12px">
-          <div style="font-size:1em;font-weight:700;border-bottom:1.5px solid #333;padding-bottom:3px;margin-bottom:5px">Your Name</div>
-          <div style="font-size:0.6em;color:#555;margin-bottom:5px">email · phone · city</div>
-          <div style="font-size:0.6em;font-weight:700;text-transform:uppercase;color:#555;border-bottom:1px solid #ccc;margin-bottom:3px">Experience</div>
-          <div style="font-size:0.65em"><b>Job Title</b> — Company</div>
-        </div>
-        <div class="tmpl-name">Classic</div>
+
+    <!-- LEFT: resume preview + generate buttons -->
+    <div class="tmpl-split-left">
+      <div class="tmpl-split-left-header">
+        <div class="section-title">Choose Template</div>
+        <div class="section-sub">Live preview updates instantly — pick your style then generate.</div>
       </div>
-      <div class="tmpl-card" data-tmpl="modern" onclick="selectTemplate(this)">
-        <div class="tmpl-preview" style="background:#0f0f1a;color:#eee;padding:0;overflow:hidden">
-          <div style="background:linear-gradient(135deg,#6c63ff,#9b55ff);padding:10px 12px">
-            <div style="font-size:0.9em;font-weight:800;color:#fff">Your Name</div>
-            <div style="font-size:0.58em;color:rgba(255,255,255,0.8)">Job Title</div>
-          </div>
-          <div style="padding:8px 12px">
-            <div style="font-size:0.58em;color:#9b72ff;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Experience</div>
-            <div style="border-left:2px solid #6c63ff;padding-left:6px">
-              <div style="font-size:0.62em;font-weight:600">Job Title — Company</div>
-            </div>
-          </div>
-        </div>
-        <div class="tmpl-name">Modern Dark</div>
-      </div>
-      <div class="tmpl-card" data-tmpl="minimal" onclick="selectTemplate(this)">
-        <div class="tmpl-preview" style="background:#fafaf8;color:#333;padding:12px">
-          <div style="font-size:0.85em;font-weight:300;letter-spacing:3px;text-transform:uppercase;margin-bottom:3px">YOUR NAME</div>
-          <div style="font-size:0.55em;color:#bbb;letter-spacing:2px;margin-bottom:8px">TITLE · EMAIL</div>
-          <div style="font-size:0.55em;text-transform:uppercase;letter-spacing:2px;color:#bbb;border-bottom:1px solid #eee;margin-bottom:4px">Experience</div>
-          <div style="font-size:0.62em;display:flex;justify-content:space-between"><span>Job Title</span><span style="color:#bbb">2022</span></div>
-        </div>
-        <div class="tmpl-name">Minimal</div>
-      </div>
-      <div class="tmpl-card" data-tmpl="bold" onclick="selectTemplate(this)">
-        <div class="tmpl-preview" style="background:#1a1a1a;color:#fff;padding:12px">
-          <div style="font-size:1em;font-weight:900;color:#ff6584;text-transform:uppercase">Your Name</div>
-          <div style="height:2px;background:linear-gradient(90deg,#ff6584,#6c63ff);margin:4px 0 6px"></div>
-          <div style="font-size:0.55em;color:#ff6584;text-transform:uppercase;margin-bottom:3px">Experience</div>
-          <div style="font-size:0.62em;font-weight:700">Job Title — Company</div>
-        </div>
-        <div class="tmpl-name">Bold & Edgy</div>
-      </div>
-      <div class="tmpl-card" data-tmpl="elegant" onclick="selectTemplate(this)">
-        <div class="tmpl-preview" style="background:#1c1610;color:#e8dcc8;font-family:Georgia,serif;padding:12px">
-          <div style="font-size:0.9em;font-weight:700;color:#c9a84c;letter-spacing:1px">Your Name</div>
-          <div style="font-size:0.58em;color:#a08040;margin-bottom:6px">JOB TITLE</div>
-          <div style="border-top:1px solid #c9a84c;border-bottom:1px solid #c9a84c;padding:2px 0;margin-bottom:6px">
-            <div style="font-size:0.52em;color:#c9a84c;text-align:center;letter-spacing:2px">EXPERIENCE</div>
-          </div>
-          <div style="font-size:0.62em;font-weight:700">Job Title</div>
-        </div>
-        <div class="tmpl-name">Elegant Gold</div>
-      </div>
-      <div class="tmpl-card" data-tmpl="tech" onclick="selectTemplate(this)">
-        <div class="tmpl-preview" style="background:#0d1117;color:#c9d1d9;font-family:monospace;padding:12px">
-          <div style="font-size:0.62em;color:#58a6ff">// your_name.resume</div>
-          <div style="font-size:0.9em;font-weight:700;color:#e6edf3;margin:2px 0">Your Name</div>
-          <div style="font-size:0.55em;color:#3fb950;margin-bottom:3px">## experience</div>
-          <div style="font-size:0.6em;color:#ffa657">Job Title — Company</div>
-        </div>
-        <div class="tmpl-name">Tech / Dev</div>
+      <div class="tmpl-resume-preview" id="step5-resume-preview"></div>
+      <div class="tmpl-generate-bar">
+        <button class="btn-outline" onclick="goStep(4)">← Back</button>
+        <button class="btn-generate" onclick="generateResume()">⬇ Generate Resume</button>
+        <button class="btn-gen-portfolio" onclick="generatePortfolio()">🌐 Generate Portfolio</button>
       </div>
     </div>
-    <div class="nav-actions">
-      <button class="btn-outline" onclick="goStep(4)">← Back</button>
-      <button class="btn-primary" onclick="generateResume()">Generate Resume →</button>
+
+    <!-- RIGHT: template panel -->
+    <div class="tmpl-split-right">
+      <div class="tmpl-panel-header">
+        <div class="tmpl-panel-title">✦ Templates</div>
+        <div class="tmpl-panel-sub">Click to switch instantly</div>
+      </div>
+      <div class="tmpl-panel-list" id="tmpl-panel-list"></div>
     </div>
+
   </div>
 
   <!-- STEP 6: PREVIEW -->
