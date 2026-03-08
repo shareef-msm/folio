@@ -54,6 +54,7 @@ async function loadSavedResume() {
 // ── STATE ─────────────────────────────────────────────────────────────────────
 let selectedTemplate = 'classic';
 let skills = [];
+let maxStepReached = 1;
 let expCount = 0, eduCount = 0, projCount = 0, certCount = 0, langCount = 0, achieveCount = 0;
 const certImages = {};
 let shareId = Math.random().toString(36).substr(2, 8);
