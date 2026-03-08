@@ -115,23 +115,34 @@ function skipUpload() { addExp(); addEdu(); showStep(2); }
 
 // ── STEP NAVIGATION ───────────────────────────────────────────────────────────
 function showStep(n) {
-  // Steps 1–4: normal step-panels inside split-layout
-  document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
-  // Steps 5–6: full-split-panels outside split-layout
-  document.querySelectorAll('.full-split-panel').forEach(p => p.classList.remove('active'));
+  // Hide all step-panels (1–4)
+  document.querySelectorAll('.step-panel').forEach(p => {
+    p.classList.remove('active');
+    p.style.display = 'none';
+  });
+
+  // Hide all full-split-panels (5–6)
+  document.querySelectorAll('.full-split-panel').forEach(p => {
+    p.classList.remove('active');
+    p.style.display = 'none';
+  });
+
+  const panel = document.getElementById('step-' + n);
 
   if (n <= 4) {
-    const panel = document.getElementById('step-' + n);
-    if (panel) panel.classList.add('active');
-    // Show the split-layout (with live preview on right)
+    // Show split-layout for steps 1-4
     const sl = document.querySelector('.split-layout');
     if (sl) sl.style.display = '';
+    if (panel) { panel.classList.add('active'); panel.style.display = 'block'; }
   } else {
-    // Hide the split-layout entirely for steps 5 & 6
+    // Hide split-layout for steps 5-6
     const sl = document.querySelector('.split-layout');
     if (sl) sl.style.display = 'none';
-    const panel = document.getElementById('step-' + n);
-    if (panel) panel.classList.add('active');
+    // Show the full panel with inline style
+    if (panel) {
+      panel.classList.add('active');
+      panel.style.cssText = 'display:flex !important; position:fixed; top:140px; left:0; right:0; bottom:0; z-index:50; background:#0a0a10;';
+    }
   }
 
   if (n > maxStepReached) maxStepReached = n;
